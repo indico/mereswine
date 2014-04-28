@@ -3,6 +3,7 @@ from flask.ext.script import Manager, prompt_bool
 
 from tracker import models
 from tracker.core import db, ContextfulManager
+from tracker.crawler import crawler
 from tracker.factory import make_app
 
 
@@ -30,6 +31,14 @@ def recreate():
     """Recreates database tables (same as issuing 'drop' and then 'create')"""
     drop()
     create()
+
+
+@manager.command
+def crawl(uuid=None):
+    if uuid is not None:
+        crawler.crawl_instance(uuid)
+    else:
+        crawler.crawl_all()
 
 
 @manager.shell

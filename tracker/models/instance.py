@@ -9,7 +9,8 @@ class Instance(db.Model):
     contact = db.Column(db.String, nullable=False)
     email = db.Column(db.String, nullable=False)
     organisation = db.Column(db.String, nullable=False)
-    #TODO: add json column
+    crawl_date = db.Column(db.DateTime)
+    crawled_data = db.Column(db.Text)
 
     def __repr__(self):
         return '<Instance {} {}>'.format(self.id, self.url)

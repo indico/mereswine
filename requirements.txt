@@ -9,5 +9,6 @@ Werkzeug==0.9.4
 cssmin==0.2.0
 ipython==2.0.0
 itsdangerous==0.24
+requests==2.2.1
 webassets==0.9
 wsgiref==0.1.2

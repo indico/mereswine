@@ -13,7 +13,7 @@ def create_instance():
     payload = request.get_json()
     instance = Instance()
     instance.uuid = str(uuid.uuid4())
-    instance.url = payload['url']
+    instance.url = payload['url'].rstrip('/')
     instance.contact = payload['contact']
     instance.email = payload['email']
     instance.organisation = payload['organisation']
@@ -33,6 +33,8 @@ def update_instance(uuid):
             continue
         if value == '':
             return jsonify(error='Invalid value', field=field), 400
+        if field == 'url':
+            value = value.rstrip('/')
         setattr(instance, field, value)
     if payload:
         return jsonify(error='Unexpected data', data=payload), 400
@@ -41,4 +43,10 @@ def update_instance(uuid):
     except SQLAlchemyError as e:
         db.session.rollback()
         return jsonify(error=str(e)), 400
+    return jsonify(**instance.__json__())
+
+
+@bp.route('/instance/<uuid>')
+def get_instance(uuid):
+    instance = Instance.query.filter_by(uuid=uuid).first_or_404()
     return jsonify(**instance.__json__())
