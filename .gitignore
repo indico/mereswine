@@ -6,3 +6,4 @@
 .*.swp
 *.pyc
 *.cfg
+celerybeat-schedule

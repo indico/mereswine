@@ -1,9 +1,8 @@
 from flask import current_app
 from flask.ext.script import Manager, prompt_bool
 
-from tracker import models
+from tracker import models, crawler
 from tracker.core import db, ContextfulManager
-from tracker.crawler import crawler
 from tracker.factory import make_app
 
 

@@ -2,8 +2,8 @@ import json
 import requests
 from datetime import datetime
 
-from ..core import db
-from ..models import Instance
+from .core import db
+from .models import Instance
 
 
 def crawl_instance(instance):

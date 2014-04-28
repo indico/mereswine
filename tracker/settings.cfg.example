@@ -3,3 +3,12 @@ ASSETS_DEBUG = False
 SECRET_KEY = ''
 # Database
 SQLALCHEMY_DATABASE_URI = 'postgresql:///tracker'
+# Celery
+CELERY_BROKER_URL = 'redis://127.0.0.1:6379/0'
+from datetime import timedelta
+CELERYBEAT_SCHEDULE = {
+    'crawl-everything': {
+        'task': 'tracker.crawler.crawl_all',
+        'schedule': timedelta(days=1)
+    }
+}
