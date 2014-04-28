@@ -1,0 +1,5 @@
+# Core
+ASSETS_DEBUG = False
+SECRET_KEY = ''
+# Database
+SQLALCHEMY_DATABASE_URI = 'postgresql:///tracker'

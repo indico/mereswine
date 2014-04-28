@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Instance Tracker - {% block title %}{% endblock %}</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+        <meta charset="UTF-8">
+        {% block meta %}{% endblock %}
+
+        {%- assets filters='less,cssmin,cssrewrite', depends='css/bootstrap/*.less', output='assets/bundle.css',
+                   'css/bootstrap/bootstrap.less', 'css/bootstrap/theme.less',
+                   'css/main.less' %}
+            <link href="{{ ASSET_URL|version_url }}" rel="stylesheet">
+        {%- endassets %}
+    </head>
+    <body>
+        <header class="navbar navbar-inverse navbar-fixed-top" role="banner">
+            <div class="container">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="{{ url_for('.index') }}">Instance Tracker</a>
+                </div>
+                <nav class="collapse navbar-collapse" role="navigation">
+                    {% block nav %}
+                        <ul class="nav navbar-nav">
+                            <li{% if g.menu == 'index' %} class="active"{% endif %}><a href="{{ url_for('.index') }}">Home</a></li>
+                            {# TODO: Add menu items here #}
+                        </ul>
+                    {% endblock %}
+                </nav>
+            </div>
+        </header>
+
+        <ol class="breadcrumb">
+            <li><a href="{{ url_for('.index') }}">Instance Tracker</a></li>
+            {% for bc in g.breadcrumbs %}
+                {% if loop.last %}
+                    <li class="active">{{ bc.title }}</li>
+                {% elif bc.link %}
+                    <li><a href="{{ bc.link }}">{{ bc.title }}</a></li>
+                {% else %}
+                    <li>{{ bc.title }}</li>
+                {% endif %}
+            {% endfor %}
+        </ol>
+
+        <div class="clearfix container">
+            {% block flashes %}
+                {% with messages = get_flashed_messages(with_categories=true) %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ category }}">
+                            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endwith %}
+            {% endblock %}
+            {% block content %}{% endblock %}
+        </div>
+
+        {%- assets filters='rjsmin', output='assets/bundle.js', 'js/jquery.js', 'js/bootstrap.js', 'js/main.js' %}
+            <script src="{{ ASSET_URL|version_url }}"></script>
+        {%- endassets %}
+        {% block body_end %}{% endblock %}
+    </body>
+</html>

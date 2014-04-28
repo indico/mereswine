@@ -1,0 +1,42 @@
+{% macro render_field(field) -%}
+    <div class="form-group{% if field.errors %} has-error{% endif %}">
+        {{ field.label(class='sr-only') }}
+        {% if field.flags.required %}
+            {{ field(required=true, class='form-control', placeholder=field.label.text, **kwargs) }}
+        {% else %}
+            {{ field(class='form-control', placeholder=field.label.text, **kwargs) }}
+        {% endif %}
+        {% if field.errors %}
+            <div class="error help-block">{{ field.errors|join(', ') }}</div>
+        {% endif %}
+    </div>
+{%- endmacro %}
+
+{% macro render_field_horizontal(field, label_class, field_class) -%}
+    <div class="form-group{% if field.errors %} has-error{% endif %}{% if field.flags.required %} has-feedback{% endif %}">
+        {{ field.label(class='control-label ' + label_class, title=kwargs.get('title', '')) }}
+        <div class="{{ field_class }}">
+            {% if field.flags.required %}
+                {{ field(required=true, class='form-control', **kwargs) }}
+                <span class="glyphicon glyphicon-asterisk form-control-feedback" title="This field is required."></span>
+            {% else %}
+                {{ field(class='form-control', **kwargs) }}
+            {% endif %}
+            {% if field.errors %}
+                <div class="error help-block">{{ field.errors|join(', ') }}</div>
+            {% endif %}
+        </div>
+    </div>
+{%- endmacro %}
+
+{% macro render_checkbox(field) -%}
+    <div class="checkbox{% if field.errors %} has-error{% endif %}">
+        <label>
+            {{ field(**kwargs) }}
+            {{ field.label.text }}
+        </label>
+        {% if field.errors %}
+            <div class="error help-block">{{ field.errors|join(', ') }}</div>
+        {% endif %}
+    </div>
+{%- endmacro %}
