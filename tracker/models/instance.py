@@ -13,7 +13,7 @@ class Instance(db.Model):
     crawled_data = db.Column(db.Text)
 
     def __repr__(self):
-        return '<Instance {} {}>'.format(self.id, self.url)
+        return '<Instance {0} {1}>'.format(self.id, self.url)
 
     def __json__(self):
         return {'uuid': self.uuid,
