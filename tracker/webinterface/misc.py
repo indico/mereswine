@@ -1,7 +1,7 @@
-from flask import render_template, g, redirect, url_for, request
+from flask import render_template, g, jsonify
 
 from ..core import db
-from ..menu import menu, breadcrumb, make_breadcrumb
+from ..menu import menu, breadcrumb
 from ..models import Instance
 from . import bp
 
@@ -21,12 +21,12 @@ def server_list():
     return render_template('server_list.html')
 
 
-@bp.route('/servers/remove-server/<uuid>')
+@bp.route('/servers/<uuid>', methods=('DELETE',))
 def remove_server(uuid):
-    instance = Instance.query.filter_by(uuid=uuid).one()
+    instance = Instance.query.filter_by(uuid=uuid).first()
     db.session.delete(instance)
     db.session.commit()
-    return redirect(url_for('.server_list'))
+    return jsonify()
 
 
 @bp.route('/statistics')

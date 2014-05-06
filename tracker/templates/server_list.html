@@ -18,7 +18,7 @@
                     <tr>
                         <td>{{ server.organisation }}</td>
                         <td><a href="{{ server.url }}">{{ server.url }}</a></td>
-                        <td><a href="{{ url_for('.remove_server', uuid=server.uuid) }}" class="glyphicon glyphicon-remove" style="color: initial;"></a></td>
+                        <td><span class="glyphicon glyphicon-remove" remove-server-url="{{ url_for('.remove_server', uuid=server.uuid) }}"></span></td>
                     </tr>
                 {% endfor %}
             {% else %}
@@ -28,4 +28,16 @@
             {% endif %}
         </tbody>
     </table>
+
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+    <script type="text/javascript">
+        $('.glyphicon-remove').on('click', function(){
+            $.ajax({
+                url: $(this).attr('remove-server-url'),
+                type: "DELETE"
+            }).done(function(){
+                document.location.reload(true);
+            });
+        }).css('cursor', 'pointer');
+    </script>
 {%- endblock %}
