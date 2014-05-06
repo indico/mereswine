@@ -3,14 +3,13 @@
 {% block title %}List of servers{% endblock %}
 
 {% block content -%}
+    <h1>{{ self.title() }}</h1>
     <table class="table table-striped">
         <thead>
             <tr>
-                <th colspan="2" style="text-align: center; font-size: 32px;">List of servers</th>
-            </tr>
-            <tr>
                 <th>Organisation name</th>
                 <th>URL</th>
+                <th>Remove</th>
             </tr>
         </thead>
         <tbody>
@@ -19,11 +18,12 @@
                     <tr>
                         <td>{{ server.organisation }}</td>
                         <td><a href="{{ server.url }}">{{ server.url }}</a></td>
+                        <td><a href="{{ url_for('.remove_server', uuid=server.uuid) }}" class="glyphicon glyphicon-remove" style="color: initial;"></a></td>
                     </tr>
                 {% endfor %}
             {% else %}
                 <tr>
-                    <td colspan="2">No server available in our DataBase at the moment.</td>
+                    <td colspan="3">No server available in our DataBase at the moment.</td>
                 </tr>
             {% endif %}
         </tbody>
