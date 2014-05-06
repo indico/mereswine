@@ -1,7 +1,7 @@
 from celery import Celery
 from flask import Flask
 
-from .core import assets, db
+from .core import assets, db, babel
 from .assets import version_url, versioned_static_file
 from .menu import setup_breadcrumbs
 from .webinterface import bp as webinterface_bp
@@ -17,6 +17,7 @@ def make_app():
     app.config.from_pyfile('settings.cfg')
     assets.init_app(app)
     db.init_app(app)
+    babel.init_app(app)
     register_core_funcs(app)
     register_blueprints(app)
     return app

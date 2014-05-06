@@ -9,35 +9,35 @@
             <tr>
                 <th>Organisation name</th>
                 <th>URL</th>
+                <th>Last crawled</th>
                 <th>Remove</th>
             </tr>
         </thead>
-        <tbody>
+        <tbody id="server-list">
             {% if g.server_list|length != 0 %}
                 {% for server in g.server_list %}
                     <tr>
                         <td>{{ server.organisation }}</td>
                         <td><a href="{{ server.url }}">{{ server.url }}</a></td>
-                        <td><span class="glyphicon glyphicon-remove" remove-server-url="{{ url_for('.remove_server', uuid=server.uuid) }}"></span></td>
+                        {% if server.crawl_date == None %}
+                            <td>Never</td>
+                        {% else %}
+                            <td>{{ server.crawl_date | datetimeformat('medium') }}</td>
+                        {% endif %}
+                        <td><button type="button" class="btn btn-danger btn-xs js-server-delete" data-url="{{ url_for('.remove_server', uuid=server.uuid) }}" title="Delete server"><span class="glyphicon glyphicon-remove"></span></button></td>
                     </tr>
                 {% endfor %}
             {% else %}
                 <tr>
-                    <td colspan="3">No server available in our DataBase at the moment.</td>
+                    <td colspan="4">No server available in our database at the moment.</td>
                 </tr>
             {% endif %}
         </tbody>
     </table>
+{%- endblock %}
 
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
-    <script type="text/javascript">
-        $('.glyphicon-remove').on('click', function(){
-            $.ajax({
-                url: $(this).attr('remove-server-url'),
-                type: "DELETE"
-            }).done(function(){
-                document.location.reload(true);
-            });
-        }).css('cursor', 'pointer');
+{% block body_end %}
+    <script>
+        addAjaxDeleter($('#server-list'), '.js-server-delete');
     </script>
 {%- endblock %}

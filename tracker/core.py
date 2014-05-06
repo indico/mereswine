@@ -1,4 +1,5 @@
 from flask.ext.assets import Environment
+from flask.ext.babel import Babel
 from flask.ext.script import Manager
 from flask.ext.sqlalchemy import SQLAlchemy
 
@@ -6,6 +7,7 @@ from flask.ext.sqlalchemy import SQLAlchemy
 # Flask extensions
 assets = Environment()
 db = SQLAlchemy()
+babel = Babel()
 
 
 class ContextfulManager(Manager):
