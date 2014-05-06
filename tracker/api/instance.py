@@ -11,6 +11,7 @@ from . import bp
 @bp.route('/instance/', methods=('POST',))
 def create_instance():
     payload = request.get_json()
+    print payload
     instance = Instance()
     instance.uuid = str(uuid.uuid4())
     instance.url = payload['url'].rstrip('/')
@@ -48,5 +49,11 @@ def update_instance(uuid):
 
 @bp.route('/instance/<uuid>')
 def get_instance(uuid):
-    instance = Instance.query.filter_by(uuid=uuid).first_or_404()
-    return jsonify(**instance.__json__())
+    instance = Instance.query.filter_by(uuid=uuid).first()
+    if instance is None:
+        rv = jsonify()
+        rv.status_code = 404
+    else:
+        rv = jsonify(**instance.__json__())
+    rv.headers['Access-Control-Allow-Origin'] = '*'
+    return rv

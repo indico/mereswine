@@ -27,7 +27,8 @@
                     {% block nav %}
                         <ul class="nav navbar-nav">
                             <li{% if g.menu == 'index' %} class="active"{% endif %}><a href="{{ url_for('.index') }}">Home</a></li>
-                            {# TODO: Add menu items here #}
+                            <li{% if g.menu == 'server_list' %} class="active"{% endif %}><a href="{{ url_for('.server_list') }}">List of servers</a></li>
+                            <li{% if g.menu == 'statistics' %} class="active"{% endif %}><a href="{{ url_for('.statistics') }}">Statistics</a></li>
                         </ul>
                     {% endblock %}
                 </nav>

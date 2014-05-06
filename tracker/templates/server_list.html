@@ -1,0 +1,31 @@
+{% extends '_layout.html' %}
+
+{% block title %}List of servers{% endblock %}
+
+{% block content -%}
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th colspan="2" style="text-align: center; font-size: 32px;">List of servers</th>
+            </tr>
+            <tr>
+                <th>Organisation name</th>
+                <th>URL</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if g.server_list|length != 0 %}
+                {% for server in g.server_list %}
+                    <tr>
+                        <td>{{ server.organisation }}</td>
+                        <td><a href="{{ server.url }}">{{ server.url }}</a></td>
+                    </tr>
+                {% endfor %}
+            {% else %}
+                <tr>
+                    <td colspan="2">No server available in our DataBase at the moment.</td>
+                </tr>
+            {% endif %}
+        </tbody>
+    </table>
+{%- endblock %}
