@@ -1,4 +1,29 @@
+import json
+from sqlalchemy.types import TypeDecorator, VARCHAR
+
 from ..core import db
+
+
+class JSONEncodedDict(TypeDecorator):
+    """Represents an immutable structure as a json-encoded string.
+
+    Usage::
+
+        JSONEncodedDict(255)
+
+    """
+
+    impl = VARCHAR
+
+    def process_bind_param(self, value, dialect):
+        if value is not None:
+            value = json.dumps(value)
+        return value
+
+    def process_result_value(self, value, dialect):
+        if value is not None:
+            value = json.loads(value)
+        return value
 
 
 class Instance(db.Model):
@@ -10,7 +35,7 @@ class Instance(db.Model):
     email = db.Column(db.String, nullable=False)
     organisation = db.Column(db.String, nullable=False)
     crawl_date = db.Column(db.DateTime)
-    crawled_data = db.Column(db.Text)
+    crawled_data = db.Column(JSONEncodedDict)
 
     def __repr__(self):
         return '<Instance {0} {1}>'.format(self.id, self.url)

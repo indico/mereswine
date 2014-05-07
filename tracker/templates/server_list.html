@@ -4,26 +4,57 @@
 
 {% block content -%}
     <h1>{{ self.title() }}</h1>
+    <div class="additional-data-container">
+        <div id="additional-data-header">
+            <span>Additional data</span><span class="glyphicon glyphicon-chevron-right toggle-additional-data"></span>
+        </div>
+        <div id="additional-data-body">
+            {% if extra_fields|length != 0 %}
+                {% for field in extra_fields %}
+                    <div class="additional-data">
+                        <input id="{{ field }}" type="checkbox"></input>
+                        <label for="{{ field }}">{{ (field[0].upper() + field[1:]).replace('_', ' ') }}</label>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <span>No additional data available.</span>
+            {% endif %}
+        </div>
+    </div>
     <table class="table table-striped">
         <thead>
             <tr>
                 <th>Organisation name</th>
                 <th>URL</th>
                 <th>Last crawled</th>
-                <th>Remove</th>
+                {% for field in extra_fields %}
+                    <th class="field-{{ field }}">{{ (field[0].upper() + field[1:]).replace('_', ' ') }}</th>
+                {% endfor %}
+                <th></th>
             </tr>
         </thead>
         <tbody id="server-list">
-            {% if g.server_list|length != 0 %}
-                {% for server in g.server_list %}
+            {% if server_list|length != 0 %}
+                {% for server in server_list %}
                     <tr>
                         <td>{{ server.organisation }}</td>
                         <td><a href="{{ server.url }}">{{ server.url }}</a></td>
-                        {% if server.crawl_date == None %}
-                            <td>Never</td>
-                        {% else %}
-                            <td>{{ server.crawl_date | datetimeformat('medium') }}</td>
-                        {% endif %}
+                        <td>
+                            {% if server.crawl_date == None %}
+                                Never
+                            {% else %}
+                                {{ server.crawl_date | datetimeformat('medium') }}
+                            {% endif %}
+                        </td>
+                        {% for field in extra_fields %}
+                            <td class="field-{{ field }}">
+                                {% if server.crawled_data == None or server.crawled_data[field] == None %}
+                                    -
+                                {% else %}
+                                    {{ server.crawled_data[field] }}
+                                {% endif %}
+                            </td>
+                        {% endfor %}
                         <td><button type="button" class="btn btn-danger btn-xs js-server-delete" data-url="{{ url_for('.remove_server', uuid=server.uuid) }}" title="Delete server"><span class="glyphicon glyphicon-remove"></span></button></td>
                     </tr>
                 {% endfor %}
@@ -39,5 +70,20 @@
 {% block body_end %}
     <script>
         addAjaxDeleter($('#server-list'), '.js-server-delete');
+
+        $('.toggle-additional-data').on('click', function(){
+            $('#additional-data-header').nextUntil('.table').toggle(400);
+            $(this).toggleClass('glyphicon-chevron-down').toggleClass('glyphicon-chevron-right');
+        });
+        $('#additional-data-header').nextUntil('.table').toggle(0);
+
+        $('.additional-data input').on('change', function(){
+            if (this.checked) {
+                $('.field-'+this.id).css('display', 'table-cell');
+            } else {
+                $('.field-'+this.id).css('display', 'none');
+            }
+            
+        }).trigger('change');
     </script>
 {%- endblock %}

@@ -1,4 +1,3 @@
-import json
 import requests
 from datetime import datetime
 
@@ -25,7 +24,7 @@ def crawl_instance(instance):
     try:
         inferred_data = crawl_statistics(instance)
         inferred_data.update(crawl_system_info(instance))
-        instance.crawled_data = json.dumps(inferred_data)
+        instance.crawled_data = inferred_data
         instance.crawl_date = datetime.utcnow()
         db.session.commit()
     except ValueError:
