@@ -1,5 +1,6 @@
 import requests
 from datetime import datetime
+import logging
 
 from .core import db
 from .models import Instance
@@ -28,9 +29,9 @@ def crawl_instance(instance):
         instance.crawl_date = datetime.utcnow()
         db.session.commit()
     except ValueError:
-        print "FAIL: cannot crawl instance {0}".format(instance.uuid)
+        logging.warning("cannot crawl instance {0}".format(instance.uuid))
     else:
-        print "SUCCESS: successfully crawled instance {0}".format(instance.uuid)
+        logging.info("successfully crawled instance {0}".format(instance.uuid))
 
 
 def crawl_all():

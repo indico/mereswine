@@ -9,16 +9,14 @@
             <span class="toggle-additional-data">Additional data</span><span class="glyphicon glyphicon-chevron-right toggle-additional-data"></span>
         </div>
         <div id="additional-data-body">
-            {% if extra_fields|length != 0 %}
-                {% for field in extra_fields %}
-                    <div class="additional-fields">
-                        <input id="{{ field }}" type="checkbox"></input>
-                        <label for="{{ field }}">{{ (field[0].upper() + field[1:]).replace('_', ' ') }}</label>
-                    </div>
-                {% endfor %}
+            {% for field in extra_fields %}
+                <div class="additional-fields">
+                    <input id="{{ field }}" type="checkbox"></input>
+                    <label for="{{ field }}">{{ (field[0].upper() + field[1:]).replace('_', ' ') }}</label>
+                </div>
             {% else %}
                 <span>No additional data available.</span>
-            {% endif %}
+            {% endfor %}
         </div>
     </div>
     <table class="table">
@@ -40,7 +38,7 @@
                         <td>{{ server.organisation }}</td>
                         <td><a href="{{ server.url }}">{{ server.url }}</a></td>
                         <td>
-                            {% if server.crawl_date == None %}
+                            {% if server.crawl_date is none %}
                                 Never
                             {% else %}
                                 {{ server.crawl_date | datetimeformat('medium') }}
@@ -48,7 +46,7 @@
                         </td>
                         {% for field in extra_fields %}
                             <td class="field-{{ field }}">
-                                {% if server.crawled_data == None or server.crawled_data[field] == None %}
+                                {% if server.crawled_data is none or server.crawled_data[field] is none %}
                                     -
                                 {% else %}
                                     {{ server.crawled_data[field] }}
@@ -89,7 +87,7 @@
                                     <div class="additional-fields">
                                         <label>{{ (field[0].upper() + field[1:]).replace('_', ' ') }}:</label>
                                         <span>
-                                            {% if server.crawled_data == None or server.crawled_data[field] == None %}
+                                            {% if server.crawled_data is none or server.crawled_data[field] is none %}
                                                 -
                                             {% else %}
                                                 {{ server.crawled_data[field] }}

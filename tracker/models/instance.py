@@ -5,12 +5,10 @@ from ..core import db
 
 
 class JSONEncodedDict(TypeDecorator):
-    """Represents an immutable structure as a json-encoded string.
-
-    Usage::
-
-        JSONEncodedDict(255)
-
+    """
+        Represents an immutable structure as a json-encoded string.
+        Usage::
+            JSONEncodedDict(255)
     """
 
     impl = VARCHAR
