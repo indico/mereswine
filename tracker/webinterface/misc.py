@@ -22,7 +22,8 @@ def server_list():
     for server in server_list:
         extra_fields.update(server.crawled_data or {})
     wvars = {'server_list': server_list,
-             'extra_fields': sorted(extra_fields)}
+             'extra_fields': sorted(extra_fields),
+             'max_columns': len(extra_fields) + 5}
     return render_template('server_list.html', **wvars)
 
 

@@ -6,12 +6,12 @@
     <h1>{{ self.title() }}</h1>
     <div class="additional-data-container">
         <div id="additional-data-header">
-            <span>Additional data</span><span class="glyphicon glyphicon-chevron-right toggle-additional-data"></span>
+            <span class="toggle-additional-data">Additional data</span><span class="glyphicon glyphicon-chevron-right toggle-additional-data"></span>
         </div>
         <div id="additional-data-body">
             {% if extra_fields|length != 0 %}
                 {% for field in extra_fields %}
-                    <div class="additional-data">
+                    <div class="additional-fields">
                         <input id="{{ field }}" type="checkbox"></input>
                         <label for="{{ field }}">{{ (field[0].upper() + field[1:]).replace('_', ' ') }}</label>
                     </div>
@@ -21,7 +21,7 @@
             {% endif %}
         </div>
     </div>
-    <table class="table table-striped">
+    <table class="table">
         <thead>
             <tr>
                 <th>Organisation name</th>
@@ -30,13 +30,13 @@
                 {% for field in extra_fields %}
                     <th class="field-{{ field }}">{{ (field[0].upper() + field[1:]).replace('_', ' ') }}</th>
                 {% endfor %}
-                <th></th>
+                <th colspan="2"></th>
             </tr>
         </thead>
         <tbody id="server-list">
             {% if server_list|length != 0 %}
                 {% for server in server_list %}
-                    <tr>
+                    <tr class="server-row">
                         <td>{{ server.organisation }}</td>
                         <td><a href="{{ server.url }}">{{ server.url }}</a></td>
                         <td>
@@ -55,12 +55,55 @@
                                 {% endif %}
                             </td>
                         {% endfor %}
-                        <td><button type="button" class="btn btn-danger btn-xs js-server-delete" data-url="{{ url_for('.remove_server', uuid=server.uuid) }}" title="Delete server"><span class="glyphicon glyphicon-remove"></span></button></td>
+                        <td>
+                            <button type="button" class="btn btn-danger btn-xs js-server-delete" data-url="{{ url_for('.remove_server', uuid=server.uuid) }}" title="Delete server">
+                                <span class="glyphicon glyphicon-remove"></span>
+                            </button>
+                        </td>
+                        <td>
+                            <span class="glyphicon glyphicon-chevron-right toggle-expand"></span>
+                        </td>
+                    </tr>
+                    <tr class="active">
+                        <td colspan="{{ max_columns }}">
+                            <div class="clearfix">
+                                <div class="additional-fields">
+                                    <label>Contact:</label>
+                                    <span>{{ server.contact }}</span>
+                                </div>
+                                <div class="additional-fields">
+                                    <label>Email:</label>
+                                    <span>{{ server.email }}</span>
+                                </div>
+                                <div class="additional-fields">
+                                    <label>UUID:</label>
+                                    <span>{{ server.uuid }}</span>
+                                </div>
+                                <div class="additional-fields">
+                                    <label>Enabled:</label>
+                                    <span>{{ server.enabled }}</span>
+                                </div>
+                            </div>
+                            <div class="clearfix">
+                                {% for field in extra_fields %}
+                                    <div class="additional-fields">
+                                        <label>{{ (field[0].upper() + field[1:]).replace('_', ' ') }}:</label>
+                                        <span>
+                                            {% if server.crawled_data == None or server.crawled_data[field] == None %}
+                                                -
+                                            {% else %}
+                                                {{ server.crawled_data[field] }}
+                                            {% endif %}
+                                        </span>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </td>
                     </tr>
                 {% endfor %}
             {% else %}
                 <tr>
-                    <td colspan="4">No server available in our database at the moment.</td>
+                    <td colspan="5">No server available in our database at the moment.</td>
                 </tr>
             {% endif %}
         </tbody>
@@ -69,21 +112,28 @@
 
 {% block body_end %}
     <script>
+
         addAjaxDeleter($('#server-list'), '.js-server-delete');
 
         $('.toggle-additional-data').on('click', function(){
             $('#additional-data-header').nextUntil('.table').toggle(400);
-            $(this).toggleClass('glyphicon-chevron-down').toggleClass('glyphicon-chevron-right');
+            $('.toggle-additional-data.glyphicon').toggleClass('glyphicon-chevron-down').toggleClass('glyphicon-chevron-right');
         });
         $('#additional-data-header').nextUntil('.table').toggle(0);
 
-        $('.additional-data input').on('change', function(){
+        $('.additional-fields input').on('change', function(){
             if (this.checked) {
                 $('.field-'+this.id).css('display', 'table-cell');
             } else {
                 $('.field-'+this.id).css('display', 'none');
             }
-            
         }).trigger('change');
+
+        $('.toggle-expand').on('click', function(){
+            $(this).parent().parent().next().toggle();
+            $(this).toggleClass('glyphicon-chevron-down').toggleClass('glyphicon-chevron-right');
+        });
+        $('.toggle-expand').parent().parent().next().hide();
+
     </script>
 {%- endblock %}
