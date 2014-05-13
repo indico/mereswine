@@ -23,8 +23,56 @@ body {
 
 .toggle-additional-data {
     cursor: pointer;
+    margin-left: 5px;
 }
 
 .toggle-expand {
     cursor: pointer;
+    margin-left: -26px;
+    margin-right: 5px;
+}
+
+.manage-server {
+    float: right;
+}
+
+.server-main-information {
+    margin-top: 60px;
+
+    .panel-heading {
+        h3 {
+            display: inline-block;
+        }
+
+        span {
+            cursor: pointer;
+            float: right;
+            font-size: 20px;
+        }
+    }
+}
+
+.server-main-information, .server-crawled-information {
+    margin-bottom: 60px;
+    display: inline-block;
+
+    .panel-body {
+
+        .panel-section {
+            float: left;
+
+            &:not(:last-child) {
+                margin-right: 40px;
+            }
+
+            div {
+                margin-top: 5px;
+                margin-bottom: 5px;
+            }
+        }
+
+        label {
+            margin-left: 5px;
+        }
+    }
 }

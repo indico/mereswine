@@ -1,0 +1,173 @@
+{% extends '_layout.html' %}
+
+{% block title %}Server management{% endblock %}
+
+{% block content -%}
+
+    <h1>{{ self.title() }}</h1>
+
+    <div class="server-main-information panel panel-primary">
+        <div class="panel-heading">
+            <h3>Main information</h3>
+            <span id="edit-main-info" class="glyphicon glyphicon-edit" title="Edit"></span>
+        </div>
+        <div class="panel-body">
+            <div class="panel-section">
+                <div>
+                    <span class="glyphicon glyphicon-briefcase"></span>
+                    <label>Organisation:</label>
+                    <span id="organisation" class="field-value">{{ server.organisation }}</span>
+                </div>
+                <div>
+                    <span class="glyphicon glyphicon-user"></span>
+                    <label>Contact name:</label>
+                    <span id="contact" class="field-value">{{ server.contact }}</span>
+                </div>
+                <div>
+                    <span class="glyphicon glyphicon-ok"></span>
+                    <label>Enabled:</label>
+                    <span id="enabled" class="field-value">{{ server.enabled }}</span>
+                </div>
+            </div>
+            <div class="panel-section">
+                <div>
+                    <span class="glyphicon glyphicon-link"></span>
+                    <label>URL:</label>
+                    <a id="url" class="field-value" href="{{ server.url }}">{{ server.url }}</a>
+                </div>
+                <div>
+                    <span class="glyphicon glyphicon-envelope"></span>
+                    <label>Email:</label>
+                    <a id="email" class="field-value" href="mailto:{{ server.email }}">{{ server.email }}</a>
+                </div>
+                <div>
+                    <span class="glyphicon glyphicon-folder-open"></span>
+                    <label>UUID:</label>
+                    <span id="uuid" class="field-value">{{ server.uuid }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <br>
+
+    <div class="server-crawled-information panel panel-primary">
+        <div class="panel-heading">
+            <h3>Crawled information</h3>
+        </div>
+        <div class="panel-body">
+            <div class="panel-section"></div>
+            <div class="panel-section"></div>
+            <div class="panel-section"></div>
+        </div>
+    </div>
+
+    <div>
+        <h3>Actions</h3>
+        <ul>
+            <li>
+                <label>Delete server:</label>
+                <button id="js-server-delete" type="button" class="btn btn-danger btn-xs" title="Delete server">
+                    <span class="glyphicon glyphicon-remove"></span>
+                </button>
+            </li>
+        </ul>
+    </div>
+
+
+{%- endblock %}
+
+{% block body_end %}
+    <script>
+
+        $('#edit-main-info').on('click', function(e){
+            var $this = $(this);
+            if ($this.hasClass('glyphicon-edit')) {
+                $this.removeClass('glyphicon-edit').addClass('glyphicon-floppy-disk');
+                $this.prop('title', 'Save');
+                $('.server-main-information .field-value').each(function(){
+                    var fieldValue = $(this);
+                    var div = fieldValue.parent();
+                    $('<input>', {type: 'text', value: fieldValue.text(), id: fieldValue.prop('id'), class: "field-input"}).appendTo(div);
+                    fieldValue.remove();
+                });
+            } else {
+                $.ajax({
+                    type: 'POST',
+                    url: "{{ url_for('.remove_server', uuid=server.uuid) }}",
+                    data: {
+                        organisation: $('#organisation').val(),
+                        url: $('#url').val(),
+                        contact: $('#contact').val(),
+                        email: $('#email').val(),
+                        enabled: $('#enabled').val(),
+                        uuid: $('#uuid').val()
+                    },
+                    success: function() {
+                        $this.removeClass('glyphicon-floppy-disk').addClass('glyphicon-edit');
+                        $this.prop('title', 'Edit');
+                        $('.server-main-information .field-input').each(function(){
+                            var fieldInput = $(this);
+                            var div = fieldInput.parent();
+                            var fieldValue;
+                            if (fieldInput.prop('id') == 'url') {
+                                fieldValue = $('<a>', {id: fieldInput.prop('id'), href: fieldInput.val(), text: fieldInput.val(), class: "field-value"});
+                            } else if (fieldInput.prop('id') == 'email') {
+                                fieldValue = $('<a>', {id: fieldInput.prop('id'), href: 'mailto:' + fieldInput.val(), text: fieldInput.val(), class: "field-value"});
+                            } else {
+                                fieldValue = $('<span>', {id: fieldInput.prop('id'), text: fieldInput.val(), class: "field-value"});
+                            }
+                            fieldValue.appendTo(div);
+                            fieldInput.remove();
+                        });
+                    },
+                    error: function (xhr, textStatus, errorThrown) {
+                        alert('AJAX request failed: ' + errorThrown);
+                        location.reload();
+                    }
+                });
+            }
+        });
+
+        var crawledData = {{ server.crawled_data|tojson }};
+        if (crawledData != null) {
+            var section = 0;
+            var sections = $('.server-crawled-information .panel-body').children();
+            for (var key in crawledData) {
+                var label = (key.charAt(0).toUpperCase() + key.slice(1)).replace('_', ' ');
+                var row = $('<div>');
+                $('<span>', {'class': 'glyphicon glyphicon-file'}).appendTo(row);
+                $('<label>', {text: label}).appendTo(row);
+                row.append(': ');
+                var value = '-';
+                if (crawledData[key] != null) {
+                    value = crawledData[key];
+                }
+                $('<span>', {text: value}).appendTo(row);
+                $(sections[section % 3]).append(row);
+
+                section++;
+            }
+        } else {
+            $('<span>', {text: 'No crawled data available for this server.'}).appendTo($('.server-crawled-information .panel-body'));
+        }
+
+        $('#js-server-delete').on('click', function(){
+            if (!confirm('Do you really want to delete this item?')) {
+                return;
+            }
+ 
+            $.ajax({
+                type: 'DELETE',
+                url: "{{ url_for('.remove_server', uuid=server.uuid) }}",
+                success: function() {
+                    location.href = "{{ url_for('.server_list') }}";
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                    alert('AJAX request failed: ' + errorThrown);
+                }
+            });
+        });
+
+    </script>
+{%- endblock %}

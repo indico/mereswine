@@ -28,8 +28,8 @@ def crawl_instance(instance):
         instance.crawled_data = inferred_data
         instance.crawl_date = datetime.utcnow()
         db.session.commit()
-    except ValueError:
-        logging.warning("cannot crawl instance {0}".format(instance.uuid))
+    except Exception:
+        logging.exception("cannot crawl instance {0}".format(instance.uuid))
     else:
         logging.info("successfully crawled instance {0}".format(instance.uuid))
 
