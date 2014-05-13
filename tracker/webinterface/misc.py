@@ -47,7 +47,7 @@ def update_server(uuid):
         instance.contact = request.form['contact']
         instance.email = request.form['email']
         instance.organisation = request.form['organisation']
-        instance.enabled = bool(request.form['enabled'])
+        instance.enabled = True if request.form['enabled'] == 'true' else False
         db.session.commit()
     return jsonify()
 

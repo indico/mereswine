@@ -1,4 +1,5 @@
 @import 'bootstrap/variables.less';
+@import 'bootstrap/mixins.less';
 
 html {
     overflow-y: scroll;
@@ -71,11 +72,63 @@ body {
         .panel-section {
             float: left;
 
+            .hidden-input {
+                display: none;
+            }
+
+            .toggle-button {
+                .box-sizing(border-box);
+                border: 1px solid #999;
+                box-shadow: 0 0 5px rgba(100,100,100,0.3) inset;
+                width: 3em;
+                display: inline-block;
+                background: #ddd;
+                height: 1.5em;
+                position: relative;
+                vertical-align: middle;
+
+                .toggle {
+                    .box-sizing(border-box);
+                    .transition-property(left);
+                    .transition-duration(.25s);
+                    position: absolute;
+                    left: 0px;
+                    width: 50%;
+                    height: 100%;
+                    background: #aaa;
+                    text-align: center;
+                    border: 1px solid #888
+                }
+
+                .toggle::before {
+                    color: #666;
+                    display: inline-block;
+                    font-size: 1em;
+                    content: "N";
+                    line-height: 0em;
+                }
+
+                &.toggled {
+
+                    .toggle {
+                        box-shadow: 0 0 1px rgba(255,255,255,0.8) inset;
+                        background-color: @brand-info;
+                        border-color: @brand-primary;
+                        left: 1.5em;
+                    }
+
+                    .toggle::before {
+                        content: "Y";
+                        color: #eee !important;
+                    }
+                }
+            }
+
             &:not(:last-child) {
                 margin-right: 40px;
             }
 
-            div {
+            div:not(.toggle-button):not(.toggle) {
                 margin-top: 5px;
                 margin-bottom: 5px;
             }

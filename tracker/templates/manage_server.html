@@ -28,7 +28,14 @@
                 <div>
                     <span class="glyphicon glyphicon-ok"></span>
                     <label>Enabled:</label>
-                    <span id="enabled" class="field-value">{{ server.enabled }}</span>
+                    {% if server.enabled %}
+                        <input id="enable" class="hidden-input" type="checkbox" value="1" checked>
+                    {% else %}
+                        <input id="enable" class="hidden-input" type="checkbox" value="1">
+                    {% endif %}
+                    <div class="toggle-button">
+                        <div class="toggle"></div>
+                    </div>
                 </div>
             </div>
             <div class="panel-section">
@@ -68,13 +75,13 @@
         <h3>Actions</h3>
         <ul>
             <li>
-                <button id="js-server-delete" type="button" class="btn btn-danger btn-xs" title="Delete server">
+                <button id="js-server-delete" type="button" class="btn btn-danger btn-xs">
                     <span class="glyphicon glyphicon-remove"></span>
                 </button>
                 <label>Delete server</label>
             </li>
             <li>
-                <button id="crawl-now" type="button" class="btn btn-primary btn-xs" title="Crawl now">
+                <button id="crawl-now" type="button" class="btn btn-primary btn-xs">
                     <span class="glyphicon glyphicon-import"></span>
                 </button>
                 <label>Crawl now</label>
@@ -88,11 +95,25 @@
 {% block body_end %}
     <script>
 
+        $('.toggle-button').on('click', function() {
+            if ($('#edit-main-info').hasClass('glyphicon-floppy-disk')) {
+                var $this = $(this);
+                $this.toggleClass('toggled');
+                var toggled = $this.hasClass('toggled');
+                var checkbox = $('#enable');
+                checkbox.prop('checked', toggled);
+            }
+        });
+        if ($('#enable').prop('checked')) {
+            $('.toggle-button').toggleClass('toggled');
+        }
+
         var uuidOld = $('#uuid').text();
 
         $('#edit-main-info').on('click', function(e){
             var $this = $(this);
             if ($this.hasClass('glyphicon-edit')) {
+                $('.toggle-button').css('cursor', 'pointer');
                 $this.removeClass('glyphicon-edit').addClass('glyphicon-floppy-disk');
                 $this.prop('title', 'Save');
                 $('.server-main-information .field-value').each(function(){
@@ -110,11 +131,12 @@
                         url: $('#url').val(),
                         contact: $('#contact').val(),
                         email: $('#email').val(),
-                        enabled: $('#enabled').val(),
+                        enabled: $('#enable').prop('checked'),
                         uuid: $('#uuid').val()
                     },
                     success: function() {
                         var uuidNew = $('#uuid').val();
+                        $('.toggle-button').css('cursor', 'default');
                         $this.removeClass('glyphicon-floppy-disk').addClass('glyphicon-edit');
                         $this.prop('title', 'Edit');
                         $('.server-main-information .field-input').each(function(){
