@@ -9,7 +9,9 @@
     <div class="server-main-information panel panel-primary">
         <div class="panel-heading">
             <h3>Main information</h3>
-            <span id="edit-main-info" class="glyphicon glyphicon-edit" title="Edit"></span>
+            <div>
+                <span id="edit-main-info" class="glyphicon glyphicon-edit" title="Edit"></span>
+            </div>
         </div>
         <div class="panel-body">
             <div class="panel-section">
@@ -71,6 +73,12 @@
                     <span class="glyphicon glyphicon-remove"></span>
                 </button>
             </li>
+            <li>
+                <label>Crawl now:</label>
+                <button id="crawl-now" type="button" class="btn btn-primary btn-xs" title="Crawl now">
+                    <span class="glyphicon glyphicon-import"></span>
+                </button>
+            </li>
         </ul>
     </div>
 
@@ -79,6 +87,8 @@
 
 {% block body_end %}
     <script>
+
+        var uuidOld = $('#uuid').text();
 
         $('#edit-main-info').on('click', function(e){
             var $this = $(this);
@@ -94,7 +104,7 @@
             } else {
                 $.ajax({
                     type: 'POST',
-                    url: "{{ url_for('.remove_server', uuid=server.uuid) }}",
+                    url: "{{ url_for('.update_server', uuid=server.uuid) }}",
                     data: {
                         organisation: $('#organisation').val(),
                         url: $('#url').val(),
@@ -104,6 +114,7 @@
                         uuid: $('#uuid').val()
                     },
                     success: function() {
+                        var uuidNew = $('#uuid').val();
                         $this.removeClass('glyphicon-floppy-disk').addClass('glyphicon-edit');
                         $this.prop('title', 'Edit');
                         $('.server-main-information .field-input').each(function(){
@@ -120,6 +131,9 @@
                             fieldValue.appendTo(div);
                             fieldInput.remove();
                         });
+                        if (uuidOld != uuidNew) {
+                            location.href = "/servers/" + uuidNew;
+                        }
                     },
                     error: function (xhr, textStatus, errorThrown) {
                         alert('AJAX request failed: ' + errorThrown);
@@ -133,20 +147,27 @@
         if (crawledData != null) {
             var section = 0;
             var sections = $('.server-crawled-information .panel-body').children();
+            var div = $('<div>');
+            $('<label>', {text: 'Last crawled'}).appendTo(div);
+            div.append(': ');
+            $('<span>', {text: "{{ server.crawl_date|datetimeformat('medium') }}"}).appendTo(div);
+            div.appendTo($('.server-crawled-information .panel-heading'));
             for (var key in crawledData) {
-                var label = (key.charAt(0).toUpperCase() + key.slice(1)).replace('_', ' ');
-                var row = $('<div>');
-                $('<span>', {'class': 'glyphicon glyphicon-file'}).appendTo(row);
-                $('<label>', {text: label}).appendTo(row);
-                row.append(': ');
-                var value = '-';
                 if (crawledData[key] != null) {
-                    value = crawledData[key];
-                }
-                $('<span>', {text: value}).appendTo(row);
-                $(sections[section % 3]).append(row);
+                    var label = (key.charAt(0).toUpperCase() + key.slice(1)).replace('_', ' ');
+                    var row = $('<div>');
+                    $('<span>', {'class': 'glyphicon glyphicon-file'}).appendTo(row);
+                    $('<label>', {text: label}).appendTo(row);
+                    row.append(': ');
+                    var value = crawledData[key];
+                    if (crawledData[key] instanceof Object) {
+                        value = '[Data not displayable]';
+                    }
+                    $('<span>', {text: value}).appendTo(row);
+                    $(sections[section % 3]).append(row);
 
-                section++;
+                    section++;
+                }
             }
         } else {
             $('<span>', {text: 'No crawled data available for this server.'}).appendTo($('.server-crawled-information .panel-body'));
@@ -165,6 +186,23 @@
                 },
                 error: function (xhr, textStatus, errorThrown) {
                     alert('AJAX request failed: ' + errorThrown);
+                }
+            });
+        });
+
+        $('#crawl-now').on('click', function(){
+            $.ajax({
+                type: 'POST',
+                url: "{{ url_for('.update_server', uuid=server.uuid) }}",
+                data: {
+                    crawl: true
+                },
+                success: function() {
+                    location.reload();
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                    alert('AJAX request failed: ' + errorThrown);
+                    location.reload();
                 }
             });
         });

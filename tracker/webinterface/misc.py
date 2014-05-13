@@ -3,6 +3,7 @@ from flask import render_template, jsonify, g, request
 from ..core import db
 from ..menu import menu, breadcrumb, make_breadcrumb
 from ..models import Instance
+from .. import crawler
 from . import bp
 
 
@@ -37,13 +38,17 @@ def remove_server(uuid):
 @bp.route('/servers/<uuid>', methods=('POST', ))
 def update_server(uuid):
     instance = Instance.query.filter_by(uuid=uuid).first()
-    instance.uuid = request.form['uuid']
-    instance.url = request.form['url'].rstrip('/')
-    instance.contact = request.form['contact']
-    instance.email = request.form['email']
-    instance.organisation = request.form['organisation']
-    instance.enabled = bool(request.form['enabled'])
-    db.session.commit()
+    crawl = request.form.get('crawl', False)
+    if crawl:
+        crawler.crawl_instance(uuid)
+    else:
+        instance.uuid = request.form['uuid']
+        instance.url = request.form['url'].rstrip('/')
+        instance.contact = request.form['contact']
+        instance.email = request.form['email']
+        instance.organisation = request.form['organisation']
+        instance.enabled = bool(request.form['enabled'])
+        db.session.commit()
     return jsonify()
 
 

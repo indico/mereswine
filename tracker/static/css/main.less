@@ -39,22 +39,32 @@ body {
 .server-main-information {
     margin-top: 60px;
 
-    .panel-heading {
-        h3 {
-            display: inline-block;
-        }
+    .panel-heading div {
+        cursor: pointer;
+        font-size: 20px;
+    }
+}
 
-        span {
-            cursor: pointer;
-            float: right;
-            font-size: 20px;
-        }
+.server-crawled-information {
+
+    .panel-heading div {
+        margin-top: 40px;
     }
 }
 
 .server-main-information, .server-crawled-information {
     margin-bottom: 60px;
     display: inline-block;
+
+    .panel-heading {
+        h3 {
+            display: inline-block;
+        }
+
+        div {
+            float: right;
+        }
+    }
 
     .panel-body {
 
