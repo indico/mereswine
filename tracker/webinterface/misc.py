@@ -18,7 +18,7 @@ def index():
 @menu('server_list')
 @breadcrumb('List of servers', '.server_list')
 def server_list():
-    server_list = Instance.query.filter_by(enabled=True).all()
+    server_list = Instance.query.all()
     extra_fields = set()
     for server in server_list:
         extra_fields.update(server.crawled_data or {})

@@ -9,19 +9,43 @@
             Crawl all
             <span class="glyphicon glyphicon-refresh"></span>
         </button>
-        {% if extra_fields|length != 0 %}
+        <div class="btn-group">
             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                Additional data
+                Show
                 <b class="caret"></b>
             </button>
-            <ul id="additional-data-dropdown" class="dropdown-menu dropdown-menu-form dropdown-menu-right" role="menu">
-                {% for field in extra_fields %}
+            <ul id="show-dropdown" class="dropdown-menu dropdown-menu-form dropdown-menu-right" role="menu">
+                <li>
                     <label class="checkbox">
-                        <input id="{{ field }}"  type="checkbox">
-                        {{ (field[0].upper() + field[1:]).replace('_', ' ') }}
+                        <input id="show-enabled"  type="checkbox">
+                        Enabled instances
                     </label>
-                {% endfor %}
+                </li>
+                <li>
+                    <label class="checkbox">
+                        <input id="show-disabled"  type="checkbox">
+                        Disabled instances
+                    </label>
+                </li>
             </ul>
+        </div>
+        {% if extra_fields|length != 0 %}
+            <div class="btn-group">
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                    Additional data
+                    <b class="caret"></b>
+                </button>
+                <ul id="additional-data-dropdown" class="dropdown-menu dropdown-menu-form dropdown-menu-right" role="menu">
+                    {% for field in extra_fields %}
+                        <li>
+                            <label class="checkbox">
+                                <input id="{{ field }}"  type="checkbox">
+                                {{ (field[0].upper() + field[1:]).replace('_', ' ') }}
+                            </label>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
         {% endif %}
     </div>
     <table class="table">
@@ -39,7 +63,11 @@
         <tbody id="server-list">
             {% if server_list|length != 0 %}
                 {% for server in server_list %}
-                    <tr class="server-row">
+                    {% if server.enabled %}
+                        <tr class="server-row">
+                    {% else %}
+                        <tr class="server-row danger">
+                    {% endif %}
                         <td>
                             <span class="glyphicon glyphicon-chevron-right toggle-expand"></span>
                             {{ server.organisation }}
@@ -118,9 +146,12 @@
                         </td>
                     </tr>
                 {% endfor %}
+                <tr id="no-matching-instances">
+                    <td colspan="{{ extra_fields|length + 4 }}">No instance matches the criteria selected.</td>
+                </tr>
             {% else %}
                 <tr>
-                    <td colspan="4">No server available in our database at the moment.</td>
+                    <td colspan="4">No server available in the database at the moment.</td>
                 </tr>
             {% endif %}
         </tbody>
@@ -190,6 +221,53 @@
                 }
             });
         });
+
+
+        var noMatch = $('#no-matching-instances');
+        $('#show-enabled').on('change', function(){
+            var toggled = this.checked;
+            var allHidden = true;
+            $('.server-row').each(function(){
+                var $this = $(this);
+                if (!$this.hasClass('danger')) {
+                    if (toggled) {
+                        $this.show();
+                    } else {
+                        $this.hide();
+                    }
+                }
+                if ($this.css('display') != 'none') {
+                    allHidden = false;
+                }
+            });
+            if (allHidden) {
+                noMatch.show();
+            } else {
+                noMatch.hide();
+            }
+        }).prop('checked', true).trigger('change');
+        $('#show-disabled').on('change', function(){
+            var toggled = this.checked;
+            var allHidden = true;
+            $('.server-row').each(function(){
+                var $this = $(this);
+                if ($this.hasClass('danger')) {
+                    if (toggled) {
+                        $this.show();
+                    } else {
+                        $this.hide();
+                    }
+                }
+                if ($this.css('display') != 'none') {
+                    allHidden = false;
+                }
+            });
+            if (allHidden) {
+                noMatch.show();
+            } else {
+                noMatch.hide();
+            }
+        }).prop('checked', false).trigger('change');
 
     </script>
 {%- endblock %}

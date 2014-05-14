@@ -20,7 +20,11 @@
         </div>
     </div>
 
-    <div class="server-main-information panel panel-primary">
+    {% if server.enabled %}
+        <div class="server-main-information panel panel-primary">
+    {% else %}
+        <div class="server-main-information panel panel-default">
+    {% endif %}
         <div class="panel-heading">
             <h3>Main information</h3>
             <div>
@@ -75,7 +79,11 @@
 
     <br>
 
-    <div class="server-crawled-information panel panel-primary">
+    {% if server.enabled %}
+        <div class="server-crawled-information panel panel-primary">
+    {% else %}
+        <div class="server-crawled-information panel panel-default">
+    {% endif %}
         <div class="panel-heading">
             <h3>Crawled information</h3>
         </div>
@@ -125,7 +133,8 @@
                     uuid: $('#uuid').text()
                 }
                 $('.toggle-button').css('cursor', 'pointer');
-                $('.server-main-information').removeClass('panel-primary').addClass('panel-success');
+                $('.server-main-information').removeClass('panel-primary').removeClass('panel-default').addClass('panel-info');
+                $('.server-main-information .panel-heading h3').text('Main information (editing)');
                 $('#cancel-main-info').show();
                 $this.removeClass('glyphicon-edit').addClass('glyphicon-floppy-disk');
                 $this.prop('title', 'Save');
@@ -149,7 +158,13 @@
                     },
                     success: function() {
                         $('.toggle-button').css('cursor', 'default');
-                        $('.server-main-information').removeClass('panel-success').addClass('panel-primary');
+                        var panelClass = 'panel-default';
+                        if ($('#enable').prop('checked')) {
+                            panelClass = 'panel-primary';
+                        }
+                        $('.server-main-information').removeClass('panel-info').addClass(panelClass);
+                        $('.server-crawled-information').removeClass('panel-primary').removeClass('panel-default').addClass(panelClass);
+                        $('.server-main-information .panel-heading h3').text('Main information');
                         $('#cancel-main-info').hide();
                         $this.removeClass('glyphicon-floppy-disk').addClass('glyphicon-edit');
                         $this.prop('title', 'Edit');
@@ -179,7 +194,12 @@
         $('#cancel-main-info').on('click', function(){
             var edit = $('#edit-main-info');
             $('.toggle-button').css('cursor', 'default');
-            $('.server-main-information').removeClass('panel-success').addClass('panel-primary');
+            var panelClass = 'panel-default';
+            if (oldFields['enabled']) {
+                panelClass = 'panel-primary';
+            }
+            $('.server-main-information').removeClass('panel-info').addClass(panelClass);
+            $('.server-main-information .panel-heading h3').text('Main information');
             $('#cancel-main-info').hide();
             edit.removeClass('glyphicon-floppy-disk').addClass('glyphicon-edit');
             edit.prop('title', 'Edit');
