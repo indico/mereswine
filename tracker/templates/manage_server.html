@@ -4,12 +4,27 @@
 
 {% block content -%}
 
-    <h1>{{ self.title() }}</h1>
+    <h1>{{ title }}</h1>
+
+    <div class="server-actions">
+        <h3>Actions</h3>
+        <div class="btn-group">
+            <button id="crawl-now" type="button" class="btn btn-default">
+                Crawl now
+                <span class="glyphicon glyphicon-refresh"></span>
+            </button>
+            <button id="js-server-delete" type="button" class="btn btn-danger">
+                Delete server
+                <span class="glyphicon glyphicon-remove"></span>
+            </button>
+        </div>
+    </div>
 
     <div class="server-main-information panel panel-primary">
         <div class="panel-heading">
             <h3>Main information</h3>
             <div>
+                <span id="cancel-main-info" class="glyphicon glyphicon-remove" title="Cancel"></span>
                 <span id="edit-main-info" class="glyphicon glyphicon-edit" title="Edit"></span>
             </div>
         </div>
@@ -71,25 +86,6 @@
         </div>
     </div>
 
-    <div>
-        <h3>Actions</h3>
-        <ul>
-            <li>
-                <button id="js-server-delete" type="button" class="btn btn-danger btn-xs">
-                    <span class="glyphicon glyphicon-remove"></span>
-                </button>
-                <label>Delete server</label>
-            </li>
-            <li>
-                <button id="crawl-now" type="button" class="btn btn-primary btn-xs">
-                    <span class="glyphicon glyphicon-import"></span>
-                </button>
-                <label>Crawl now</label>
-            </li>
-        </ul>
-    </div>
-
-
 {%- endblock %}
 
 {% block body_end %}
@@ -108,12 +104,29 @@
             $('.toggle-button').toggleClass('toggled');
         }
 
-        var uuidOld = $('#uuid').text();
+        var oldFields = {
+            organisation: $('#organisation').text(),
+            url: $('#url').text(),
+            contact: $('#contact').text(),
+            email: $('#email').text(),
+            enabled: $('#enable').prop('checked'),
+            uuid: $('#uuid').text()
+        }
 
         $('#edit-main-info').on('click', function(e){
             var $this = $(this);
             if ($this.hasClass('glyphicon-edit')) {
+                oldFields = {
+                    organisation: $('#organisation').text(),
+                    url: $('#url').text(),
+                    contact: $('#contact').text(),
+                    email: $('#email').text(),
+                    enabled: $('#enable').prop('checked'),
+                    uuid: $('#uuid').text()
+                }
                 $('.toggle-button').css('cursor', 'pointer');
+                $('.server-main-information').removeClass('panel-primary').addClass('panel-success');
+                $('#cancel-main-info').show();
                 $this.removeClass('glyphicon-edit').addClass('glyphicon-floppy-disk');
                 $this.prop('title', 'Save');
                 $('.server-main-information .field-value').each(function(){
@@ -125,7 +138,7 @@
             } else {
                 $.ajax({
                     type: 'POST',
-                    url: "{{ url_for('.update_server', uuid=server.uuid) }}",
+                    url: "{{ url_for('.update_server', id=server.id) }}",
                     data: {
                         organisation: $('#organisation').val(),
                         url: $('#url').val(),
@@ -135,8 +148,9 @@
                         uuid: $('#uuid').val()
                     },
                     success: function() {
-                        var uuidNew = $('#uuid').val();
                         $('.toggle-button').css('cursor', 'default');
+                        $('.server-main-information').removeClass('panel-success').addClass('panel-primary');
+                        $('#cancel-main-info').hide();
                         $this.removeClass('glyphicon-floppy-disk').addClass('glyphicon-edit');
                         $this.prop('title', 'Edit');
                         $('.server-main-information .field-input').each(function(){
@@ -153,9 +167,6 @@
                             fieldValue.appendTo(div);
                             fieldInput.remove();
                         });
-                        if (uuidOld != uuidNew) {
-                            location.href = "/servers/" + uuidNew;
-                        }
                     },
                     error: function (xhr, textStatus, errorThrown) {
                         alert('AJAX request failed: ' + errorThrown);
@@ -165,15 +176,40 @@
             }
         });
 
+        $('#cancel-main-info').on('click', function(){
+            var edit = $('#edit-main-info');
+            $('.toggle-button').css('cursor', 'default');
+            $('.server-main-information').removeClass('panel-success').addClass('panel-primary');
+            $('#cancel-main-info').hide();
+            edit.removeClass('glyphicon-floppy-disk').addClass('glyphicon-edit');
+            edit.prop('title', 'Edit');
+            $('.server-main-information .field-input').each(function(){
+                var fieldInput = $(this);
+                var div = fieldInput.parent();
+                var fieldValue;
+                if (fieldInput.prop('id') == 'url') {
+                    fieldValue = $('<a>', {id: fieldInput.prop('id'), href: oldFields[fieldInput.prop('id')], text: oldFields[fieldInput.prop('id')], class: "field-value"});
+                } else if (fieldInput.prop('id') == 'email') {
+                    fieldValue = $('<a>', {id: fieldInput.prop('id'), href: 'mailto:' + oldFields[fieldInput.prop('id')], text: oldFields[fieldInput.prop('id')], class: "field-value"});
+                } else {
+                    fieldValue = $('<span>', {id: fieldInput.prop('id'), text: oldFields[fieldInput.prop('id')], class: "field-value"});
+                }
+                fieldValue.appendTo(div);
+                fieldInput.remove();
+            });
+            if (oldFields['enabled'] != $('#enable').prop('checked')) {
+                $('#enable').prop('checked', oldFields['enabled']);
+                $('.toggle-button').toggleClass('toggled');
+            }
+        });
+
         var crawledData = {{ server.crawled_data|tojson }};
         if (crawledData != null) {
             var section = 0;
             var sections = $('.server-crawled-information .panel-body').children();
-            var div = $('<div>');
-            $('<label>', {text: 'Last crawled'}).appendTo(div);
-            div.append(': ');
-            $('<span>', {text: "{{ server.crawl_date|datetimeformat('medium') }}"}).appendTo(div);
-            div.appendTo($('.server-crawled-information .panel-heading'));
+            var div = $('<div>', {class: 'panel-footer'});
+            $('<span>', {html: "<strong>Last crawled:</strong> {{ server.crawl_date|datetimeformat('medium') }}"}).appendTo(div);
+            div.appendTo($('.server-crawled-information'));
             for (var key in crawledData) {
                 if (crawledData[key] != null) {
                     var label = (key.charAt(0).toUpperCase() + key.slice(1)).replace('_', ' ');
@@ -196,13 +232,13 @@
         }
 
         $('#js-server-delete').on('click', function(){
-            if (!confirm('Do you really want to delete this item?')) {
+            if (!confirm('Do you really want to delete this instance?')) {
                 return;
             }
  
             $.ajax({
                 type: 'DELETE',
-                url: "{{ url_for('.remove_server', uuid=server.uuid) }}",
+                url: "{{ url_for('.remove_server', id=server.id) }}",
                 success: function() {
                     location.href = "{{ url_for('.server_list') }}";
                 },
@@ -215,7 +251,7 @@
         $('#crawl-now').on('click', function(){
             $.ajax({
                 type: 'POST',
-                url: "{{ url_for('.update_server', uuid=server.uuid) }}",
+                url: "{{ url_for('.update_server', id=server.id) }}",
                 data: {
                     crawl: true
                 },

@@ -4,20 +4,25 @@
 
 {% block content -%}
     <h1>{{ self.title() }}</h1>
-    <div class="additional-data-container">
-        <div id="additional-data-header">
-            <span class="toggle-additional-data">Additional data</span><span class="glyphicon glyphicon-chevron-right toggle-additional-data"></span>
-        </div>
-        <div id="additional-data-body">
-            {% for field in extra_fields %}
-                <div class="additional-fields">
-                    <input id="{{ field }}" type="checkbox"></input>
-                    <label for="{{ field }}">{{ (field[0].upper() + field[1:]).replace('_', ' ') }}</label>
-                </div>
-            {% else %}
-                <span>No additional data available.</span>
-            {% endfor %}
-        </div>
+    <div class="server-list-actions btn-group">
+        <button id="crawl-all" type="button" class="btn btn-default">
+            Crawl all
+            <span class="glyphicon glyphicon-refresh"></span>
+        </button>
+        {% if extra_fields|length != 0 %}
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                Additional data
+                <b class="caret"></b>
+            </button>
+            <ul id="additional-data-dropdown" class="dropdown-menu dropdown-menu-form dropdown-menu-right" role="menu">
+                {% for field in extra_fields %}
+                    <label class="checkbox">
+                        <input id="{{ field }}"  type="checkbox">
+                        {{ (field[0].upper() + field[1:]).replace('_', ' ') }}
+                    </label>
+                {% endfor %}
+            </ul>
+        {% endif %}
     </div>
     <table class="table">
         <thead>
@@ -59,12 +64,17 @@
                             </td>
                         {% endfor %}
                         <td>
-                            <button type="button" class="btn btn-danger btn-xs js-server-delete" data-url="{{ url_for('.remove_server', uuid=server.uuid) }}" title="Delete server">
-                                <span class="glyphicon glyphicon-remove"></span>
-                            </button>
-                            <button type="button" class="btn btn-primary btn-xs crawl-now" data-url="{{ url_for('.update_server', uuid=server.uuid) }}" title="Crawl now">
-                                <span class="glyphicon glyphicon-import"></span>
-                            </button>
+                            <div class="btn-group btn-group-xs">
+                                <button type="button" class="btn btn-default manage-server" data-url="{{ url_for('.get_server', id=server.id) }}" title="Server details">
+                                    <span class="glyphicon glyphicon-search"></span>
+                                </button>
+                                <button type="button" class="btn btn-default crawl-now" data-url="{{ url_for('.update_server', id=server.id) }}" title="Crawl now">
+                                    <span class="glyphicon glyphicon-refresh"></span>
+                                </button>
+                                <button type="button" class="btn btn-danger js-server-delete" data-url="{{ url_for('.remove_server', id=server.id) }}" title="Delete server">
+                                    <span class="glyphicon glyphicon-remove"></span>
+                                </button>
+                            </div>
                         </td>
                     </tr>
                     <tr class="active">
@@ -105,9 +115,6 @@
                                     {% endfor %}
                                 {% endif %}
                             </div>
-                            <div class="clearfix manage-server">
-                                <a href="{{ url_for('.get_server', uuid=server.uuid) }}">Manage server</a>
-                            </div>
                         </td>
                     </tr>
                 {% endfor %}
@@ -125,13 +132,7 @@
 
         addAjaxDeleter($('#server-list'), '.js-server-delete');
 
-        $('.toggle-additional-data').on('click', function(){
-            $('#additional-data-header').nextUntil('.table').toggle(400);
-            $('.toggle-additional-data.glyphicon').toggleClass('glyphicon-chevron-down').toggleClass('glyphicon-chevron-right');
-        });
-        $('#additional-data-header').nextUntil('.table').toggle(0);
-
-        $('.additional-fields input').on('change', function(){
+        $('#additional-data-dropdown input').on('change', function(){
             if (this.checked) {
                 $('.field-'+this.id).css('display', 'table-cell');
             } else {
@@ -152,6 +153,34 @@
                 data: {
                     crawl: true
                 },
+                success: function() {
+                    location.reload();
+                },
+                error: function (xhr, textStatus, errorThrown) {
+                    alert('AJAX request failed: ' + errorThrown);
+                    location.reload();
+                }
+            });
+        });
+
+        $('.manage-server').on('click', function(){
+            location.href = $(this).data('url');
+        });
+
+        $('.dropdown-menu').on('click', function(e) {
+            if($(this).hasClass('dropdown-menu-form')) {
+                e.stopPropagation();
+            }
+        });
+
+        $('#crawl-all').on('click', function(){
+            if (!confirm('Do you really want to crawl all the servers now?')) {
+                return;
+            }
+
+            $.ajax({
+                type: 'POST',
+                url: "{{ url_for('.crawl_all') }}",
                 success: function() {
                     location.reload();
                 },

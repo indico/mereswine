@@ -7,7 +7,7 @@
                 row = $this.closest('tr');
  
             e.preventDefault();
-            if (!confirm('Do you really want to delete this item?')) {
+            if (!confirm('Do you really want to delete this instance?')) {
                 return;
             }
  

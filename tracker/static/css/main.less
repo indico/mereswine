@@ -14,27 +14,19 @@ body {
     margin-right: 3em;
 }
 
-.additional-data-container {
-    margin-top: 20px;
-}
-
-.table {
-    margin-top: 40px;
-}
-
-.toggle-additional-data {
-    cursor: pointer;
-    margin-left: 5px;
-}
-
 .toggle-expand {
     cursor: pointer;
     margin-left: -26px;
     margin-right: 5px;
 }
 
-.manage-server {
-    float: right;
+.server-list-actions {
+    margin-top: 40px;
+    margin-bottom: 60px;
+
+    ul.dropdown-menu-form {
+        padding: 5px 10px 0;
+    }
 }
 
 .server-main-information {
@@ -46,16 +38,20 @@ body {
     }
 }
 
-.server-crawled-information {
+.server-main-information {
 
-    .panel-heading div {
-        margin-top: 40px;
+    .panel-heading .glyphicon-remove {
+        display: none;
     }
 }
 
+.server-main-information, .server-crawled-information, .server-actions {
+    margin-top: 60px;
+}
+
 .server-main-information, .server-crawled-information {
-    margin-bottom: 60px;
     display: inline-block;
+    width: 700px;
 
     .panel-heading {
         h3 {
@@ -132,10 +128,22 @@ body {
                 margin-top: 5px;
                 margin-bottom: 5px;
             }
+
+            input {
+                width: 215px;
+            }
         }
 
         label {
             margin-left: 5px;
+        }
+    }
+
+    .panel-footer {
+        min-height: 40px;
+
+        span, label {
+            float: right;
         }
     }
 }

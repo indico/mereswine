@@ -27,20 +27,20 @@ def server_list():
     return render_template('server_list.html', **wvars)
 
 
-@bp.route('/servers/<uuid>', methods=('DELETE',))
-def remove_server(uuid):
-    instance = Instance.query.filter_by(uuid=uuid).first()
+@bp.route('/servers/<id>', methods=('DELETE',))
+def remove_server(id):
+    instance = Instance.query.filter_by(id=id).first()
     db.session.delete(instance)
     db.session.commit()
     return jsonify()
 
 
-@bp.route('/servers/<uuid>', methods=('POST', ))
-def update_server(uuid):
-    instance = Instance.query.filter_by(uuid=uuid).first()
+@bp.route('/servers/<id>', methods=('POST', ))
+def update_server(id):
+    instance = Instance.query.filter_by(id=id).first()
     crawl = request.form.get('crawl', False)
     if crawl:
-        crawler.crawl_instance(uuid)
+        crawler.crawl_instance(instance)
     else:
         instance.uuid = request.form['uuid']
         instance.url = request.form['url'].rstrip('/')
@@ -52,13 +52,29 @@ def update_server(uuid):
     return jsonify()
 
 
-@bp.route('/servers/<uuid>')
+@bp.route('/servers/<id>')
 @breadcrumb('List of servers', '.server_list')
-def get_server(uuid):
-    g.breadcrumbs.append(make_breadcrumb('Server management'))
-    instance = Instance.query.filter_by(uuid=uuid).first()
-    wvars = {'server': instance}
+def get_server(id):
+    instance = Instance.query.filter_by(id=id).first()
+    title = instance.url[instance.url.index('//')+2:]
+    try:
+        title = title[:title.index(':')]
+    except ValueError:
+        pass
+    try:
+        title = title[title.index('www.')+4:]
+    except ValueError:
+        pass
+    g.breadcrumbs.append(make_breadcrumb(title))
+    wvars = {'server': instance,
+             'title': title}
     return render_template('manage_server.html', **wvars)
+
+
+@bp.route('/servers', methods=('POST', ))
+def crawl_all():
+    crawler.crawl_all()
+    return jsonify()
 
 
 @bp.route('/statistics')
