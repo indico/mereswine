@@ -5,47 +5,49 @@
 {% block content -%}
     <h1>{{ self.title() }}</h1>
     <div class="server-list-actions btn-group">
-        <button id="crawl-all" type="button" class="btn btn-default">
-            Crawl all
-            <span class="glyphicon glyphicon-refresh"></span>
-        </button>
-        <div class="btn-group">
-            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                Show
-                <b class="caret"></b>
+        {% if server_list|length != 0 %}
+            <button id="crawl-all" type="button" class="btn btn-default">
+                Crawl all
+                <span class="glyphicon glyphicon-refresh"></span>
             </button>
-            <ul id="show-dropdown" class="dropdown-menu dropdown-menu-form dropdown-menu-right" role="menu">
-                <li>
-                    <label class="checkbox">
-                        <input id="show-enabled"  type="checkbox">
-                        Enabled instances
-                    </label>
-                </li>
-                <li>
-                    <label class="checkbox">
-                        <input id="show-disabled"  type="checkbox">
-                        Disabled instances
-                    </label>
-                </li>
-            </ul>
-        </div>
-        {% if extra_fields|length != 0 %}
             <div class="btn-group">
                 <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                    Additional data
+                    Show
                     <b class="caret"></b>
                 </button>
-                <ul id="additional-data-dropdown" class="dropdown-menu dropdown-menu-form dropdown-menu-right" role="menu">
-                    {% for field in extra_fields %}
-                        <li>
-                            <label class="checkbox">
-                                <input id="{{ field }}"  type="checkbox">
-                                {{ (field[0].upper() + field[1:]).replace('_', ' ') }}
-                            </label>
-                        </li>
-                    {% endfor %}
+                <ul id="show-dropdown" class="dropdown-menu dropdown-menu-form dropdown-menu-right" role="menu">
+                    <li>
+                        <label class="checkbox">
+                            <input id="show-enabled"  type="checkbox">
+                            Enabled instances
+                        </label>
+                    </li>
+                    <li>
+                        <label class="checkbox">
+                            <input id="show-disabled"  type="checkbox">
+                            Disabled instances
+                        </label>
+                    </li>
                 </ul>
             </div>
+            {% if extra_fields|length != 0 %}
+                <div class="btn-group">
+                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                        Additional data
+                        <b class="caret"></b>
+                    </button>
+                    <ul id="additional-data-dropdown" class="dropdown-menu dropdown-menu-form dropdown-menu-right" role="menu">
+                        {% for field in extra_fields %}
+                            <li>
+                                <label class="checkbox">
+                                    <input id="{{ field }}"  type="checkbox">
+                                    {{ (field[0].upper() + field[1:]).replace('_', ' ') }}
+                                </label>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            {% endif %}
         {% endif %}
     </div>
     <table class="table">
