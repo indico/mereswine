@@ -96,7 +96,11 @@
                                 <button type="button" class="btn btn-default manage-server" data-url="{{ url_for('.get_server', id=server.id) }}" title="Server details">
                                     <span class="glyphicon glyphicon-search"></span>
                                 </button>
-                                <button type="button" class="btn btn-default crawl-now" data-url="{{ url_for('.update_server', id=server.id) }}" title="Crawl now">
+                                {% if server.enabled %}
+                                    <button type="button" class="btn btn-default crawl-now" data-url="{{ url_for('.update_server', id=server.id) }}" title="Crawl now">
+                                {% else %}
+                                    <button type="button" class="btn btn-default crawl-now disabled" data-url="{{ url_for('.update_server', id=server.id) }}" title="Crawl now">
+                                {% endif %}
                                     <span class="glyphicon glyphicon-refresh"></span>
                                 </button>
                                 <button type="button" class="btn btn-danger js-server-delete" data-url="{{ url_for('.remove_server', id=server.id) }}" title="Delete server">

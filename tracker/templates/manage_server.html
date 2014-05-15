@@ -9,7 +9,11 @@
     <div class="server-actions">
         <h3>Actions</h3>
         <div class="btn-group">
-            <button id="crawl-now" type="button" class="btn btn-default">
+            {% if server.enabled %}
+                <button id="crawl-now" type="button" class="btn btn-default">
+            {% else %}
+                <button id="crawl-now" type="button" class="btn btn-default disabled">
+            {% endif %}
                 Crawl now
                 <span class="glyphicon glyphicon-refresh"></span>
             </button>
@@ -161,6 +165,9 @@
                         var panelClass = 'panel-default';
                         if ($('#enable').prop('checked')) {
                             panelClass = 'panel-primary';
+                            $('#crawl-now').removeClass('disabled');
+                        } else {
+                            $('#crawl-now').addClass('disabled');
                         }
                         $('.server-main-information').removeClass('panel-info').addClass(panelClass);
                         $('.server-crawled-information').removeClass('panel-primary').removeClass('panel-default').addClass(panelClass);
