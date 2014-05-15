@@ -20,8 +20,15 @@ body {
     margin-right: 5px;
 }
 
-.server-row.danger {
-    color: gray;
+.server-row {
+
+    &.danger {
+        color: gray;
+    }
+
+    .server-actions {
+        min-width: 70px;
+    }
 }
 
 .server-list-actions {
@@ -49,7 +56,7 @@ body {
     }
 }
 
-.server-main-information, .server-crawled-information, .server-actions {
+.server-main-information, .server-crawled-information {
     margin-top: 60px;
 }
 
