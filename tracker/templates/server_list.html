@@ -50,7 +50,7 @@
             {% endif %}
         {% endif %}
     </div>
-    <table class="table">
+    <table id="server-table" class="table">
         <thead>
             <tr>
                 <th>Organisation name</th>
@@ -59,7 +59,7 @@
                 {% for field in extra_fields %}
                     <th class="field-{{ field }}">{{ (field[0].upper() + field[1:]).replace('_', ' ') }}</th>
                 {% endfor %}
-                <th></th>
+                <th class="no-sort"></th>
             </tr>
         </thead>
         <tbody id="server-list">
@@ -111,7 +111,7 @@
                             </div>
                         </td>
                     </tr>
-                    <tr class="active">
+                    <tr class="active server-info-row">
                         <td colspan="{{ extra_fields|length + 4 }}">
                             <div class="clearfix">
                                 <div class="additional-fields">
@@ -152,9 +152,6 @@
                         </td>
                     </tr>
                 {% endfor %}
-                <tr id="no-matching-instances">
-                    <td colspan="{{ extra_fields|length + 4 }}">No instance matches the criteria selected.</td>
-                </tr>
             {% else %}
                 <tr>
                     <td colspan="4">No server available in the database at the moment.</td>
@@ -165,6 +162,10 @@
 {%- endblock %}
 
 {% block body_end %}
+
+    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.0/css/jquery.dataTables.css">
+    <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.0/js/jquery.dataTables.js"></script>
+
     <script>
 
         addAjaxDeleter($('#server-list'), '.js-server-delete');
@@ -178,10 +179,12 @@
         }).trigger('change');
 
         $('.toggle-expand').on('click', function(){
-            $(this).parent().parent().next().toggle();
+            var $line = $(this).parent().parent();
+            if( $line.data('cached-row') ) {
+                $line.data('cached-row').toggle().insertAfter($line);
+            }
             $(this).toggleClass('glyphicon-chevron-down').toggleClass('glyphicon-chevron-right');
         });
-        $('.toggle-expand').parent().parent().next().hide();
 
         $('.crawl-now').on('click', function(){
             $.ajax({
@@ -275,5 +278,38 @@
             }
         }).prop('checked', false).trigger('change');
 
+        $('.server-row').each(function(){
+            var $row = $(this);
+            var $rowmore = $row.next('.server-info-row');
+
+            if($rowmore.length>0){
+                $row.data('cached-row', $rowmore);
+            }
+        });
+        $('.server-info-row').remove();
+        var aoColumns = [];
+        $('#server-table thead th').each(function(){
+            if ($(this).hasClass('no-sort')) {
+                aoColumns.push({ "bSortable": false });
+            } else {
+                aoColumns.push(null);
+            }
+        });
+        $('#server-table').DataTable({
+            'columns': aoColumns
+        });
+        {% if server_list|length != 0 %}
+            var tr = $('<tr>', {id: "no-matching-instances"});
+            $('<td>', {colspan: "{{ extra_fields|length + 4 }}", text: 'No instance matches the criteria selected.'}).appendTo(tr);
+            tr.appendTo($('#server-table tbody'));
+        {% endif %}
+
+        $('th:not(.no-sort)').on('click', function(){
+            $('.toggle-expand').each(function(){
+                $(this).removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-right');
+            });
+        });
+
     </script>
+
 {%- endblock %}
