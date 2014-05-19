@@ -24,7 +24,8 @@ def login():
     if registered_user is None:
         flash('Invalid username and/or password', 'error')
     else:
-        login_user(registered_user)
+        remember = True if 'remember' in request.form else False
+        login_user(registered_user, remember=remember)
         flash('Logged in successfully as {0}'.format(current_user.username))
     return redirect(url_for('.index'))
 

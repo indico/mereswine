@@ -169,8 +169,22 @@ body {
 
     .panel-body {
 
-        div:not(.login-button) {
+        div:not(.login-button):not(.remember-me) {
             margin-bottom: 5px;
+
+            input {
+                width: 220px;
+            }
+        }
+
+        .remember-me {
+            float: left;
+            margin-top: 20px;
+            margin-right: 20px;
+
+            label {
+                font-weight: normal;
+            }
         }
 
         .login-button {
