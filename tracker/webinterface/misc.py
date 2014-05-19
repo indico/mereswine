@@ -1,8 +1,9 @@
-from flask import render_template, jsonify, g, request
+from flask import render_template, jsonify, g, request, flash, redirect, url_for
+from flask.ext.login import login_user, current_user, logout_user, login_required
 
 from ..core import db
 from ..menu import menu, breadcrumb, make_breadcrumb
-from ..models import Instance
+from ..models import Instance, User
 from .. import crawler
 from . import bp
 
@@ -11,13 +12,36 @@ from . import bp
 @menu('index')
 @breadcrumb('Home', '.index')
 def index():
-    return render_template('index.html')
+    wvars = {'logged': current_user.is_authenticated()}
+    return render_template('index.html', **wvars)
+
+
+@bp.route('/login', methods=['POST', ])
+def login():
+    username = request.form['username']
+    password = request.form['password']
+    registered_user = User.query.filter_by(username=username, password=password).first()
+    if registered_user is None:
+        flash('Invalid username and/or password', 'error')
+    else:
+        login_user(registered_user)
+        flash('Logged in successfully as {0}'.format(current_user.username))
+    return redirect(url_for('.index'))
+
+
+@bp.route('/logout', methods=['POST', ])
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('.index'))
 
 
 @bp.route('/servers')
 @menu('server_list')
-@breadcrumb('List of servers', '.server_list')
+@login_required
+@breadcrumb('Servers', '.server_list')
 def server_list():
+    g.breadcrumbs.append(make_breadcrumb('Server list'))
     server_list = Instance.query.all()
     extra_fields = set()
     for server in server_list:
@@ -28,6 +52,7 @@ def server_list():
 
 
 @bp.route('/servers/<id>', methods=('DELETE',))
+@login_required
 def remove_server(id):
     instance = Instance.query.filter_by(id=id).first()
     db.session.delete(instance)
@@ -36,6 +61,7 @@ def remove_server(id):
 
 
 @bp.route('/servers/<id>', methods=('POST', ))
+@login_required
 def update_server(id):
     instance = Instance.query.filter_by(id=id).first()
     crawl = request.form.get('crawl', False)
@@ -47,13 +73,14 @@ def update_server(id):
         instance.contact = request.form['contact']
         instance.email = request.form['email']
         instance.organisation = request.form['organisation']
-        instance.enabled = True if request.form['enabled'] == 'true' else False
+        instance.enabled = request.form['enabled'] == 'true'
         db.session.commit()
     return jsonify()
 
 
 @bp.route('/servers/<id>')
-@breadcrumb('List of servers', '.server_list')
+@login_required
+@breadcrumb('Servers', '.server_list')
 def get_server(id):
     instance = Instance.query.filter_by(id=id).first()
     title = instance.url[instance.url.index('//')+2:]
@@ -72,6 +99,7 @@ def get_server(id):
 
 
 @bp.route('/servers', methods=('POST', ))
+@login_required
 def crawl_all():
     crawler.crawl_all()
     return jsonify()
@@ -79,6 +107,7 @@ def crawl_all():
 
 @bp.route('/statistics')
 @menu('statistics')
+@login_required
 @breadcrumb('Statistics', '.statistics')
 def statistics():
     return render_template('statistics.html')

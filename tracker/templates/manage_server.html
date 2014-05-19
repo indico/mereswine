@@ -9,11 +9,7 @@
     <div class="server-actions">
         <h3>Actions</h3>
         <div class="btn-group">
-            {% if server.enabled %}
-                <button id="crawl-now" type="button" class="btn btn-default">
-            {% else %}
-                <button id="crawl-now" type="button" class="btn btn-default disabled">
-            {% endif %}
+            <button id="crawl-now" type="button" class="btn btn-default"{{ ' disabled' if not server.enabled }}>
                 Crawl now
                 <span class="glyphicon glyphicon-refresh"></span>
             </button>
@@ -24,11 +20,7 @@
         </div>
     </div>
 
-    {% if server.enabled %}
-        <div class="server-main-information panel panel-primary">
-    {% else %}
-        <div class="server-main-information panel panel-default">
-    {% endif %}
+    <div class="server-main-information panel panel{{ '-primary' if server.enabled else '-default' }}">
         <div class="panel-heading">
             <h3>Main information</h3>
             <div>
@@ -51,11 +43,7 @@
                 <div>
                     <span class="glyphicon glyphicon-ok"></span>
                     <label>Enabled:</label>
-                    {% if server.enabled %}
-                        <input id="enable" class="hidden-input" type="checkbox" value="1" checked>
-                    {% else %}
-                        <input id="enable" class="hidden-input" type="checkbox" value="1">
-                    {% endif %}
+                    <input id="enable" class="hidden-input" type="checkbox" value="1"{{ ' checked' if server.enabled }}>
                     <div class="toggle-button">
                         <div class="toggle"></div>
                     </div>
@@ -83,11 +71,7 @@
 
     <br>
 
-    {% if server.enabled %}
-        <div class="server-crawled-information panel panel-primary">
-    {% else %}
-        <div class="server-crawled-information panel panel-default">
-    {% endif %}
+    <div class="server-crawled-information panel panel{{ '-primary' if server.enabled else '-default' }}">
         <div class="panel-heading">
             <h3>Crawled information</h3>
         </div>
@@ -152,7 +136,7 @@
             } else {
                 $.ajax({
                     type: 'POST',
-                    url: "{{ url_for('.update_server', id=server.id) }}",
+                    url: {{ url_for('.update_server', id=server.id) | tojson }},
                     data: {
                         organisation: $('#organisation').val(),
                         url: $('#url').val(),
@@ -163,13 +147,8 @@
                     },
                     success: function() {
                         $('.toggle-button').css('cursor', 'default');
-                        var panelClass = 'panel-default';
-                        if ($('#enable').prop('checked')) {
-                            panelClass = 'panel-primary';
-                            $('#crawl-now').removeClass('disabled');
-                        } else {
-                            $('#crawl-now').addClass('disabled');
-                        }
+                        var panelClass = $('#enable').prop('checked') ? 'panel-primary' : 'panel-default';
+                        $('#crawl-now').prop('disabled', ! $('#enable').prop('checked'));
                         $('.server-main-information').removeClass('panel-info').addClass(panelClass);
                         $('.server-crawled-information').removeClass('panel-primary').removeClass('panel-default').addClass(panelClass);
                         $('.server-main-information .panel-heading h3').text('Main information');
@@ -202,10 +181,7 @@
         $('#cancel-main-info').on('click', function(){
             var edit = $('#edit-main-info');
             $('.toggle-button').css('cursor', 'default');
-            var panelClass = 'panel-default';
-            if (oldFields['enabled']) {
-                panelClass = 'panel-primary';
-            }
+            var panelClass = oldFields.enabled ? 'panel-primary' : 'panel-default';
             $('.server-main-information').removeClass('panel-info').addClass(panelClass);
             $('.server-main-information .panel-heading h3').text('Main information');
             $('#cancel-main-info').hide();
@@ -266,9 +242,9 @@
  
             $.ajax({
                 type: 'DELETE',
-                url: "{{ url_for('.remove_server', id=server.id) }}",
+                url: {{ url_for('.remove_server', id=server.id) | tojson }},
                 success: function() {
-                    location.href = "{{ url_for('.server_list') }}";
+                    location.href = {{ url_for('.server_list') | tojson }};
                 },
                 error: function (xhr, textStatus, errorThrown) {
                     alert('AJAX request failed: ' + errorThrown);
@@ -279,7 +255,7 @@
         $('#crawl-now').on('click', function(){
             $.ajax({
                 type: 'POST',
-                url: "{{ url_for('.update_server', id=server.id) }}",
+                url: {{ url_for('.update_server', id=server.id) | tojson }},
                 data: {
                     crawl: true
                 },

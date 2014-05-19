@@ -27,8 +27,10 @@
                     {% block nav %}
                         <ul class="nav navbar-nav">
                             <li{% if g.menu == 'index' %} class="active"{% endif %}><a href="{{ url_for('.index') }}">Home</a></li>
-                            <li{% if g.menu == 'server_list' %} class="active"{% endif %}><a href="{{ url_for('.server_list') }}">List of servers</a></li>
-                            <li{% if g.menu == 'statistics' %} class="active"{% endif %}><a href="{{ url_for('.statistics') }}">Statistics</a></li>
+                            {% if current_user.is_authenticated() %}
+                                <li{% if g.menu == 'server_list' %} class="active"{% endif %}><a href="{{ url_for('.server_list') }}">Servers</a></li>
+                                <li{% if g.menu == 'statistics' %} class="active"{% endif %}><a href="{{ url_for('.statistics') }}">Statistics</a></li>
+                            {% endif %}
                         </ul>
                     {% endblock %}
                 </nav>

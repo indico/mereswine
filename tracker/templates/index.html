@@ -3,6 +3,33 @@
 {% block title %}Home{% endblock %}
 
 {% block content -%}
-	Some description or statistics preview here!<br>
-    Authentication here!!!!
+	<h1>Instance Tracker</h1>
+    <div class="login-panel panel panel-info">
+        <div class="panel-body">
+            {% if not logged %}
+                <form action={{ url_for('.login') | tojson }} method="POST" class="form-horizontal">
+                    <div>
+                        <input type="text" id="username" name="username" class="input-xlarge"
+                    placeholder="Username" required>
+                    </div>
+
+                    <div>
+                        <input type="password" id="password" name="password" class="input-xlarge"
+                    placeholder="Password" required>
+                    </div>
+
+                    <div class="login-button">
+                        <button type="submit" class="btn btn-info">Login</button>
+                    </div>
+                </form>
+            {% else %}
+                Welcome back {{ current_user.username }}!
+                <form action={{ url_for('.logout') | tojson }} method="POST" class="form-horizontal">
+                    <div class="login-button">
+                        <button type="submit" class="btn btn-info">Logout</button>
+                    </div>
+                </form>
+            {% endif %}
+        </div>
+    </div>
 {%- endblock %}

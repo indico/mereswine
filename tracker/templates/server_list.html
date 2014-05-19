@@ -5,7 +5,7 @@
 {% block content -%}
     <h1>{{ self.title() }}</h1>
     <div class="server-list-actions btn-group">
-        {% if server_list|length != 0 %}
+        {% if server_list %}
             <button id="crawl-all" type="button" class="btn btn-default">
                 Crawl all
                 <span class="glyphicon glyphicon-refresh"></span>
@@ -30,7 +30,7 @@
                     </li>
                 </ul>
             </div>
-            {% if extra_fields|length != 0 %}
+            {% if extra_fields %}
                 <div class="btn-group">
                     <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
                         Additional data
@@ -63,13 +63,9 @@
             </tr>
         </thead>
         <tbody id="server-list">
-            {% if server_list|length != 0 %}
+            {% if server_list %}
                 {% for server in server_list %}
-                    {% if server.enabled %}
-                        <tr class="server-row">
-                    {% else %}
-                        <tr class="server-row danger">
-                    {% endif %}
+                    <tr class="server-row{{ ' danger' if not server.enabled }}">
                         <td>
                             <span class="glyphicon glyphicon-chevron-right toggle-expand"></span>
                             {{ server.organisation }}
@@ -98,11 +94,7 @@
                                 <button type="button" class="btn btn-default manage-server" data-url="{{ url_for('.get_server', id=server.id) }}" title="Server details">
                                     <span class="glyphicon glyphicon-search"></span>
                                 </button>
-                                {% if server.enabled %}
-                                    <button type="button" class="btn btn-default crawl-now" data-url="{{ url_for('.update_server', id=server.id) }}" title="Crawl now">
-                                {% else %}
-                                    <button type="button" class="btn btn-default crawl-now disabled" data-url="{{ url_for('.update_server', id=server.id) }}" title="Crawl now">
-                                {% endif %}
+                                <button type="button" class="btn btn-default crawl-now"{{ ' disabled' if not server.enabled }} data-url="{{ url_for('.update_server', id=server.id) }}" title="Crawl now">
                                     <span class="glyphicon glyphicon-refresh"></span>
                                 </button>
                                 <button type="button" class="btn btn-danger js-server-delete" data-url="{{ url_for('.remove_server', id=server.id) }}" title="Delete server">
@@ -180,7 +172,7 @@
 
         $('.toggle-expand').on('click', function(){
             var $line = $(this).parent().parent();
-            if( $line.data('cached-row') ) {
+            if($line.data('cached-row')) {
                 $line.data('cached-row').toggle().insertAfter($line);
             }
             $(this).toggleClass('glyphicon-chevron-down').toggleClass('glyphicon-chevron-right');
@@ -220,7 +212,7 @@
 
             $.ajax({
                 type: 'POST',
-                url: "{{ url_for('.crawl_all') }}",
+                url: {{ url_for('.crawl_all') | tojson }},
                 success: function() {
                     location.reload();
                 },
@@ -238,11 +230,7 @@
             $('.server-row').each(function(){
                 var $this = $(this);
                 if (!$this.hasClass('danger')) {
-                    if (toggled) {
-                        $this.show();
-                    } else {
-                        $this.hide();
-                    }
+                    $this.toggle(toggled);
                 }
                 if ($this.css('display') != 'none') {
                     allHidden = false;
@@ -253,7 +241,7 @@
             } else {
                 noMatch.hide();
             }
-        }).prop('checked', true).trigger('change');
+        }).prop('checked', true);
         $('#show-disabled').on('change', function(){
             var noMatch = $('#no-matching-instances');
             var toggled = this.checked;
@@ -267,7 +255,7 @@
                         $this.hide();
                     }
                 }
-                if ($this.css('display') != 'none') {
+                if ($this.is(':visible')) {
                     allHidden = false;
                 }
             });
@@ -276,13 +264,13 @@
             } else {
                 noMatch.hide();
             }
-        }).prop('checked', false).trigger('change');
+        }).prop('checked', false);
 
         $('.server-row').each(function(){
             var $row = $(this);
             var $rowmore = $row.next('.server-info-row');
 
-            if($rowmore.length>0){
+            if($rowmore.length > 0){
                 $row.data('cached-row', $rowmore);
             }
         });
@@ -296,18 +284,17 @@
             }
         });
         $('#server-table').DataTable({
-            'columns': aoColumns
+            'columns': aoColumns,
+            'order': [[2, 'asc']]
         });
-        {% if server_list|length != 0 %}
+        {% if server_list %}
             var tr = $('<tr>', {id: "no-matching-instances"});
             $('<td>', {colspan: "{{ extra_fields|length + 4 }}", text: 'No instance matches the criteria selected.'}).appendTo(tr);
             tr.appendTo($('#server-table tbody'));
         {% endif %}
 
         $('th:not(.no-sort)').on('click', function(){
-            $('.toggle-expand').each(function(){
-                $(this).removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-right');
-            });
+            $('.toggle-expand').removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-right');
         });
 
         $('#show-enabled').trigger('change');
