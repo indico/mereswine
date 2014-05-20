@@ -1,3 +1,4 @@
+import bcrypt
 from datetime import datetime
 
 from ..core import db
@@ -13,7 +14,7 @@ class User(db.Model):
 
     def __init__(self, username, password, email):
         self.username = username
-        self.password = password
+        self.password = bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
         self.email = email
         self.registered_on = datetime.utcnow()
 

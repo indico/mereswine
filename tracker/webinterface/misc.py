@@ -1,4 +1,5 @@
-from flask import render_template, jsonify, g, request, flash, redirect, url_for
+import bcrypt
+from flask import render_template, jsonify, g, request, flash, redirect, url_for, current_app
 from flask.ext.login import login_user, current_user, logout_user, login_required
 
 from ..core import db
@@ -20,8 +21,9 @@ def index():
 def login():
     username = request.form['username']
     password = request.form['password']
-    registered_user = User.query.filter_by(username=username, password=password).first()
-    if registered_user is None:
+    registered_user = User.query.filter_by(username=username).first()
+    if registered_user is None or bcrypt.hashpw(password.encode('utf-8'),
+                                                registered_user.password.encode('utf-8')) != registered_user.password:
         flash('Invalid username and/or password', 'error')
     else:
         remember = True if 'remember' in request.form else False

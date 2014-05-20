@@ -4,7 +4,7 @@
 
 {% block content -%}
     <div class="it-home-header">
-    	<h1>Instance Tracker</h1>
+    	<h1>{{ config['APP_NAME'] }} Tracker</h1>
         <div class="login-panel panel panel-info">
             <div class="panel-body">
                 {% if not logged %}
@@ -37,4 +37,11 @@
             </div>
         </div>
     </div>
+
+    Welcome to the {{ config['APP_NAME'] }} Tracker!<br>
+    Here you can see all the information of the servers running your application, as well as beign able to manage them and explore interesting statistics information.<br>
+    <br>
+    {% if not logged %}
+        To access the restricted area (server management and statistics) you have to login.
+    {% endif %}
 {%- endblock %}

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Instance Tracker - {% block title %}{% endblock %}</title>
+        <title>{{ config['APP_NAME'] }} Tracker - {% block title %}{% endblock %}</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
         <meta charset="UTF-8">
         {% block meta %}{% endblock %}
@@ -21,7 +21,7 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" href="{{ url_for('.index') }}">Instance Tracker</a>
+                    <a class="navbar-brand" href="{{ url_for('.index') }}">{{ config['APP_NAME'] }} Tracker</a>
                 </div>
                 <nav class="collapse navbar-collapse" role="navigation">
                     {% block nav %}
@@ -38,7 +38,7 @@
         </header>
 
         <ol class="breadcrumb">
-            <li><a href="{{ url_for('.index') }}">Instance Tracker</a></li>
+            <li><a href="{{ url_for('.index') }}">{{ config['APP_NAME'] }} Tracker</a></li>
             {% for bc in g.breadcrumbs %}
                 {% if loop.last %}
                     <li class="active">{{ bc.title }}</li>

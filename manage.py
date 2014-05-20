@@ -40,6 +40,13 @@ def crawl(uuid=None):
         crawler.crawl_all()
 
 
+@manager.command
+def create_user(username, password, email):
+    user = models.User(username, password, email)
+    db.session.add(user)
+    db.session.commit()
+
+
 @manager.shell
 def shell_context():
     ctx = {'db': db}
