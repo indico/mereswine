@@ -38,10 +38,26 @@
         </div>
     </div>
 
-    Welcome to the {{ config['APP_NAME'] }} Tracker!<br>
+    <h3>Welcome to the {{ config['APP_NAME'] }} Tracker!</h3>
     Here you can see all the information of the servers running your application, as well as beign able to manage them and explore interesting statistics information.<br>
     <br>
     {% if not logged %}
-        To access the restricted area (server management and statistics) you have to login.
+        To access the restricted area you have to login.
+    {% else %}
+        Click on the following buttons to access the restricted area:
     {% endif %}
+    <div class="sections-buttons">
+        <form action={{ url_for('.server_list') | tojson }} method="GET">
+            <button type="submit" class="btn btn-default"{{ ' disabled' if not logged }}>
+                Server Management
+                <span class="glyphicon glyphicon-cog"></span>
+            </button>
+        </form>
+        <form action={{ url_for('.statistics') | tojson }} method="GET">
+            <button type="submit" class="btn btn-default"{{ ' disabled' if not logged }}>
+                Statistics
+                <span class="glyphicon glyphicon-stats"></span>
+            </button>
+        </form>
+    </div>
 {%- endblock %}
