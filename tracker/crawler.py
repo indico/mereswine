@@ -23,9 +23,9 @@ def crawl_instance(instance):
     if not isinstance(instance, Instance):
         instance = Instance.query.filter_by(uuid=instance).one()
     try:
-        inferred_data = crawl_statistics(instance)
-        inferred_data.update(crawl_system_info(instance))
-        instance.crawled_data = inferred_data
+        crawled_data = crawl_statistics(instance)
+        crawled_data.update(crawl_system_info(instance))
+        instance.crawled_data = crawled_data
         instance.crawl_date = datetime.utcnow()
         db.session.commit()
     except Exception:

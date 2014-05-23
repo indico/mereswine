@@ -9,6 +9,51 @@ body {
     padding-top: @navbar-height;
 }
 
+.it-navbar-menu {
+    float: left;
+}
+
+.it-navbar-login {
+    float: right;
+    margin-top: 8px;
+
+    .flashed-message {
+        color: @brand-danger;
+        font-weight: bold;
+        margin-right: 15px;
+    }
+
+    .logged-user-button {
+        cursor: default;;
+    }
+
+    ul {
+        width: 240px;
+
+        li:not(.divider):not(.login-logout-button), span {
+            margin-left: 10px;
+            margin-top: 10px;
+            margin-bottom: 10px;
+        }
+
+        .remember-me {
+            float: left;
+            margin-top: 10px;
+            margin-right: 20px;
+            margin-left: 10px;
+
+            label {
+                font-weight: normal;
+            }
+        }
+
+        .login-button {
+            float: right;
+            margin-right: 10px;
+        }
+    }
+}
+
 .additional-fields {
     float: left;
     margin-right: 3em;
@@ -44,160 +89,58 @@ body {
     }
 }
 
-.server-main-information {
-    margin-top: 60px;
+.server-management-body {
 
-    .panel-heading div {
-        cursor: pointer;
-        font-size: 20px;
+    .col-md-4, .col-md-6, .col-md-7 {
+        padding-left: 0px;
     }
-}
 
-.server-main-information {
+    .server-main-information {
+        margin-top: 60px;
 
-    .panel-heading .glyphicon-remove {
-        display: none;
-    }
-}
-
-.server-main-information, .server-crawled-information {
-    margin-top: 60px;
-}
-
-.server-main-information, .server-crawled-information {
-    display: inline-block;
-    width: 700px;
-
-    .panel-heading {
-        h3 {
-            display: inline-block;
-        }
-
-        div {
-            float: right;
+        .panel-heading, .panel-footer .glyphicon {
+            cursor: pointer;
+            font-size: 20px;
         }
     }
 
-    .panel-body {
-
-        .panel-section {
-            float: left;
-
-            .hidden-input {
-                display: none;
-            }
-
-            .toggle-button {
-                .box-sizing(border-box);
-                border: 1px solid #999;
-                box-shadow: 0 0 5px rgba(100,100,100,0.3) inset;
-                width: 3em;
-                display: inline-block;
-                background: #ddd;
-                height: 1.5em;
-                position: relative;
-                vertical-align: middle;
-
-                .toggle {
-                    .box-sizing(border-box);
-                    .transition-property(left);
-                    .transition-duration(.25s);
-                    position: absolute;
-                    left: 0px;
-                    width: 50%;
-                    height: 100%;
-                    background: #aaa;
-                    text-align: center;
-                    border: 1px solid #888
-                }
-
-                .toggle::before {
-                    color: #666;
-                    display: inline-block;
-                    font-size: 1em;
-                    content: "N";
-                    line-height: 0em;
-                }
-
-                &.toggled {
-
-                    .toggle {
-                        box-shadow: 0 0 1px rgba(255,255,255,0.8) inset;
-                        background-color: @brand-info;
-                        border-color: @brand-primary;
-                        left: 1.5em;
-                    }
-
-                    .toggle::before {
-                        content: "Y";
-                        color: #eee !important;
-                    }
-                }
-            }
-
-            &:not(:last-child) {
-                margin-right: 40px;
-            }
-
-            div:not(.toggle-button):not(.toggle) {
-                margin-top: 5px;
-                margin-bottom: 5px;
-            }
-
-            input {
-                width: 215px;
-            }
-        }
-
-        label {
-            margin-left: 5px;
-        }
-    }
-
-    .panel-footer {
-        min-height: 40px;
-
-        span, label {
-            float: right;
-        }
-    }
-}
-
-.it-home-header {
-    display: inline-block;
-    width: 100%;
-
-    h1 {
-        float: left;
-    }
-
-    .login-panel {
+    .server-main-information, .server-crawled-information {
         display: inline-block;
-        float: right;
+        width: 500px;
+        margin-top: 60px;
+        text-align: left;
+
+        .panel-heading {
+            h3 {
+                display: inline-block;
+            }
+
+            div {
+                float: right;
+            }
+
+            .glyphicon {
+                margin-top: 20px;
+            }
+        }
 
         .panel-body {
 
-            div:not(.login-button):not(.remember-me) {
-                margin-bottom: 5px;
-
-                input {
-                    width: 220px;
-                }
+            .text-success, .text-muted {
+                font-weight: bold;
             }
+        }
 
-            .remember-me {
-                float: left;
-                margin-top: 20px;
-                margin-right: 20px;
+        .panel-footer {
+            display: none;
+            min-height: 40px;
 
-                label {
-                    font-weight: normal;
-                }
-            }
-
-            .login-button {
+            span, label {
                 float: right;
-                margin-top: 10px;
+            }
+
+            .glyphicon {
+                margin-left: 10px;
             }
         }
     }

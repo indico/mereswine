@@ -41,8 +41,8 @@ def crawl(uuid=None):
 
 
 @manager.command
-def create_user(username, password, email):
-    user = models.User(username, password, email)
+def create_user(username, password):
+    user = models.User(username, password)
     db.session.add(user)
     db.session.commit()
 

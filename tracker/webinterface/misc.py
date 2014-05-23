@@ -1,6 +1,6 @@
 import bcrypt
-from flask import render_template, jsonify, g, request, flash, redirect, url_for, current_app
-from flask.ext.login import login_user, current_user, logout_user, login_required
+from flask import render_template, jsonify, g, request, flash, redirect, url_for
+from flask.ext.login import login_user, logout_user, login_required
 
 from ..core import db
 from ..menu import menu, breadcrumb, make_breadcrumb
@@ -13,8 +13,7 @@ from . import bp
 @menu('index')
 @breadcrumb('Home', '.index')
 def index():
-    wvars = {'logged': current_user.is_authenticated()}
-    return render_template('index.html', **wvars)
+    return render_template('index.html')
 
 
 @bp.route('/login', methods=['POST', ])
@@ -28,7 +27,6 @@ def login():
     else:
         remember = True if 'remember' in request.form else False
         login_user(registered_user, remember=remember)
-        flash('Logged in successfully as {0}'.format(current_user.username))
     return redirect(url_for('.index'))
 
 
@@ -71,7 +69,6 @@ def update_server(id):
     if crawl:
         crawler.crawl_instance(instance)
     else:
-        instance.uuid = request.form['uuid']
         instance.url = request.form['url'].rstrip('/')
         instance.contact = request.form['contact']
         instance.email = request.form['email']
