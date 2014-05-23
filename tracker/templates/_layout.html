@@ -43,13 +43,14 @@
                         {% endif %}
                     {% endwith %}
                     {% if not current_user.is_authenticated() %}
-                        <div class="btn-group">
-                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                                <span class="glyphicon glyphicon-user"></span>
-                                <span class="caret"></span>
-                            </button>
-                            <ul class="dropdown-menu dropdown-menu-form dropdown-menu-right" role="menu">
-                                <form action="{{ url_for('.login') }}" method="POST">
+                        <form action="{{ url_for('.login') }}" method="POST">
+                            <input type="hidden" name="next" value={{ request.args.next }}>
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                                    <span class="glyphicon glyphicon-user"></span>
+                                    <span class="caret"></span>
+                                </button>
+                                <ul class="dropdown-menu dropdown-menu-form dropdown-menu-right" role="menu">
                                     <li>
                                         <input type="text" name="username" placeholder="Username" required>
                                     </li>
@@ -66,9 +67,9 @@
                                             <button type="submit" class="btn btn-default">Login</button>
                                         </div>
                                     </li>
-                                </form>
-                            </ul>
-                        </div>
+                                </ul>
+                            </div>
+                        </form>
                     {% else %}
                         <form action="{{ url_for('.logout') }}" method="POST">
                             <div class="btn-group">

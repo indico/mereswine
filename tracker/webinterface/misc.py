@@ -16,7 +16,7 @@ def index():
     return render_template('index.html')
 
 
-@bp.route('/login', methods=['POST', ])
+@bp.route('/login', methods=('POST',))
 def login():
     username = request.form['username']
     password = request.form['password']
@@ -27,10 +27,11 @@ def login():
     else:
         remember = True if 'remember' in request.form else False
         login_user(registered_user, remember=remember)
-    return redirect(url_for('.index'))
+    print request.args.get("next")
+    return redirect(request.form["next"] or url_for(".index"))
 
 
-@bp.route('/logout', methods=['POST', ])
+@bp.route('/logout', methods=('POST',))
 @login_required
 def logout():
     logout_user()
