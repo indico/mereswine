@@ -126,8 +126,10 @@
             </div>
 
             {% if server.geolocation %}
-                <div class="server-geolocation" data-latitude="{{ server.geolocation.latitude }}" data-longitude="{{ server.geolocation.longitude }}">
-                    <h3>Geolocation</h3>
+                <div class="row">
+                    <div class="col-md-12 server-geolocation" data-latitude="{{ server.geolocation.latitude }}" data-longitude="{{ server.geolocation.longitude }}">
+                        <h3>Geolocation</h3>
+                    </div>
                 </div>
             {% endif %}
 
