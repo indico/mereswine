@@ -34,6 +34,7 @@ class Instance(db.Model):
     organisation = db.Column(db.String, nullable=False)
     crawl_date = db.Column(db.DateTime)
     crawled_data = db.Column(JSONEncodedDict)
+    geolocation = db.Column(JSONEncodedDict)
 
     def __repr__(self):
         return '<Instance {0} {1}>'.format(self.id, self.url)

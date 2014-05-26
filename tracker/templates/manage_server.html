@@ -124,6 +124,13 @@
                 </div>
 
             </div>
+
+            {% if server.geolocation %}
+                <div class="server-geolocation" data-latitude="{{ server.geolocation.latitude }}" data-longitude="{{ server.geolocation.longitude }}">
+                    <h3>Geolocation</h3>
+                </div>
+            {% endif %}
+
         </div>
 
     </div>
@@ -131,6 +138,8 @@
 {%- endblock %}
 
 {% block body_end %}
+
+    <script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true"></script>
 
     <script>
 
@@ -301,6 +310,31 @@
                     alert('AJAX request failed: ' + errorThrown);
                     location.reload();
                 }
+            });
+        });
+
+        $('.server-geolocation').each(function(){
+            $this = $(this);
+            var mapCanvas = $('<div>', {class: 'map-canvas'});
+            $this.append(mapCanvas);
+
+            var coords = new google.maps.LatLng($this.data('latitude'), $this.data('longitude'));
+
+            var options = {
+                zoom: 9,
+                center: coords,
+                mapTypeControl: false,
+                navigationControlOptions: {
+                    style: google.maps.NavigationControlStyle.SMALL
+                },
+                mapTypeId: google.maps.MapTypeId.ROADMAP
+            };
+            var map = new google.maps.Map(mapCanvas.get(0), options);
+
+            var marker = new google.maps.Marker({
+                position: coords,
+                map: map,
+                title: {{ title | tojson }}
             });
         });
 

@@ -84,15 +84,7 @@ def update_server(id):
 @breadcrumb('Servers', '.server_list')
 def get_server(id):
     instance = Instance.query.filter_by(id=id).first()
-    title = instance.url[instance.url.index('//')+2:]
-    try:
-        title = title[:title.index(':')]
-    except ValueError:
-        pass
-    try:
-        title = title[title.index('www.')+4:]
-    except ValueError:
-        pass
+    title = crawler.trim_url(instance.url)
     g.breadcrumbs.append(make_breadcrumb(title))
     wvars = {'server': instance,
              'title': title}
