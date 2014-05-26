@@ -47,7 +47,7 @@
                             <input type="hidden" name="next" value={{ request.args.next }}>
                             <div class="btn-group">
                                 <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                                    <span class="glyphicon glyphicon-user"></span>
+                                    Log in
                                     <span class="caret"></span>
                                 </button>
                                 <ul class="dropdown-menu dropdown-menu-form dropdown-menu-right" role="menu">
@@ -64,7 +64,7 @@
                                             <label for="remember">Remember me</label>
                                         </div>
                                         <div class="login-button">
-                                            <button type="submit" class="btn btn-default">Login</button>
+                                            <button type="submit" class="btn btn-success">Log in</button>
                                         </div>
                                     </li>
                                 </ul>
@@ -72,11 +72,9 @@
                         </form>
                     {% else %}
                         <form action="{{ url_for('.logout') }}" method="POST">
+                            <span class="navbar-user navbar-brand glyphicon glyphicon-user"> {{ current_user.username }}</span>
                             <div class="btn-group">
-                                <button type="button" class="btn btn-default logged-user-button" data-toggle="dropdown">
-                                    <span class="glyphicon glyphicon-user"> {{ current_user.username }}</span>
-                                </button>
-                                <button type="submit" class="btn btn-default">Logout</button>
+                                <button type="submit" class="btn btn-default">Log out</button>
                             </div>
                         </form>
                     {% endif %}
