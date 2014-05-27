@@ -75,7 +75,7 @@
                             {% if server.crawl_date is none %}
                                 Never
                             {% else %}
-                                {{ server.crawl_date | datetimeformat('medium') }}
+                                {{ server.crawl_date | datetimeformat('medium') }} ({{ config['BABEL_DEFAULT_TIMEZONE'] }})
                             {% endif %}
                         </td>
                         {% for field in extra_fields %}

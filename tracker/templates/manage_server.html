@@ -259,7 +259,7 @@
             var panelBody = $('.server-crawled-information .panel-body');
             var footer = $('.server-crawled-information .panel-footer');
             footer.show();
-            $('<span>', {html: "<strong>Last crawled:</strong> {{ server.crawl_date|datetimeformat('medium') }}"}).appendTo(footer);
+            $('<span>', {html: "<strong>Last crawled:</strong> {{ server.crawl_date|datetimeformat('medium') }} ({{ config['BABEL_DEFAULT_TIMEZONE'] }})"}).appendTo(footer);
             for (var key in crawledData) {
                 if (crawledData[key] != null) {
                     var row = $('<div>', {class: 'row'});
