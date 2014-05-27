@@ -8,7 +8,11 @@ from .models import Instance
 
 
 def trim_url(url):
-    short_url = url[url.index('//')+2:]
+    short_url = url
+    try:
+        short_url = short_url[short_url.index('//')+2:]
+    except ValueError:
+        pass
     try:
         short_url = short_url[:short_url.index(':')]
     except ValueError:

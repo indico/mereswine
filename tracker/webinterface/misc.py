@@ -1,4 +1,5 @@
 import bcrypt
+from collections import Counter
 from flask import render_template, jsonify, g, request, flash, redirect, url_for
 from flask.ext.login import login_user, logout_user, login_required
 
@@ -62,7 +63,7 @@ def remove_server(id):
     return jsonify()
 
 
-@bp.route('/servers/<id>', methods=('POST', ))
+@bp.route('/servers/<id>', methods=('POST',))
 @login_required
 def update_server(id):
     instance = Instance.query.filter_by(id=id).first()
@@ -91,7 +92,7 @@ def get_server(id):
     return render_template('manage_server.html', **wvars)
 
 
-@bp.route('/servers', methods=('POST', ))
+@bp.route('/servers', methods=('POST',))
 @login_required
 def crawl_all():
     crawler.crawl_all()
@@ -103,4 +104,26 @@ def crawl_all():
 @login_required
 @breadcrumb('Statistics', '.statistics')
 def statistics():
-    return render_template('statistics.html')
+    server_list = Instance.query.all()
+    country_names = []
+    country_codes = []
+    markers = []
+    id_mapping = {}
+    i = 0
+    for server in server_list:
+        if server.geolocation:
+            country_names.append(server.geolocation['country_name'])
+            country_codes.append(server.geolocation['country_code'])
+            markers.append({
+                'latLng': [server.geolocation['latitude'], server.geolocation['longitude']],
+                'name': crawler.trim_url(server.url)
+            })
+            id_mapping[i] = server.id
+            i += 1
+        else:
+            country_names.append('Unknown')
+    wvars = {'country_names': Counter(country_names),
+             'country_codes': Counter(country_codes),
+             'markers': markers,
+             'id_mapping': id_mapping}
+    return render_template('statistics.html', **wvars)

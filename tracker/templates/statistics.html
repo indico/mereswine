@@ -3,5 +3,108 @@
 {% block title %}Statistics{% endblock %}
 
 {% block content -%}
-    Some cool plot here!
+
+    <h1>Statistics</h1>
+
+    <div class="country-distribution">
+        <h2>Country distribution</h2>
+        <div class="world-map" style="width: 600px; height: 400px"></div>
+        <div class="country-piechart-container">
+            <div id="country-piechart"></div>
+        </div>
+    </div>
+
+{%- endblock %}
+
+{% block body_end %}
+
+    <link rel="stylesheet" type="text/css" href="static/css/jquery.jqplot.css" />
+    <script language="javascript" type="text/javascript" src="static/js/jqplot/jquery.jqplot.js"></script>
+    <script type="text/javascript" src="static/js/jqplot/plugins/jqplot.pieRenderer.min.js"></script>
+
+    <link rel="stylesheet" href="static/css/jquery-jvectormap-1.2.2.css" type="text/css" media="screen"/>
+    <script type="text/javascript" src="static/js/jvectormap/jquery-jvectormap-1.2.2.min.js"></script>
+    <script type="text/javascript" src="static/js/jvectormap/jquery-jvectormap-world-mill-en.js"></script>
+
+    <script>
+
+        var countryNames = {{ country_names | tojson }};
+        data = [];
+        for (var name in countryNames) {
+            data.push([name, countryNames[name]]);
+        }
+        var options = { 
+            seriesDefaults: {
+                renderer: jQuery.jqplot.PieRenderer, 
+                rendererOptions: {
+                    showDataLabels: true,
+                    // fill: false,
+                    // sliceMargin: 4,
+                    // lineWidth: 5
+                }
+            },
+            legend: {
+                show: true,
+                location: 'e'
+            },
+            grid: {
+                background: '#FFFFFF',
+                borderWidth: 0,
+                shadow: false
+            }
+        }
+        $.jqplot(
+            'country-piechart',
+            [data],
+            options
+        );
+
+        var countryCodes = {{ country_codes | tojson }};
+        var idMapping = {{ id_mapping | tojson }};
+        $('.world-map').vectorMap({
+            map: 'world_mill_en',
+            backgroundColor: 'white',
+            zoomButtons: false,
+            series: {
+                regions: [{
+                    values: countryCodes,
+                    scale: ['#C8EEFF', '#0071A4'],
+                    normalizeFunction: 'polynomial'
+                }]
+            },
+            regionStyle: {
+                initial: {
+                    fill: 'lightgray',
+                    stroke: 'white',
+                    'stroke-width': '1'
+                }
+            },
+            markers: {{ markers | tojson }},
+            markerStyle: {
+                initial: {
+                    fill: 'white'
+                }
+            },
+            onRegionLabelShow: function(e, el, code){
+                var label = el.html();
+                if (countryCodes[code] == 1) {
+                    label += ': 1 instance';
+                } else if (countryCodes[code] != undefined) {
+                    label += ': '+countryCodes[code]+' instances';
+                }
+                el.html(label);
+            },
+            onMarkerClick: function(e, code){
+                location.href = '/servers/' + idMapping[code];
+            },
+            onMarkerOver: function(e, code){
+                document.body.style.cursor = 'pointer';
+            },
+            onMarkerOut: function(e, code){
+                document.body.style.cursor = 'default';
+            }
+        });
+
+    </script>
+
 {%- endblock %}
