@@ -28,7 +28,6 @@ def login():
     else:
         remember = True if 'remember' in request.form else False
         login_user(registered_user, remember=remember)
-    print request.args.get("next")
     return redirect(request.form["next"] or url_for(".index"))
 
 
