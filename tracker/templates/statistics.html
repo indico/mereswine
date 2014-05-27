@@ -38,12 +38,11 @@
                 renderer: jQuery.jqplot.PieRenderer, 
                 rendererOptions: {
                     showDataLabels: true,
-                    // fill: false,
-                    // sliceMargin: 4,
-                    // lineWidth: 5
-                }
+                },
+                shadow: false
             },
             legend: {
+                renderer: $.jqplot.EnhancedLegendRenderer,
                 show: true,
                 location: 'e'
             },
