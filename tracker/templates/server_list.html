@@ -103,43 +103,48 @@
                             </div>
                         </td>
                     </tr>
-                    <tr class="active server-info-row">
+                    <tr class="active server-info-row hidden">
                         <td colspan="{{ extra_fields|length + 4 }}">
-                            <div class="clearfix">
-                                <div class="additional-fields">
-                                    <label>Contact:</label>
-                                    <span>{{ server.contact }}</span>
+                            <div class="container-fluid">
+                                <div class="row">
+                                    <div class="col-md-3">
+                                        <label>Contact:</label>
+                                        <span>{{ server.contact }}</span>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <label>Email:</label>
+                                        <a href="mailto:{{ server.email }}">{{ server.email }}</a>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label>UUID:</label>
+                                        <span>{{ server.uuid }}</span>
+                                    </div>
+                                    <div class="col-md-2">
+                                        {% if server.enabled %}
+                                            <label class="brand-success">Enabled</label>
+                                        {% else %}
+                                            <label class="brand-danger">Disabled</label>
+                                        {% endif %}
+                                    </div>
                                 </div>
-                                <div class="additional-fields">
-                                    <label>Email:</label>
-                                    <a href="mailto:{{ server.email }}">{{ server.email }}</a>
-                                </div>
-                                <div class="additional-fields">
-                                    <label>UUID:</label>
-                                    <span>{{ server.uuid }}</span>
-                                </div>
-                                <div class="additional-fields">
-                                    <label>Enabled:</label>
-                                    <span>{{ server.enabled }}</span>
-                                </div>
-                            </div>
-                            <div class="clearfix">
-                                {% if server.crawled_data is not none %}
-                                    {% for field in extra_fields %}
-                                        <div class="additional-fields">
+                                <div class="row">
+                                    {% if server.crawled_data is not none %}
+                                        {% for field in extra_fields %}
                                             {% if server.crawled_data[field] is not none %}
-                                                <label>{{ (field[0].upper() + field[1:]).replace('_', ' ') }}:</label>
-                                                <span>
-                                                    {% if server.crawled_data[field] is mapping %}
-                                                        [Data not displayable]
-                                                    {% else %}
-                                                        {{ server.crawled_data[field] }}
-                                                    {% endif %}
-                                                </span>
+                                                <div class="col-md-3">
+                                                    <label>{{ (field[0].upper() + field[1:]).replace('_', ' ') }}:</label>
+                                                    <span>
+                                                        {% if server.crawled_data[field] is mapping %}
+                                                            [Data not displayable]
+                                                        {% else %}
+                                                            {{ server.crawled_data[field] }}
+                                                        {% endif %}
+                                                    </span>
+                                                </div>
                                             {% endif %}
-                                        </div>
-                                    {% endfor %}
-                                {% endif %}
+                                        {% endfor %}
+                                    {% endif %}
+                                </div>
                             </div>
                         </td>
                     </tr>
@@ -273,8 +278,9 @@
             if($rowmore.length > 0){
                 $row.data('cached-row', $rowmore);
             }
+            $rowmore.detach();
+            $rowmore.removeClass('hidden');
         });
-        $('.server-info-row').remove();
         var aoColumns = [];
         $('#server-table thead th').each(function(){
             if ($(this).hasClass('no-sort')) {
