@@ -138,7 +138,11 @@ def statistics():
                 data.append(server.crawled_data[field])
             else:
                 data.append('Unknown')
-    additional_charts = {field: Counter(data).most_common() for field, data in additional_charts.iteritems()}
+    for field, data in additional_charts.iteritems():
+        try:
+            additional_charts[field] = Counter(data).most_common()
+        except Exception:
+            additional_charts[field] = None
 
     wvars = {'country_names': Counter(country_names),
              'country_codes': Counter(country_codes),
