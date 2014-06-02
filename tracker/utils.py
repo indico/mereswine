@@ -1,2 +1,5 @@
-# Utility functions go here. Remove this comment once you add something.
-# Or maybe delete this file until you need it
+from flask import current_app
+
+
+def pretty_name(value):
+    return current_app.config['EXTRA_FIELD_LABELS'].get(value, (value[0].upper() + value[1:]).replace('_', ' '))

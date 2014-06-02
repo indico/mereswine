@@ -118,8 +118,38 @@
                         <div class="panel-heading">
                             <h3>Crawled information</h3>
                         </div>
-                        <div class="panel-body container-fluid"></div>
-                        <div class="panel-footer"></div>
+                        <div class="panel-body container-fluid">
+                            {% if server.crawled_data %}
+                                {% for key, value in server.crawled_data | dictsort %}
+                                    {% if value %}
+                                        <div class="row">
+                                            <div class="col-md-1">
+                                                <span class="glyphicon glyphicon-file"></span>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <label>{{ key | pretty_name }}:</label>
+                                            </div>
+                                            <div class="col-md-7">
+                                                <span>
+                                                    {% if value is string or value is number %}
+                                                        {{ value }}
+                                                    {% else %}
+                                                        [Data not displayable]
+                                                    {% endif %}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                {% endfor %}
+                            {% else %}
+                                <span>No crawled data available for this server.</span>
+                            {% endif %}
+                        </div>
+                        {% if server.crawled_data %}
+                            <div class="panel-footer">
+                                <span><strong>Last crawled:</strong> {{ server.crawl_date|datetimeformat('medium') }} ({{ config['BABEL_DEFAULT_TIMEZONE'] }})</span>
+                            </div>
+                        {% endif %}
                     </div>
                 </div>
 
@@ -253,33 +283,6 @@
             $('#enable').prop('checked', oldFields['enabled']).addClass('hidden').trigger('change');
             $('#enabled-text').removeClass('hidden');
         });
-
-        var crawledData = {{ server.crawled_data|tojson }};
-        if (crawledData != null) {
-            var panelBody = $('.server-crawled-information .panel-body');
-            var footer = $('.server-crawled-information .panel-footer');
-            footer.show();
-            $('<span>', {html: "<strong>Last crawled:</strong> {{ server.crawl_date|datetimeformat('medium') }} ({{ config['BABEL_DEFAULT_TIMEZONE'] }})"}).appendTo(footer);
-            for (var key in crawledData) {
-                if (crawledData[key] != null) {
-                    var row = $('<div>', {class: 'row'});
-                    var icon = $('<div>', {class: 'col-md-1'});
-                    $('<span>', {'class': 'glyphicon glyphicon-file'}).appendTo(icon);
-                    icon.appendTo(row);
-                    var label = $('<div>', {class: 'col-md-4'});
-                    var labelText = (key.charAt(0).toUpperCase() + key.slice(1)).replace('_', ' ');
-                    $('<label>', {text: labelText + ':'}).appendTo(label);
-                    label.appendTo(row);
-                    var value = $('<div>', {class: 'col-md-7'});
-                    var valueText = crawledData[key] instanceof Object ? '[Data not displayable]' : crawledData[key];
-                    $('<span>', {text: valueText}).appendTo(value);
-                    value.appendTo(row);
-                    row.appendTo(panelBody);
-                }
-            }
-        } else {
-            $('<span>', {text: 'No crawled data available for this server.'}).appendTo($('.server-crawled-information .panel-body'));
-        }
 
         $('#js-server-delete').on('click', function(){
             if (!confirm('Do you really want to delete this instance?')) {

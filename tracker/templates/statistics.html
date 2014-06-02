@@ -6,11 +6,27 @@
 
     <h1>Statistics</h1>
 
-    <div class="country-distribution">
-        <h2>Country distribution</h2>
-        <div class="world-map" style="width: 600px; height: 400px"></div>
-        <div class="country-piechart-container">
-            <div id="country-piechart"></div>
+    <div class="statistics-grid">
+        <div class="container-fluid">
+            <div class="row">
+                <h2>Country distribution</h2>
+                <div class="col-md-7">
+                    <div class="world-map"></div>
+                </div>
+                <div class="col-md-5">
+                    <div class="country-piechart-container">
+                        <div id="country-piechart"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                {% for field, data in additional_charts.iteritems() %}
+                    <div class="col-md-6">
+                        <h4>{{ field | pretty_name }}</h4>
+                        <div id="{{ field }}" class="chartdiv" data-data="{{ data | tojson | forceescape }}"></div>
+                    </div>
+                {% endfor %}
+            </div>
         </div>
     </div>
 
@@ -21,41 +37,15 @@
     <link rel="stylesheet" type="text/css" href="static/css/jquery.jqplot.css" />
     <script language="javascript" type="text/javascript" src="static/js/jqplot/jquery.jqplot.js"></script>
     <script type="text/javascript" src="static/js/jqplot/plugins/jqplot.pieRenderer.min.js"></script>
+    <script type="text/javascript" src="static/js/jqplot/plugins/jqplot.barRenderer.min.js"></script>
+    <script type="text/javascript" src="static/js/jqplot/plugins/jqplot.categoryAxisRenderer.min.js"></script>
+    <script type="text/javascript" src="static/js/jqplot/plugins/jqplot.pointLabels.min.js"></script>
 
     <link rel="stylesheet" href="static/css/jquery-jvectormap-1.2.2.css" type="text/css" media="screen"/>
     <script type="text/javascript" src="static/js/jvectormap/jquery-jvectormap-1.2.2.min.js"></script>
     <script type="text/javascript" src="static/js/jvectormap/jquery-jvectormap-world-mill-en.js"></script>
 
     <script>
-
-        var countryNames = {{ country_names | tojson }};
-        data = [];
-        for (var name in countryNames) {
-            data.push([name, countryNames[name]]);
-        }
-        var options = { 
-            seriesDefaults: {
-                renderer: jQuery.jqplot.PieRenderer, 
-                rendererOptions: {
-                    showDataLabels: true,
-                },
-                shadow: false
-            },
-            legend: {
-                show: true,
-                location: 'e'
-            },
-            grid: {
-                background: '#FFFFFF',
-                borderWidth: 0,
-                shadow: false
-            }
-        }
-        $.jqplot(
-            'country-piechart',
-            [data],
-            options
-        );
 
         var countryCodes = {{ country_codes | tojson }};
         var idMapping = {{ id_mapping | tojson }};
@@ -101,6 +91,74 @@
             onMarkerOut: function(e, code){
                 document.body.style.cursor = 'default';
             }
+        });
+
+        var countryNames = {{ country_names | tojson }};
+        var data = [];
+        for (var name in countryNames) {
+            data.push([name, countryNames[name]]);
+        }
+        var options = { 
+            seriesDefaults: {
+                renderer: $.jqplot.PieRenderer,
+                rendererOptions: {
+                    showDataLabels: true,
+                },
+                shadow: false
+            },
+            legend: {
+                show: true,
+                location: 'e'
+            },
+            grid: {
+                background: '#FFFFFF',
+                borderWidth: 0,
+                shadow: false
+            }
+        };
+        $.jqplot(
+            'country-piechart',
+            [data],
+            options
+        );
+
+        $('.chartdiv').each(function(){
+            var list = $(this).data('data');
+            var data = [];
+            var ticks = [];
+            for (var i = 0; i < list.length; i++) {
+                ticks.push(list[i][0]);
+                data.push(list[i][1]);
+            }
+            var options = { 
+                seriesDefaults: {
+                    renderer: $.jqplot.BarRenderer,
+                    shadow: false,
+                    pointLabels: {show: true}
+                },
+                grid: {
+                    background: '#FFFFFF',
+                    borderWidth: 0,
+                    shadow: false
+                },
+                axes: {
+                    xaxis: {
+                        renderer: $.jqplot.CategoryAxisRenderer,
+                        ticks: ticks,
+                        tickOptions: {
+                            showGridline: false
+                        }
+                    },
+                    yaxis: {
+                        rendererOptions: {drawBaseline: false}
+                    }
+                }
+            };
+            $.jqplot(
+                this.id,
+                [data],
+                options
+            );
         });
 
     </script>

@@ -41,7 +41,7 @@
                             <li>
                                 <label class="checkbox">
                                     <input id="{{ field }}"  type="checkbox">
-                                    {{ (field[0].upper() + field[1:]).replace('_', ' ') }}
+                                    {{ field | pretty_name }}
                                 </label>
                             </li>
                         {% endfor %}
@@ -57,7 +57,7 @@
                 <th>URL</th>
                 <th>Last crawled</th>
                 {% for field in extra_fields %}
-                    <th class="field-{{ field }}">{{ (field[0].upper() + field[1:]).replace('_', ' ') }}</th>
+                    <th class="field-{{ field }}">{{ field | pretty_name }}</th>
                 {% endfor %}
                 <th class="no-sort"></th>
             </tr>
@@ -132,7 +132,7 @@
                                         {% for field in extra_fields %}
                                             {% if server.crawled_data[field] is not none %}
                                                 <div class="col-md-3">
-                                                    <label>{{ (field[0].upper() + field[1:]).replace('_', ' ') }}:</label>
+                                                    <label>{{ field | pretty_name }}:</label>
                                                     <span>
                                                         {% if server.crawled_data[field] is mapping %}
                                                             [Data not displayable]
