@@ -1,11 +1,12 @@
 import bcrypt
 from collections import Counter
-from flask import render_template, jsonify, g, request, flash, redirect, url_for, current_app
+from flask import render_template, jsonify, g, request, flash, redirect, url_for
 from flask.ext.login import login_user, logout_user, login_required
 
 from ..core import db
 from ..menu import menu, breadcrumb, make_breadcrumb
 from ..models import Instance, User
+from ..utils import aggregate_values, aggregate_chart
 from .. import crawler
 from . import bp
 
@@ -52,8 +53,10 @@ def logout():
 def server_list():
     g.breadcrumbs.append(make_breadcrumb('Server list'))
     server_list = Instance.query.all()
-    wvars = {'server_list': server_list,
-             'extra_fields': get_extra_fields(server_list)}
+    wvars = {
+        'server_list': server_list,
+        'extra_fields': get_extra_fields(server_list)
+    }
     return render_template('server_list.html', **wvars)
 
 
@@ -90,8 +93,10 @@ def get_server(id):
     instance = Instance.query.filter_by(id=id).first()
     title = crawler.trim_url(instance.url)
     g.breadcrumbs.append(make_breadcrumb(title))
-    wvars = {'server': instance,
-             'title': title}
+    wvars = {
+        'server': instance,
+        'title': title
+    }
     return render_template('manage_server.html', **wvars)
 
 
@@ -110,11 +115,7 @@ def statistics():
     server_list = Instance.query.all()
 
     extra_fields = get_extra_fields(server_list)
-    additional_fields = current_app.config['ADDITIONAL_CHARTS']
-    additional_charts = {}
-    for field in additional_fields:
-        if field in extra_fields:
-            additional_charts[field] = []
+    extended_instances = []
     country_names = []
     country_codes = []
     markers = []
@@ -133,20 +134,17 @@ def statistics():
             i += 1
         else:
             country_names.append('Unknown')
-        for field, data in additional_charts.iteritems():
-            if server.crawled_data is not None and server.crawled_data[field] is not None:
-                data.append(server.crawled_data[field])
-            else:
-                data.append('Unknown')
-    for field, data in additional_charts.iteritems():
-        try:
-            additional_charts[field] = Counter(data).most_common()
-        except Exception:
-            additional_charts[field] = None
+        extended_instances.append({
+            'instance': server,
+            'fields': aggregate_values(server, extra_fields)
+        })
+    additional_charts = aggregate_chart(extended_instances, extra_fields)
 
-    wvars = {'country_names': Counter(country_names),
-             'country_codes': Counter(country_codes),
-             'markers': markers,
-             'id_mapping': id_mapping,
-             'additional_charts': additional_charts}
+    wvars = {
+        'country_names': Counter(country_names),
+        'country_codes': Counter(country_codes),
+        'markers': markers,
+        'id_mapping': id_mapping,
+        'additional_charts': additional_charts
+    }
     return render_template('statistics.html', **wvars)

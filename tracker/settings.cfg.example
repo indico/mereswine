@@ -4,8 +4,7 @@ BABEL_DEFAULT_LOCALE = "en_GB"
 ASSETS_DEBUG = False
 SECRET_KEY = ''
 APP_NAME = 'Instance'
-ADDITIONAL_CHARTS = []
-EXTRA_FIELD_LABELS = {}
+CRAWLED_FIELDS_SETTINGS = {}
 # Database
 SQLALCHEMY_DATABASE_URI = 'postgresql:///tracker'
 # Celery
