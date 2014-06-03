@@ -5,7 +5,7 @@ from flask.ext.login import LoginManager
 from .core import assets, db, babel
 from .assets import version_url, versioned_static_file
 from .menu import setup_breadcrumbs
-from .utils import pretty_name
+from .utils import pretty_name, aggregate
 from .webinterface import bp as webinterface_bp
 from .api import bp as api_bp
 # noinspection PyUnresolvedReferences
@@ -43,6 +43,7 @@ def register_core_funcs(app):
     app.before_request(setup_breadcrumbs)
     # template filters
     app.add_template_filter(pretty_name)
+    app.add_template_filter(aggregate)
 
 
 def register_blueprints(app):

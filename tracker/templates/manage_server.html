@@ -122,17 +122,25 @@
                             {% if server.crawled_data %}
                                 {% for key, value in server.crawled_data | dictsort %}
                                     {% if value %}
+                                        {% set aggregation_func = config['CRAWLED_FIELDS_SETTINGS'].get(key, {}).get('aggregation', None) %}
                                         <div class="row">
                                             <div class="col-md-1">
                                                 <span class="glyphicon glyphicon-file"></span>
                                             </div>
                                             <div class="col-md-4">
-                                                <label>{{ key | pretty_name }}:</label>
+                                                <label>
+                                                    {{ key | pretty_name }}
+                                                    {% if aggregation_func %}
+                                                         ({{ aggregation_func }})
+                                                    {% endif %}
+                                                    :
+                                                </label>
                                             </div>
                                             <div class="col-md-7">
                                                 <span>
-                                                    {% if value is string or value is number %}
-                                                        {{ value }}
+                                                    {% set aggregated_value = (value | aggregate(aggregation_func)) %}
+                                                    {% if aggregated_value is string or aggregated_value is number %}
+                                                        {{ aggregated_value }}
                                                     {% else %}
                                                         [Data not displayable]
                                                     {% endif %}

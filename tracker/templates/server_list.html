@@ -38,10 +38,14 @@
                     </button>
                     <ul id="additional-data-dropdown" class="dropdown-menu dropdown-menu-form dropdown-menu-right" role="menu">
                         {% for field in extra_fields %}
+                            {% set aggregation_func = config['CRAWLED_FIELDS_SETTINGS'].get(field, {}).get('aggregation', None) %}
                             <li>
                                 <label class="checkbox">
                                     <input id="{{ field }}"  type="checkbox">
                                     {{ field | pretty_name }}
+                                    {% if aggregation_func %}
+                                         ({{ aggregation_func }})
+                                    {% endif %}
                                 </label>
                             </li>
                         {% endfor %}
@@ -57,7 +61,13 @@
                 <th>URL</th>
                 <th>Last crawled</th>
                 {% for field in extra_fields %}
-                    <th class="field-{{ field }}">{{ field | pretty_name }}</th>
+                    {% set aggregation_func = config['CRAWLED_FIELDS_SETTINGS'].get(field, {}).get('aggregation', None) %}
+                    <th class="field-{{ field }}">
+                        {{ field | pretty_name }}
+                        {% if aggregation_func %}
+                             ({{ aggregation_func }})
+                        {% endif %}
+                    </th>
                 {% endfor %}
                 <th class="no-sort"></th>
             </tr>
@@ -79,13 +89,17 @@
                             {% endif %}
                         </td>
                         {% for field in extra_fields %}
+                            {% set aggregation_func = config['CRAWLED_FIELDS_SETTINGS'].get(field, {}).get('aggregation', None) %}
                             <td class="field-{{ field }}">
                                 {% if server.crawled_data is none or server.crawled_data[field] is none %}
                                     -
-                                {% elif server.crawled_data[field] is mapping %}
-                                    [Data not displayable]
                                 {% else %}
-                                    {{ server.crawled_data[field] }}
+                                    {% set aggregated_value = (server.crawled_data[field] | aggregate(aggregation_func)) %}
+                                    {% if aggregated_value is string or aggregated_value is number %}
+                                        {{ aggregated_value }}
+                                    {% else %}
+                                        [Data not displayable]
+                                    {% endif %}
                                 {% endif %}
                             </td>
                         {% endfor %}
@@ -130,14 +144,22 @@
                                 <div class="row">
                                     {% if server.crawled_data is not none %}
                                         {% for field in extra_fields %}
+                                            {% set aggregation_func = config['CRAWLED_FIELDS_SETTINGS'].get(field, {}).get('aggregation', None) %}
                                             {% if server.crawled_data[field] is not none %}
                                                 <div class="col-md-3">
-                                                    <label>{{ field | pretty_name }}:</label>
+                                                    <label>
+                                                        {{ field | pretty_name }}
+                                                        {% if aggregation_func %}
+                                                             ({{ aggregation_func }})
+                                                        {% endif %}
+                                                        :
+                                                    </label>
                                                     <span>
-                                                        {% if server.crawled_data[field] is mapping %}
-                                                            [Data not displayable]
+                                                        {% set aggregated_value = (server.crawled_data[field] | aggregate(aggregation_func)) %}
+                                                        {% if aggregated_value is string or aggregated_value is number %}
+                                                            {{ aggregated_value }}
                                                         {% else %}
-                                                            {{ server.crawled_data[field] }}
+                                                            [Data not displayable]
                                                         {% endif %}
                                                     </span>
                                                 </div>
