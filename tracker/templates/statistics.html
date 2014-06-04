@@ -40,18 +40,19 @@
 
 {% block body_end %}
 
-    <link rel="stylesheet" type="text/css" href="static/css/jquery.jqplot.css" />
-    <script language="javascript" type="text/javascript" src="static/js/jqplot/jquery.jqplot.js"></script>
-    <script type="text/javascript" src="static/js/jqplot/plugins/jqplot.pieRenderer.min.js"></script>
-    <script type="text/javascript" src="static/js/jqplot/plugins/jqplot.barRenderer.min.js"></script>
-    <script type="text/javascript" src="static/js/jqplot/plugins/jqplot.categoryAxisRenderer.min.js"></script>
-    <script type="text/javascript" src="static/js/jqplot/plugins/jqplot.pointLabels.min.js"></script>
-    <script type="text/javascript" src="static/js/jqplot/plugins/jqplot.canvasAxisLabelRenderer.min.js"></script>
-    <script type="text/javascript" src="static/js/jqplot/plugins/jqplot.canvasTextRenderer.min.js"></script>
+    {%- assets filters='cssmin,cssrewrite', output='assets/statistics.css',
+               'css/jquery.jqplot.css', 'css/jquery-jvectormap-1.2.2.css' %}
+        <link href="{{ ASSET_URL|version_url }}" rel="stylesheet">
+    {%- endassets %}
 
-    <link rel="stylesheet" href="static/css/jquery-jvectormap-1.2.2.css" type="text/css" media="screen"/>
-    <script type="text/javascript" src="static/js/jvectormap/jquery-jvectormap-1.2.2.min.js"></script>
-    <script type="text/javascript" src="static/js/jvectormap/jquery-jvectormap-world-mill-en.js"></script>
+    {%- assets filters='rjsmin', output='assets/statistics.js', 'js/jqplot/jquery.jqplot.js',
+               'js/jqplot/plugins/jqplot.pieRenderer.js', 'js/jqplot/plugins/jqplot.barRenderer.js',
+               'js/jqplot/plugins/jqplot.categoryAxisRenderer.js', 'js/jqplot/plugins/jqplot.pointLabels.js',
+               'js/jqplot/plugins/jqplot.canvasAxisLabelRenderer.js',
+               'js/jqplot/plugins/jqplot.canvasTextRenderer.js', 'js/jvectormap/jquery.jvectormap.js',
+               'js/jvectormap/jquery-jvectormap-world-mill-en.js' %}
+        <script src="{{ ASSET_URL|version_url }}"></script>
+    {%- endassets %}
 
     <script>
 
