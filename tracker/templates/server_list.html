@@ -313,7 +313,8 @@
         });
         $('#server-table').DataTable({
             'columns': aoColumns,
-            'order': [[2, 'asc']]
+            'order': [[2, 'asc']],
+            'paging': false
         });
         {% if server_list %}
             var tr = $('<tr>', {id: "no-matching-instances"});
