@@ -93,10 +93,18 @@ def aggregate_chart(extended_instances, extra_fields):
 
         if aggregation_func == 'count':
             values = aggregate(values, aggregation_func)
+            aggregation_label = '# of instances'
+            aggregate_by_label = pretty_name(field)
         else:
             for group in values_groups:
                 values.append((group, aggregate(values_groups[group], aggregation_func)))
+            aggregation_label = aggregation_func
+            aggregate_by_label = pretty_name(chart_aggregate_by)
 
-        aggregated_fields[field] = values
+        aggregated_fields[field] = {
+            'data': values,
+            'aggregation_label': aggregation_label,
+            'aggregate_by_label': aggregate_by_label
+        }
 
     return aggregated_fields

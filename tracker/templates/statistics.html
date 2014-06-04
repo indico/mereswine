@@ -20,7 +20,7 @@
                 </div>
             </div>
             <div class="row">
-                {% for field, data in additional_charts.iteritems() if data %}
+                {% for field, content in additional_charts.iteritems() if content %}
                     {% set aggregation_func = config['CRAWLED_FIELDS_SETTINGS'].get(field, {}).get('aggregation', None) %}
                     <div class="col-md-6">
                         <h4>
@@ -29,7 +29,7 @@
                                  ({{ aggregation_func }})
                             {% endif %}
                         </h4>
-                        <div id="{{ field }}" class="chartdiv" data-data="{{ data | tojson | forceescape }}"></div>
+                        <div id="{{ field }}" class="chartdiv" data-data="{{ content['data'] | tojson | forceescape }}" data-aggregation-label="{{ content['aggregation_label'] }}" data-aggregate-by-label="{{ content['aggregate_by_label'] }}"></div>
                     </div>
                 {% endfor %}
             </div>
@@ -46,6 +46,8 @@
     <script type="text/javascript" src="static/js/jqplot/plugins/jqplot.barRenderer.min.js"></script>
     <script type="text/javascript" src="static/js/jqplot/plugins/jqplot.categoryAxisRenderer.min.js"></script>
     <script type="text/javascript" src="static/js/jqplot/plugins/jqplot.pointLabels.min.js"></script>
+    <script type="text/javascript" src="static/js/jqplot/plugins/jqplot.canvasAxisLabelRenderer.min.js"></script>
+    <script type="text/javascript" src="static/js/jqplot/plugins/jqplot.canvasTextRenderer.min.js"></script>
 
     <link rel="stylesheet" href="static/css/jquery-jvectormap-1.2.2.css" type="text/css" media="screen"/>
     <script type="text/javascript" src="static/js/jvectormap/jquery-jvectormap-1.2.2.min.js"></script>
@@ -129,7 +131,10 @@
         );
 
         $('.chartdiv').each(function(){
-            var list = $(this).data('data');
+            var $this = $(this);
+            var list = $this.data('data');
+            var xLabel = $this.data('aggregate-by-label');
+            var yLabel = $this.data('aggregation-label');
             var data = [];
             var ticks = [];
             for (var i = 0; i < list.length; i++) {
@@ -147,8 +152,12 @@
                     borderWidth: 0,
                     shadow: false
                 },
+                axesDefaults: {
+                    labelRenderer: $.jqplot.CanvasAxisLabelRenderer
+                },
                 axes: {
                     xaxis: {
+                        label: xLabel,
                         renderer: $.jqplot.CategoryAxisRenderer,
                         ticks: ticks,
                         tickOptions: {
@@ -156,6 +165,7 @@
                         }
                     },
                     yaxis: {
+                        label: yLabel,
                         rendererOptions: {drawBaseline: false}
                     }
                 }
