@@ -29,7 +29,7 @@
                                  ({{ aggregation_func }})
                             {% endif %}
                         </h4>
-                        <div id="{{ field }}" class="chartdiv" data-data="{{ content['data'] | tojson | forceescape }}" data-aggregation-label="{{ content['aggregation_label'] }}" data-aggregate-by-label="{{ content['aggregate_by_label'] }}"></div>
+                        <div id="{{ field }}" class="chartdiv" data-data="{{ content['data'] | tojson | forceescape }}" data-aggregation-label="{{ content['aggregation_label'] }}" data-aggregate-by-label="{{ content['aggregate_by_label'] }}" data-chart-type="{{ content['chart_type'] }}"></div>
                     </div>
                 {% endfor %}
             </div>
@@ -135,15 +135,41 @@
             var list = $this.data('data');
             var xLabel = $this.data('aggregate-by-label');
             var yLabel = $this.data('aggregation-label');
+            var type = $this.data('chart-type');
             var data = [];
             var ticks = [];
             for (var i = 0; i < list.length; i++) {
                 ticks.push(list[i][0]);
                 data.push(list[i][1]);
             }
+            var chartRenderer = null;
+            var xAxisOptions = {
+                label: xLabel,
+                renderer: $.jqplot.CategoryAxisRenderer,
+                ticks: ticks,
+                tickOptions: {
+                    showGridline: false
+                }
+            };
+            var isPieChart = false;
+            if (type == 'line') {
+                chartRenderer = $.jqplot.LineRendered;
+            } else if (type == 'pie') {
+                chartRenderer = $.jqplot.PieRenderer;
+                xAxisOptions = {
+                    show: false
+                };
+                isPieChart = true;
+            } else {
+                chartRenderer = $.jqplot.BarRenderer;
+            }
+
             var options = { 
                 seriesDefaults: {
-                    renderer: $.jqplot.BarRenderer,
+                    renderer: chartRenderer,
+                    rendererOptions: {
+                        showDataLabels: true,
+                    },
                     shadow: false,
                     pointLabels: {show: true}
                 },
@@ -152,24 +178,23 @@
                     borderWidth: 0,
                     shadow: false
                 },
+                legend: {
+                    show: isPieChart,
+                    location: 'e',
+                    labels: ticks
+                },
                 axesDefaults: {
                     labelRenderer: $.jqplot.CanvasAxisLabelRenderer
                 },
                 axes: {
-                    xaxis: {
-                        label: xLabel,
-                        renderer: $.jqplot.CategoryAxisRenderer,
-                        ticks: ticks,
-                        tickOptions: {
-                            showGridline: false
-                        }
-                    },
+                    xaxis: xAxisOptions,
                     yaxis: {
                         label: yLabel,
                         rendererOptions: {drawBaseline: false}
                     }
                 }
             };
+
             $.jqplot(
                 this.id,
                 [data],

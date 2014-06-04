@@ -67,6 +67,12 @@ def aggregate_chart(extended_instances, extra_fields):
             chart_aggregate_by = crawled_fields_settings[field]['chart_aggregate_by']
         except KeyError:
             chart_aggregate_by = 'country'
+        try:
+            chart_type = crawled_fields_settings[field]['chart_type']
+        except KeyError:
+            chart_type = 'bar'
+        if chart_type == 'pie' and aggregation_func == 'avg':
+            aggregation_func = 'sum'
 
         values = []
         values_groups = {}
@@ -104,7 +110,8 @@ def aggregate_chart(extended_instances, extra_fields):
         aggregated_fields[field] = {
             'data': values,
             'aggregation_label': aggregation_label,
-            'aggregate_by_label': aggregate_by_label
+            'aggregate_by_label': aggregate_by_label,
+            'chart_type': chart_type
         }
 
     return aggregated_fields
