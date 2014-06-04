@@ -1,14 +1,42 @@
-# Core
+# Core settings
+##############################
 BABEL_DEFAULT_TIMEZONE = "UTC"
 BABEL_DEFAULT_LOCALE = "en_GB"
 ASSETS_DEBUG = False
 SECRET_KEY = ''
 APP_NAME = 'Instance'
-CRAWLING_ENDPOINTS = []
-CRAWLED_FIELDS_SETTINGS = {}
-# Database
+CRAWLING_ENDPOINTS = [
+    {
+        'url': '/example/endpoint',
+        'headers': {'Accept': 'application/json'}
+    },
+    {
+        'url': '/another/example/endpoint'
+    }
+]
+CRAWLED_FIELDS_SETTINGS = {
+    'example_field': {
+        'label': 'The Example Field!',
+        'chart': True,
+        'chart_type': 'line',
+        'aggregation': 'sum',
+        'chart_aggregation': 'avg',
+        'chart_aggregate_by': 'another_example_field'
+    },
+    'example_field_2': {
+        'chart': True,
+        'chart_type': 'pie',
+        'chart_aggregation': 'avg',
+        'chart_aggregate_by': 'country'
+    }
+}
+
+# Database settings
+##############################
 SQLALCHEMY_DATABASE_URI = 'postgresql:///tracker'
-# Celery
+
+# Celery settings
+##############################
 CELERY_BROKER_URL = 'redis://127.0.0.1:6379/0'
 from datetime import timedelta
 CELERYBEAT_SCHEDULE = {
