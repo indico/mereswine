@@ -314,7 +314,8 @@
         $('#server-table').DataTable({
             'columns': aoColumns,
             'order': [[2, 'asc']],
-            'paging': false
+            'paging': false,
+            'bInfo': false
         });
         {% if server_list %}
             var tr = $('<tr>', {id: "no-matching-instances"});
