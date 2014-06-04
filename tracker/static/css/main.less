@@ -134,6 +134,7 @@ body {
 
         .panel-footer {
             display: none;
+            min-height: 60px;
         }
 
         .panel-heading, .panel-footer .glyphicon {
@@ -144,6 +145,10 @@ body {
 
     .server-crawled-information {
         float: right;
+
+        .panel-footer {
+            min-height: 40px;
+        }
     }
 
     .server-main-information, .server-crawled-information {
@@ -161,7 +166,7 @@ body {
                 float: right;
             }
 
-            .glyphicon {
+            .btn {
                 margin-top: 20px;
             }
         }
@@ -174,13 +179,12 @@ body {
         }
 
         .panel-footer {
-            min-height: 40px;
 
-            span, label {
+            button, label {
                 float: right;
             }
 
-            .glyphicon {
+            .btn {
                 margin-left: 10px;
             }
         }
