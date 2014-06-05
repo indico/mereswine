@@ -1,0 +1,2 @@
+recursive-include tracker/static *
+recursive-include tracker/templates *

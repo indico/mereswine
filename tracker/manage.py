@@ -1,9 +1,12 @@
+import sys
+
 from flask import current_app
 from flask.ext.script import Manager, prompt_bool
 
-from tracker import models, crawler
-from tracker.core import db, ContextfulManager
-from tracker.factory import make_app
+from . import models, crawler
+from .core import db, ContextfulManager
+from .factory import make_app
+from .tasks import celery
 
 
 manager = ContextfulManager(make_app)
@@ -47,6 +50,15 @@ def create_user(username, password):
     db.session.commit()
 
 
+@manager.command
+def runworker(concurrency='4'):
+    """Runs the celery worker"""
+    args = sys.argv[:1]
+    args += ('-c', concurrency)
+    args += ('-B',)
+    celery.worker_main(args)
+
+
 @manager.shell
 def shell_context():
     ctx = {'db': db}
@@ -54,5 +66,9 @@ def shell_context():
     return ctx
 
 
-if __name__ == '__main__':
+def main():
     manager.run()
+
+
+if __name__ == '__main__':
+    main()

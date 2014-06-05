@@ -1,4 +1,6 @@
 /env/
+/dist
+*.egg-info
 /.idea/
 /tracker/static/.webassets-cache
 /tracker/static/assets/
