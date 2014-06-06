@@ -23,6 +23,10 @@ def aggregate(values, aggregation_func):
         return sum(values)
     elif aggregation_func == 'avg':
         return sum(values) / len(values)
+    elif aggregation_func == 'min':
+        return min(values)
+    elif aggregation_func == 'max':
+        return max(values)
     else:
         raise ValueError('Invalid aggregation function: {0}'.format(aggregation_func))
 
