@@ -1,5 +1,4 @@
 # Core settings
-##############################
 BABEL_DEFAULT_TIMEZONE = "UTC"
 BABEL_DEFAULT_LOCALE = "en_GB"
 ASSETS_DEBUG = False
@@ -32,11 +31,9 @@ CRAWLED_FIELDS_SETTINGS = {
 }
 
 # Database settings
-##############################
 SQLALCHEMY_DATABASE_URI = 'postgresql:///tracker'
 
 # Celery settings
-##############################
 CELERY_BROKER_URL = 'redis://127.0.0.1:6379/0'
 from datetime import timedelta
 CELERYBEAT_SCHEDULE = {

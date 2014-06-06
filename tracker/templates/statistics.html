@@ -6,35 +6,39 @@
 
     <h1>Statistics</h1>
 
-    <div class="statistics-grid">
-        <div class="container-fluid">
-            <div class="row">
-                <h2>Country distribution</h2>
-                <div class="col-md-7">
-                    <div class="world-map"></div>
-                </div>
-                <div class="col-md-5">
-                    <div class="country-piechart-container">
-                        <div id="country-piechart"></div>
+    {% if country_names %}
+        <div class="statistics-grid">
+            <div class="container-fluid">
+                <div class="row">
+                    <h2>Country distribution</h2>
+                    <div class="col-md-7">
+                        <div class="world-map"></div>
+                    </div>
+                    <div class="col-md-5">
+                        <div class="country-piechart-container">
+                            <div id="country-piechart"></div>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="row">
-                {% for field, content in additional_charts.iteritems() if content %}
-                    {% set aggregation_func = config['CRAWLED_FIELDS_SETTINGS'].get(field, {}).get('aggregation', None) %}
-                    <div class="col-md-6">
-                        <h4>
-                            {{ field | pretty_name }}
-                            {% if aggregation_func %}
-                                 ({{ aggregation_func }})
-                            {% endif %}
-                        </h4>
-                        <div id="{{ field }}" class="chartdiv" data-data="{{ content['data'] | tojson | forceescape }}" data-aggregation-label="{{ content['aggregation_label'] }}" data-aggregate-by-label="{{ content['aggregate_by_label'] }}" data-chart-type="{{ content['chart_type'] }}"></div>
-                    </div>
-                {% endfor %}
+                <div class="row">
+                    {% for field, content in additional_charts.iteritems() if content %}
+                        {% set aggregation_func = config['CRAWLED_FIELDS_SETTINGS'].get(field, {}).get('aggregation', None) %}
+                        <div class="col-md-6">
+                            <h4>
+                                {{ field | pretty_name }}
+                                {% if aggregation_func %}
+                                     ({{ aggregation_func }})
+                                {% endif %}
+                            </h4>
+                            <div id="{{ field }}" class="chartdiv" data-data="{{ content['data'] | tojson | forceescape }}" data-aggregation-label="{{ content['aggregation_label'] }}" data-aggregate-by-label="{{ content['aggregate_by_label'] }}" data-chart-type="{{ content['chart_type'] }}"></div>
+                        </div>
+                    {% endfor %}
+                </div>
             </div>
         </div>
-    </div>
+    {% else %}
+        <span>No statistics available!<span>
+    {% endif %}
 
 {%- endblock %}
 
