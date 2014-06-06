@@ -311,12 +311,14 @@
                 aoColumns.push(null);
             }
         });
-        $('#server-table').DataTable({
-            'columns': aoColumns,
-            'order': [[2, 'asc']],
-            'paging': false,
-            'bInfo': false
-        });
+        if ($('.server-row').length > 0) {
+            $('#server-table').DataTable({
+                'columns': aoColumns,
+                'order': [[2, 'asc']],
+                'paging': false,
+                'bInfo': false
+            });
+        }
         {% if server_list %}
             var tr = $('<tr>', {id: "no-matching-instances"});
             $('<td>', {colspan: "{{ extra_fields|length + 4 }}", text: 'No instance matches the criteria selected.'}).appendTo(tr);
