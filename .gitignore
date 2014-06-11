@@ -2,9 +2,9 @@
 /dist
 *.egg-info
 /.idea/
-/tracker/static/.webassets-cache
-/tracker/static/assets/
-/tracker/static/locale/*.js
+/cephalopod/static/.webassets-cache
+/cephalopod/static/assets/
+/cephalopod/static/locale/*.js
 .*.swp
 *.pyc
 *.cfg

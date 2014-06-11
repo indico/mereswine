@@ -1,2 +1,2 @@
-recursive-include tracker/static *
-recursive-include tracker/templates *
+recursive-include cephalopod/static *
+recursive-include cephalopod/templates *

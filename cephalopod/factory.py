@@ -16,7 +16,7 @@ login_manager = LoginManager()
 
 def make_app():
     """Returns a :class:`CustomFlask` application instance that is properly configured."""
-    app = Flask('tracker')
+    app = Flask('cephalopod')
     app.config.from_pyfile('settings.cfg.example')  # In case a custom option is missing in settings.cfg
     app.config.from_pyfile('settings.cfg')
     assets.init_app(app)

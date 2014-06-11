@@ -1,14 +1,14 @@
-# Instance tracker
+# Cephalopod
 
-With the Instance Tracker package you'll be able to easily track and manage the various instances of your application, as well as analizing interesting statistical information.
+With the Cephalopod package you'll be able to easily track and manage the various instances of your application, as well as analizing interesting statistical information.
 
 ## Installation
 
 To install this package, first of all head to your code directory and clone this repository:
 
 ```sh
-git clone https://github.com/tommy39/instance-tracker.git
-cd instance-tracker
+git clone https://github.com/indico/cephalopod.git
+cd cephalopod
 ```
 
 Then you can either install the package in a dedicated virtual environment (suggested):
@@ -30,7 +30,7 @@ python setup.py install
 After you installed the package, you should create your own settings file
 
 ```sh
-cp tracker/settings.cfg.example tracker/settings.cfg
+cp cephalopod/settings.cfg.example cephalopod/settings.cfg
 ```
 
 and personalize it.
@@ -51,11 +51,11 @@ The default values are `UTC` for the timezone and `en_GB` (i.e. English format) 
 
 ### Application name
 
-To personalize your Instance Tracker application you should change the field `APP_NAME` to your application name.
+To personalize your Cephalopod application you should change the field `APP_NAME` to your application name.
 
 ### Crawling endpoints
 
-To allow your Instance Tracker to crawl additional information from the servers running your application, you should specify all the necessary endpoints in the `CRAWLING_ENDPOINTS` field.
+To allow Cephalopod to crawl additional information from the servers running your application, you should specify all the necessary endpoints in the `CRAWLING_ENDPOINTS` field.
 
 This field is going to be a Python list where each element is a Python dictionary containing an `url` and (optionally) a `headers` dictionary. Each endpoint url will be appended to the server base url at the moment of sending the http request to crawl the information.
 
@@ -67,7 +67,7 @@ Each field must have a key name equals to the corresponding crawled field name. 
 
 For each field, the following parameters can be specified:
 
-- **label:** a string that specifies how the field name will be rendered across the Instance Tracker. The default value is the field name with spaces instead of underscores and with the first word starting with a capital letter;
+- **label:** a string that specifies how the field name will be rendered across Cephalopod. The default value is the field name with spaces instead of underscores and with the first word starting with a capital letter;
 - **chart:** a boolean value that indicates whether to include or not that field amongst the statistics. Default: `False`;
 - **chart_type:** if `chart` is set to `True` it specifies with which kind of chart the field statistics will be displayed. Accepted values are: `'bar'`, for a barchart, `'line'`, for a linechart, and `'pie'`, for a piechart. Default: `'bar'`;
 - **aggregation:** if the field cannot be directly shown (for example it's a list or a dictionary) you have to define an aggregation function to aggregate the values inside the field and use the aggregated value instead. At the moment, only numeric values are supported and the accepted aggregation functions are: `None`, when no aggregation is necessary, `'sum'`, to aggregate by sum, `'avg'`, to aggregate by average, and `'min'` and `'max'` to show the lowest and the highest value, respectively. Default: `None`;
@@ -80,14 +80,14 @@ To specify the time interval between each periodic crawl, you should modify the 
 
 ## API implementation
 
-To allow your application, and therefore each instance running it, to communicate with your Instance Tracker you have to use the three APIs available:
+To allow your application, and therefore each instance running it, to communicate with Cephalopod you have to use the three APIs available:
 
-- **Create instance:** this API is used to create a new instance record in the Instance Tracker DB.
+- **Create instance:** this API is used to create a new instance record in the Cephalopod DB.
     - *Endpoint:* `/instance/`;
     - *Request type:* `POST`;
     - *Data:* the url of the instance server, the contact person name and e-mail address and the organisation name;
     - *Response:* the instance UUID.
-- **Update instance:** used to update the instance record in the Instance Tracker DB whenever some field is changed in the instance server. Also used when the Instance Tracking has to be be enabled/disabled for that instance.
+- **Update instance:** used to update the instance record in the Cephalopod DB whenever some field is changed in the instance server. Also used when the Instance Tracking has to be be enabled/disabled for that instance.
     - *Endpoint*: `/instance/<uuid>`;
     - *Request type:* `PATCH`;
     - *Data:* every combination of the following fields: server url, contact person name, contact e-mail address and enabled status (`True` or `False`);
@@ -100,13 +100,13 @@ To allow your application, and therefore each instance running it, to communicat
 
 ## Usage
 
-The Instance Tracker is basically composed by two main functionalities: instance details & management and statistics.
+Cephalopod is basically composed by two main functionalities: instance details & management and statistics.
 
-For others more advanced functionalities a python script, `manage.py`, has been written and included in the package.
+For others more advanced functionalities a python script has been written and included in the package.
 
 ### Instance details & management
 
-The Instance Tracker allows you to view a comprehensive list of all the instances in the DB, with the possibility to filter them by a few criteria. Also in the server list you can sort the instances selected by one of the available fields (be it one of the main fields or one of the crawled fields) and you can choose to run at any moment the crawler to crawl all the instances.
+Cephalopod allows you to view a comprehensive list of all the instances in the DB, with the possibility to filter them by a few criteria. Also in the server list you can sort the instances selected by one of the available fields (be it one of the main fields or one of the crawled fields) and you can choose to run at any moment the crawler to crawl all the instances.
 
 By clicking on the detail button for a specific instance, you'll be able to explore it's main and crawled information and see a map with the approximated physical location of the server.
 
@@ -116,17 +116,17 @@ In the statistics page you'll see the country distribution by default, i.e. the 
 
 On top of that, it will also be displayed all the additional charts you might have configured in the settings file.
 
-### manage.py
+### Command line script
 
-For more advanced operations you'll have to use the script manage.py.
+For more advanced operations you'll have to use the management script.
 
 To use the script run
 
 ```sh
-manage_tracker <arguments>
+cephalopod <arguments>
 ```
 
-if you installed the tracker with `setup.py`, or
+if you installed cephalopod with `setup.py`, or
 
 ```sh
 python manage.py <arguments>
