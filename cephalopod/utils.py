@@ -111,11 +111,12 @@ def aggregate_chart(extended_instances, extra_fields):
             aggregation_label = aggregation_func
             aggregate_by_label = pretty_name(chart_aggregate_by)
 
-        aggregated_fields[field] = {
-            'data': values,
-            'aggregation_label': aggregation_label,
-            'aggregate_by_label': aggregate_by_label,
-            'chart_type': chart_type
-        }
+        if values:
+            aggregated_fields[field] = {
+                'data': values,
+                'aggregation_label': aggregation_label,
+                'aggregate_by_label': aggregate_by_label,
+                'chart_type': chart_type
+            }
 
     return aggregated_fields
