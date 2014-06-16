@@ -92,7 +92,10 @@ def aggregate_chart(extended_instances, extra_fields):
                     continue
 
                 if chart_aggregate_by == 'country':
-                    category = instance['instance'].geolocation['country_name']
+                    if instance['instance'].geolocation:
+                        category = instance['instance'].geolocation['country_name']
+                    else:
+                        category = 'Unknown'
                 else:
                     category = instance['instance'].crawled_data.get(chart_aggregate_by, 'Unknown')
 
