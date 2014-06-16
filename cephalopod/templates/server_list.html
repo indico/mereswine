@@ -4,6 +4,9 @@
 
 {% block content -%}
     <h1>{{ self.title() }}</h1>
+
+    <p class="lead">Number of active instances: {{ active_instances }}/{{ server_list | length }}</p>
+
     <div class="server-list-actions btn-group">
         {% if server_list %}
             <button id="crawl-all" type="button" class="btn btn-default">
@@ -18,13 +21,13 @@
                 <ul id="show-dropdown" class="dropdown-menu dropdown-menu-form dropdown-menu-right" role="menu">
                     <li>
                         <label class="checkbox">
-                            <input id="show-enabled"  type="checkbox">
+                            <input id="show-enabled" type="checkbox">
                             Enabled instances
                         </label>
                     </li>
                     <li>
                         <label class="checkbox">
-                            <input id="show-disabled"  type="checkbox">
+                            <input id="show-disabled" type="checkbox">
                             Disabled instances
                         </label>
                     </li>
@@ -54,6 +57,7 @@
             {% endif %}
         {% endif %}
     </div>
+
     <table id="server-table" class="table">
         <thead>
             <tr>

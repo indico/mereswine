@@ -53,9 +53,11 @@ def logout():
 def server_list():
     g.breadcrumbs.append(make_breadcrumb('Server list'))
     server_list = Instance.query.all()
+    active_instances = sum(1 for server in server_list if server.enabled)
     wvars = {
         'server_list': server_list,
-        'extra_fields': get_extra_fields(server_list)
+        'extra_fields': get_extra_fields(server_list),
+        'active_instances': active_instances
     }
     return render_template('server_list.html', **wvars)
 
