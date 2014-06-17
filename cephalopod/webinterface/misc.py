@@ -1,3 +1,5 @@
+import itertools
+
 import bcrypt
 from collections import Counter
 from flask import render_template, jsonify, g, request, flash, redirect, url_for
@@ -122,9 +124,11 @@ def statistics():
     country_codes = []
     markers = []
     id_mapping = {}
+    dates = []
     i = 0
 
     for server in server_list:
+        dates.append(server.registration_date.date())
         if server.geolocation:
             country_names.append(server.geolocation['country_name'])
             country_codes.append(server.geolocation['country_code'])
@@ -142,11 +146,19 @@ def statistics():
         })
     additional_charts = aggregate_chart(extended_instances, extra_fields)
 
+    count = 0
+    registration_counts = []
+    for date, items in itertools.groupby(sorted(dates)):
+        count += sum(1 for _ in items)
+        registration_counts.append((date.strftime('%Y-%m-%d'), count))
+    print registration_counts
+
     wvars = {
         'country_names': Counter(country_names),
         'country_codes': Counter(country_codes),
         'markers': markers,
         'id_mapping': id_mapping,
-        'additional_charts': additional_charts
+        'additional_charts': additional_charts,
+        'registration_counts': registration_counts
     }
     return render_template('statistics.html', **wvars)

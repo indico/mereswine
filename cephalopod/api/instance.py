@@ -1,4 +1,5 @@
 import uuid
+from datetime import datetime
 
 from flask import jsonify, request
 from sqlalchemy.exc import SQLAlchemyError
@@ -18,6 +19,7 @@ def create_instance():
     instance.contact = payload['contact']
     instance.email = payload['email']
     instance.organisation = payload['organisation']
+    instance.registration_date = datetime.utcnow()
     db.session.add(instance)
     db.session.commit()
     return jsonify(uuid=instance.uuid)

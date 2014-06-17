@@ -21,6 +21,12 @@
                     </div>
                 </div>
                 <div class="row">
+                    <h2>Registered instances</h2>
+                    <div class="col-md-12">
+                        <div id="instances-chart"></div>
+                    </div>
+                </div>
+                <div class="row">
                     {% for field, content in additional_charts.iteritems() if content %}
                         {% set aggregation_func = config['CRAWLED_FIELDS_SETTINGS'].get(field, {}).get('aggregation', None) %}
                         <div class="col-md-6">
@@ -53,6 +59,7 @@
                'js/jqplot/plugins/jqplot.pieRenderer.js', 'js/jqplot/plugins/jqplot.barRenderer.js',
                'js/jqplot/plugins/jqplot.categoryAxisRenderer.js', 'js/jqplot/plugins/jqplot.pointLabels.js',
                'js/jqplot/plugins/jqplot.canvasAxisLabelRenderer.js',
+               'js/jqplot/plugins/jqplot.dateAxisRenderer.js',
                'js/jqplot/plugins/jqplot.canvasTextRenderer.js', 'js/jvectormap/jquery.jvectormap.js',
                'js/jvectormap/jquery-jvectormap-world-mill-en.js' %}
         <script src="{{ ASSET_URL|version_url }}"></script>
@@ -131,6 +138,45 @@
         };
         $.jqplot(
             'country-piechart',
+            [data],
+            options
+        );
+
+        var registration_counts = {{ registration_counts | tojson }};
+        data = [];
+        for (var i = 0; i < registration_counts.length; i++) {
+            data.push([registration_counts[i][0], registration_counts[i][1]]);
+        }
+        options = { 
+            seriesDefaults: {
+                renderer: $.jqplot.LineRendered,
+                rendererOptions: {
+                    showDataLabels: true,
+                },
+                shadow: false,
+                pointLabels: {show: true}
+            },
+            grid: {
+                background: '#FFFFFF',
+                borderWidth: 0,
+                shadow: false
+            },
+            axes: {
+                xaxis: {
+                    renderer: $.jqplot.DateAxisRenderer,
+                    tickOptions: {
+                        showGridline: false,
+                        formatString:'%b, %Y'
+                    },
+                    tickInterval:'4 month'
+                },
+                yaxis: {
+                    rendererOptions: {drawBaseline: false}
+                }
+            }
+        };
+        $.jqplot(
+            'instances-chart',
             [data],
             options
         );

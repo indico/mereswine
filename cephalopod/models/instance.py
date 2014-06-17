@@ -35,6 +35,7 @@ class Instance(db.Model):
     crawl_date = db.Column(db.DateTime)
     crawled_data = db.Column(JSONEncodedDict)
     geolocation = db.Column(JSONEncodedDict)
+    registration_date = db.Column(db.DateTime, nullable=False)
 
     def __repr__(self):
         return '<Instance {0} {1}>'.format(self.id, self.url)
@@ -45,4 +46,5 @@ class Instance(db.Model):
                 'url': self.url,
                 'contact': self.contact,
                 'email': self.email,
-                'organisation': self.organisation}
+                'organisation': self.organisation,
+                'registered': self.registration_date}
