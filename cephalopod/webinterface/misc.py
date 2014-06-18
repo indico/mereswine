@@ -151,7 +151,6 @@ def statistics():
     for date, items in itertools.groupby(sorted(dates)):
         count += sum(1 for _ in items)
         registration_counts.append((date.strftime('%Y-%m-%d'), count))
-    print registration_counts
 
     wvars = {
         'country_names': Counter(country_names),
