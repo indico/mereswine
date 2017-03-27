@@ -45,13 +45,17 @@ Just add whichever key you prefer or insert a random alphanumeric string.
 
 ### Timezone and time format
 
-The fields `BABEL_DEFAULT_TIMEZONE` and `BABEL_DEFAULT_LOCALE` determine, respectively, the in which timezone the times will be shown and in which format.
+The fields `BABEL_DEFAULT_TIMEZONE` and `BABEL_DEFAULT_LOCALE` determine, respectively, in which timezone the times will be shown and in which format.
 
 The default values are `UTC` for the timezone and `en_GB` (i.e. English format) for the time format.
 
 ### Application name
 
 To personalize your Cephalopod application you should change the field `APP_NAME` to your application name.
+
+### SSL support
+
+In order to run the web server with SSL you should uncomment and change the fields `SSL_CERT` and `SSL_KEY` with the path of your SSL certificate and key.
 
 ### Crawling endpoints
 
