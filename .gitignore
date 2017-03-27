@@ -9,3 +9,4 @@
 *.pyc
 *.cfg
 celerybeat-schedule
+/build/
