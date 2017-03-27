@@ -1,7 +1,7 @@
 import sys
 
 from flask import current_app
-from flask.ext.script import Manager, prompt_bool
+from flask.ext.script import Manager, Server, prompt_bool
 
 from . import models, crawler
 from .core import db, ContextfulManager
@@ -12,6 +12,10 @@ from .tasks import celery
 manager = ContextfulManager(make_app)
 db_manager = Manager(help='Manage database')
 manager.add_command('db', db_manager)
+app = manager.app()
+if app.config.get('SSL_CERT') and app.config.get('SSL_KEY'):
+    manager.add_command('runserver',
+                        Server(ssl_context=(app.config.get('SSL_CERT'), app.config.get('SSL_KEY'))))
 
 
 @db_manager.command
