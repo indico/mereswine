@@ -2,7 +2,7 @@ import itertools
 
 import bcrypt
 from collections import Counter
-from flask import render_template, jsonify, g, request, flash, redirect, url_for
+from flask import current_app, render_template, jsonify, g, request, flash, redirect, url_for
 from flask.ext.login import login_user, logout_user, login_required
 
 from ..core import db
@@ -13,10 +13,19 @@ from .. import crawler
 from . import bp
 
 
-def get_extra_fields(server_list):
+def get_all_server_fields(server_list):
     extra_fields = set()
     for server in server_list:
-        extra_fields.update(server.crawled_data or {})
+        extra_fields.update(get_server_fields(server) or {})
+    return sorted(extra_fields)
+
+
+def get_server_fields(server):
+    extra_fields = set()
+    fields_settings = current_app.config['CRAWLED_FIELDS_SETTINGS']
+    if server.crawled_data:
+        data = {k: v for k, v in server.crawled_data.iteritems() if fields_settings.get(k, False) is not None}
+        extra_fields.update(data or {})
     return sorted(extra_fields)
 
 
@@ -58,7 +67,7 @@ def server_list():
     active_instances = sum(1 for server in server_list if server.enabled)
     wvars = {
         'server_list': server_list,
-        'extra_fields': get_extra_fields(server_list),
+        'extra_fields': get_all_server_fields(server_list),
         'active_instances': active_instances
     }
     return render_template('server_list.html', **wvars)
@@ -99,6 +108,7 @@ def get_server(id):
     g.breadcrumbs.append(make_breadcrumb(title))
     wvars = {
         'server': instance,
+        'fields': get_server_fields(instance),
         'title': title
     }
     return render_template('manage_server.html', **wvars)
@@ -117,8 +127,7 @@ def crawl_all():
 @breadcrumb('Statistics', '.statistics')
 def statistics():
     server_list = Instance.query.all()
-
-    extra_fields = get_extra_fields(server_list)
+    extra_fields = get_all_server_fields(server_list)
     extended_instances = []
     country_names = []
     country_codes = []

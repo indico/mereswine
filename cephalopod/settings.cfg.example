@@ -4,6 +4,7 @@ BABEL_DEFAULT_LOCALE = "en_GB"
 ASSETS_DEBUG = False
 SECRET_KEY = ''
 APP_NAME = 'Cephalopod'
+DEBUG = True
 #SSL_CERT = '/path/to/ssl_cert.crt'
 #SSL_KEY = '/path/to/ssl_key.key'
 CRAWLING_ENDPOINTS = [

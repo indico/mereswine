@@ -126,34 +126,32 @@
                         </div>
                         <div class="panel-body container-fluid">
                             {% if server.crawled_data %}
-                                {% for key, value in server.crawled_data | dictsort %}
-                                    {% if value %}
-                                        {% set aggregation_func = config['CRAWLED_FIELDS_SETTINGS'].get(key, {}).get('aggregation', None) %}
-                                        <div class="row">
-                                            <div class="col-md-1">
-                                                <span class="glyphicon glyphicon-file"></span>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <label>
-                                                    {{ key | pretty_name }}
-                                                    {% if aggregation_func %}
-                                                         ({{ aggregation_func }})
-                                                    {% endif %}
-                                                    :
-                                                </label>
-                                            </div>
-                                            <div class="col-md-7">
-                                                <span>
-                                                    {% set aggregated_value = (value | aggregate(aggregation_func)) %}
-                                                    {% if aggregated_value is string or aggregated_value is number %}
-                                                        {{ aggregated_value }}
-                                                    {% else %}
-                                                        [Data not displayable]
-                                                    {% endif %}
-                                                </span>
-                                            </div>
+                                {% for field in fields if server.crawled_data[field] %}
+                                    {% set aggregation_func = config.CRAWLED_FIELDS_SETTINGS.get(field, {}).get('aggregation', None) %}
+                                    <div class="row">
+                                        <div class="col-md-1">
+                                            <span class="glyphicon glyphicon-file"></span>
                                         </div>
-                                    {% endif %}
+                                        <div class="col-md-4">
+                                            <label>
+                                                {{ field | pretty_name }}
+                                                {% if aggregation_func %}
+                                                     ({{ aggregation_func }})
+                                                {% endif %}
+                                                :
+                                            </label>
+                                        </div>
+                                        <div class="col-md-7">
+                                            <span>
+                                                {% set aggregated_value = (server.crawled_data[field] | aggregate(aggregation_func)) %}
+                                                {% if aggregated_value is string or aggregated_value is number %}
+                                                    {{ aggregated_value }}
+                                                {% else %}
+                                                    [Data not displayable]
+                                                {% endif %}
+                                            </span>
+                                        </div>
+                                    </div>
                                 {% endfor %}
                             {% else %}
                                 <span>No crawled data available for this server.</span>

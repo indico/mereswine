@@ -69,6 +69,8 @@ All the configurations relative to the crawled fields are managed through the `C
 
 Each field must have a key name equals to the corresponding crawled field name. Any mismatching field will be ignored.
 
+In case you want to ignore some of the fields that the crawling endpoints offer, it is possible to set the fields to `None` and your Cephalopod application will not show them in the interface.
+
 For each field, the following parameters can be specified:
 
 - **label:** a string that specifies how the field name will be rendered across Cephalopod. The default value is the field name with spaces instead of underscores and with the first word starting with a capital letter;
