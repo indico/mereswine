@@ -5,3 +5,29 @@
         }
     }
 }
+
+.statistics-grid {
+    margin-bottom: 60px;
+
+    .row {
+        min-width: 1020px;
+    }
+
+    .world-map {
+        width: 600px;
+        height: 400px;
+    }
+
+    .country-piechart-container {
+        margin-top: 50px;
+        width: 400px;
+    }
+
+    .statistics-item {
+        margin-top: 40px;
+    }
+
+    .jqplot-table-legend-swatch-outline, .jqplot-table-legend {
+        border: 0;
+    }
+}
