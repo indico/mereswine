@@ -9,50 +9,43 @@
 
     <div class="server-list-actions btn-group">
         {% if server_list %}
-            <button id="crawl-all" type="button" class="btn btn-default">
-                <span class="glyphicon glyphicon-refresh"></span>
+            <button id="crawl-all" type="button" class="btn btn-secondary">
+                <i class="fa fa-refresh" aria-hidden="true"></i>
                 Crawl all
             </button>
             <div class="btn-group">
-                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">
                     Show
-                    <b class="caret"></b>
                 </button>
-                <ul id="show-dropdown" class="dropdown-menu dropdown-menu-form dropdown-menu-right" role="menu">
-                    <li>
-                        <label class="checkbox">
+                <div class="dropdown-menu">
+                    <label class="dropdown-item checkbox">
                             <input id="show-enabled" type="checkbox">
                             Enabled instances
-                        </label>
-                    </li>
-                    <li>
-                        <label class="checkbox">
+                    </label>
+                    <label class="dropdown-item checkbox">
                             <input id="show-disabled" type="checkbox">
                             Disabled instances
-                        </label>
-                    </li>
-                </ul>
+                    </label>
+                </div>
             </div>
             {% if extra_fields %}
                 <div class="btn-group">
-                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                    <button type="button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">
                         Additional data
-                        <b class="caret"></b>
                     </button>
-                    <ul id="additional-data-dropdown" class="dropdown-menu dropdown-menu-form dropdown-menu-right" role="menu">
+                    <div id="additional-data-dropdown" class="dropdown-menu"
+                         role="menu">
                         {% for field in extra_fields %}
                             {% set aggregation_func = config.CRAWLED_FIELDS_SETTINGS.get(field, {}).get('aggregation', None) %}
-                            <li>
-                                <label class="checkbox">
+                                <label class="dropdown-item checkbox">
                                     <input id="{{ field }}"  type="checkbox">
                                     {{ field | pretty_name }}
                                     {% if aggregation_func %}
                                          ({{ aggregation_func }})
                                     {% endif %}
                                 </label>
-                            </li>
                         {% endfor %}
-                    </ul>
+                    </div>
                 </div>
             {% endif %}
         {% endif %}
@@ -81,7 +74,7 @@
                 {% for server in server_list %}
                     <tr class="server-row{{ ' danger' if not server.enabled }}">
                         <td>
-                            <span class="glyphicon glyphicon-chevron-right toggle-expand"></span>
+                            <i class="fa fa-chevron-right toggle-expand"></i>
                             {{ server.organisation }}
                         </td>
                         <td><a href="{{ server.url }}">{{ server.url }}</a></td>
@@ -109,14 +102,14 @@
                         {% endfor %}
                         <td>
                             <div class="btn-group btn-group-xs server-actions">
-                                <button type="button" class="btn btn-default manage-server" data-url="{{ url_for('.get_server', id=server.id) }}" title="Server details">
-                                    <span class="glyphicon glyphicon-search"></span>
+                                <button type="button" class="btn btn-secondary manage-server" data-url="{{ url_for('.get_server', id=server.id) }}" title="Server details">
+                                    <i class="fa fa-search" aria-hidden="true"></i>
                                 </button>
-                                <button type="button" class="btn btn-default crawl-now"{{ ' disabled' if not server.enabled }} data-url="{{ url_for('.update_server', id=server.id) }}" title="Crawl now">
-                                    <span class="glyphicon glyphicon-refresh"></span>
+                                <button type="button" class="btn btn-secondary crawl-now"{{ ' disabled' if not server.enabled }} data-url="{{ url_for('.update_server', id=server.id) }}" title="Crawl now">
+                                    <i class="fa fa-refresh"></i>
                                 </button>
                                 <button type="button" class="btn btn-danger js-server-delete" data-url="{{ url_for('.remove_server', id=server.id) }}" title="Delete server">
-                                    <span class="glyphicon glyphicon-remove"></span>
+                                    <i class="fa fa-remove"></i>
                                 </button>
                             </div>
                         </td>
@@ -126,22 +119,22 @@
                             <div class="container-fluid">
                                 <div class="row">
                                     <div class="col-md-3">
-                                        <label>Contact:</label>
+                                        <strong>Contact:</strong>
                                         <span>{{ server.contact }}</span>
                                     </div>
                                     <div class="col-md-3">
-                                        <label>Email:</label>
+                                        <strong>Email:</strong>
                                         <a href="mailto:{{ server.email }}">{{ server.email }}</a>
                                     </div>
                                     <div class="col-md-4">
-                                        <label>UUID:</label>
+                                        <strong>UUID:</strong>
                                         <span>{{ server.uuid }}</span>
                                     </div>
                                     <div class="col-md-2">
                                         {% if server.enabled %}
-                                            <label class="brand-success">Enabled</label>
+                                            <strong class="text-success">Enabled</strong>
                                         {% else %}
-                                            <label class="brand-danger">Disabled</label>
+                                            <strong class="text-danger">Disabled</strong>
                                         {% endif %}
                                     </div>
                                 </div>
@@ -151,13 +144,13 @@
                                             {% if server.crawled_data[field]%}
                                                 {% set aggregation_func = config.CRAWLED_FIELDS_SETTINGS.get(field, {}).get('aggregation', None) %}
                                                 <div class="col-md-3">
-                                                    <label>
+                                                    <strong>
                                                         {{ field | pretty_name }}
                                                         {% if aggregation_func %}
                                                              ({{ aggregation_func }})
                                                         {% endif %}
                                                         :
-                                                    </label>
+                                                    </strong>
                                                     <span>
                                                         {% set aggregated_value = (server.crawled_data[field] | aggregate(aggregation_func)) %}
                                                         {% if aggregated_value is string or aggregated_value is number %}
@@ -206,7 +199,7 @@
             if($line.data('cached-row')) {
                 $line.data('cached-row').toggle().insertAfter($line);
             }
-            $(this).toggleClass('glyphicon-chevron-down').toggleClass('glyphicon-chevron-right');
+            $(this).toggleClass('fa-chevron-down').toggleClass('fa-chevron-right');
         });
 
         $('.crawl-now').on('click', function(){
@@ -330,7 +323,7 @@
         {% endif %}
 
         $('th:not(.no-sort)').on('click', function(){
-            $('.toggle-expand').removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-right');
+            $('.toggle-expand').removeClass('fa-chevron-down').addClass('fa-chevron-right');
         });
 
         $('#show-enabled').trigger('change');
