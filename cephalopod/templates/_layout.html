@@ -8,6 +8,9 @@
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css"
               integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ"
               crossorigin="anonymous">
+        {%- assets filters='scss,cssmin,cssrewrite', output='assets/bundle.css', 'css/main.scss' %}
+            <link href="{{ ASSET_URL|version_url }}" rel="stylesheet">
+        {%- endassets %}
     </head>
     <body>
         <nav class="navbar navbar-toggleable-md navbar-inverse bg-inverse">
