@@ -3,24 +3,21 @@
 {% block title %}Home{% endblock %}
 
 {% block content -%}
-    <h1>{{ config.APP_NAME }}</h1>
-
-    <h3>Welcome to {{ config.APP_NAME }}!</h3>
-    Here you can see all the information of the servers running your application, as well as being able to manage them and explore interesting statistics information.<br>
-    <br>
-    <div class="sections-buttons">
-        <form action={{ url_for('.server_list') | tojson }} method="GET">
-            <button type="submit" class="btn btn-default btn-lg">
-                <span class="glyphicon glyphicon-cog"></span>
+    <div class="jumbotron">
+        <h1 class="display-3">Welcome to {{ config.APP_NAME }}!</h1>
+        <p class="lead">
+            Here you can see all the information of the servers running your application, as well as being able to
+            manage them and explore interesting statistics information.
+        </p>
+        <p class="lead">
+            <a class="btn btn-primary btn-lg" href="{{ url_for('.server_list') }}" role="button">
+                <i class="fa fa-cog" aria-hidden="true"></i>
                 Server Management
-            </button>
-        </form>
-
-        <form action={{ url_for('.statistics') | tojson }} method="GET">
-            <button type="submit" class="btn btn-default btn-lg">
-                <span class="glyphicon glyphicon-stats"></span>
+            </a>
+            <a class="btn btn-primary btn-lg" href="{{ url_for('.statistics') }}" role="button">
+                <i class="fa fa-bar-chart" aria-hidden="true"></i>
                 Statistics
-            </button>
-        </form>
+            </a>
+        </p>
     </div>
 {%- endblock %}
