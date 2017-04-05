@@ -5,41 +5,33 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
         <meta charset="UTF-8">
         {% block meta %}{% endblock %}
-
-        {%- assets filters='less,cssmin,cssrewrite', depends='css/bootstrap/*.less', output='assets/bundle.css',
-                   'css/bootstrap/bootstrap.less', 'css/bootstrap/theme.less',
-                   'css/main.less' %}
-            <link href="{{ ASSET_URL|version_url }}" rel="stylesheet">
-        {%- endassets %}
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css"
+              integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ"
+              crossorigin="anonymous">
     </head>
     <body>
-        <header class="navbar navbar-inverse navbar-fixed-top" role="banner">
+        <nav class="navbar navbar-toggleable-md navbar-inverse bg-inverse">
             <div class="container">
-                <div class="navbar-header">
-                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                    </button>
-                    <a class="navbar-brand" href="{{ url_for('frontend.index') }}">{{ config.APP_NAME }}</a>
+                <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <a class="navbar-brand" href="{{ url_for('frontend.index') }}">{{ config.APP_NAME }}</a>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item">
+                            <a href="{{ url_for('.server_list') }}"
+                               class="nav-link {% if g.menu == 'server_list' %}active{% endif %}">
+                                Servers
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a href="{{ url_for('.statistics') }}"
+                               class="nav-link {% if g.menu == 'statistics' %}active{% endif %}">
+                                Statistics
+                            </a>
+                        </li>
+                    </ul>
                 </div>
-                <nav class="collapse navbar-collapse it-navbar-menu" role="navigation">
-                    {% block nav %}
-                        <ul class="nav navbar-nav">
-                            <li{% if g.menu == 'index' %} class="active"{% endif %}>
-                                <a href="{{ url_for('frontend.index') }}">Home</a>
-                            </li>
-                            {% if session.user %}
-                                <li{% if g.menu == 'server_list' %} class="active"{% endif %}>
-                                    <a href="{{ url_for('.server_list') }}">Servers</a>
-                                </li>
-                                <li{% if g.menu == 'statistics' %} class="active"{% endif %}>
-                                    <a href="{{ url_for('.statistics') }}">Statistics</a>
-                                </li>
-                            {% endif %}
-                        </ul>
-                    {% endblock %}
-                </nav>
                 <div class="it-navbar-login">
                     {% with messages = get_flashed_messages() %}
                         {% if messages %}
@@ -60,17 +52,16 @@
                     {% endif %}
                 </div>
             </div>
-        </header>
-
+        </nav>
         <ol class="breadcrumb">
-            <li><a href="{{ url_for('frontend.index') }}">{{ config.APP_NAME }}</a></li>
+            <li class="breadcrumb-item"><a href="{{ url_for('frontend.index') }}">{{ config.APP_NAME }}</a></li>
             {% for bc in g.breadcrumbs %}
                 {% if loop.last %}
-                    <li class="active">{{ bc.title }}</li>
+                    <li class="breadcrumb-item active">{{ bc.title }}</li>
                 {% elif bc.link %}
-                    <li><a href="{{ bc.link }}">{{ bc.title }}</a></li>
+                    <li class="breadcrumb-item"><a href="{{ bc.link }}">{{ bc.title }}</a></li>
                 {% else %}
-                    <li>{{ bc.title }}</li>
+                    <li class="breadcrumb-item">{{ bc.title }}</li>
                 {% endif %}
             {% endfor %}
         </ol>
@@ -78,16 +69,12 @@
         <div class="clearfix container">
             {% block content %}{% endblock %}
         </div>
-
-        {%- assets filters='rjsmin', output='assets/bundle.js', 'js/jquery.js', 'js/bootstrap.js', 'js/main.js' %}
+        {%- assets filters='rjsmin', output='assets/bundle.js', 'js/jquery.js', 'js/main.js' %}
             <script src="{{ ASSET_URL|version_url }}"></script>
         {%- endassets %}
-        <script>
-            $('.it-navbar-login .dropdown-menu').on('click', function(e) {
-                if($(this).hasClass('dropdown-menu-form')) {
-                    e.stopPropagation();
-                }
-            });
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js"
+                integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn"
+                crossorigin="anonymous">
         </script>
         {% block body_end %}{% endblock %}
     </body>
