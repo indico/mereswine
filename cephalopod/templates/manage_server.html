@@ -11,12 +11,12 @@
         <div class="server-actions">
             <h3>Actions</h3>
             <div class="btn-group">
-                <button id="crawl-now" type="button" class="btn btn-default"{{ ' disabled' if not server.enabled }}>
-                    <span class="glyphicon glyphicon-refresh"></span>
+                <button id="crawl-now" type="button" class="btn btn-secondary"{{ ' disabled' if not server.enabled }}>
+                    <span class="fa fa-refresh"></span>
                     Crawl now
                 </button>
                 <button id="js-server-delete" type="button" class="btn btn-danger">
-                    <span class="glyphicon glyphicon-remove"></span>
+                    <span class="fa fa-remove"></span>
                     Delete server
                 </button>
             </div>
@@ -24,24 +24,21 @@
 
         <div class="container">
             <div class="row server-information-row">
-
                 <div class="col-md-6">
-                    <div class="server-main-information panel panel{{ '-primary' if server.enabled else '-default' }}">
-                        <div class="panel-heading">
-                            <h3>Main information</h3>
-                            <div>
-                                <button id="edit-main-info" type="button" class="btn btn-default" title="Edit">
-                                    <span class="glyphicon glyphicon-edit"></span>
-                                </button>
-                            </div>
+                    <div class="server-main-information card panel panel{{ '-primary' if server.enabled else '-default' }}">
+                        <div class="card-header d-flex justify-content-between">
+                            <h4>Main information</h4>
+                            <button id="edit-main-info" type="button" class="btn btn-secondary" title="Edit">
+                                <span class="fa fa-edit"></span>
+                            </button>
                         </div>
-                        <div class="panel-body container-fluid">
+                        <div class="card-block">
                             <div class="row">
                                 <div class="col-md-1">
-                                    <span class="glyphicon glyphicon-briefcase"></span>
+                                    <span class="fa fa-briefcase"></span>
                                 </div>
                                 <div class="col-md-4">
-                                    <label>Organisation:</label>
+                                    <strong>Organisation:</strong>
                                 </div>
                                 <div class="col-md-7">
                                     <span id="organisation" class="field-value">{{ server.organisation }}</span>
@@ -49,10 +46,10 @@
                             </div>
                             <div class="row">
                                 <div class="col-md-1">
-                                    <span class="glyphicon glyphicon-link"></span>
+                                    <span class="fa fa-link"></span>
                                 </div>
                                 <div class="col-md-4">
-                                    <label>URL:</label>
+                                    <strong>URL:</strong>
                                 </div>
                                 <div class="col-md-7">
                                     <a id="url" class="field-value" href="{{ server.url }}">{{ server.url }}</a>
@@ -60,10 +57,10 @@
                             </div>
                             <div class="row">
                                 <div class="col-md-1">
-                                    <span class="glyphicon glyphicon-user"></span>
+                                    <span class="fa fa-user"></span>
                                 </div>
                                 <div class="col-md-4">
-                                    <label>Contact name:</label>
+                                    <strong>Contact name:</strong>
                                 </div>
                                 <div class="col-md-7">
                                     <span id="contact" class="field-value">{{ server.contact }}</span>
@@ -71,10 +68,10 @@
                             </div>
                             <div class="row">
                                 <div class="col-md-1">
-                                    <span class="glyphicon glyphicon-envelope"></span>
+                                    <span class="fa fa-envelope"></span>
                                 </div>
                                 <div class="col-md-4">
-                                    <label>Email:</label>
+                                    <strong>Email:</strong>
                                 </div>
                                 <div class="col-md-7">
                                     <a id="email" class="field-value" href="mailto:{{ server.email }}">{{ server.email }}</a>
@@ -82,10 +79,10 @@
                             </div>
                             <div class="row">
                                 <div class="col-md-1">
-                                    <span class="glyphicon glyphicon-folder-open"></span>
+                                    <span class="fa fa-folder-open"></span>
                                 </div>
                                 <div class="col-md-4">
-                                    <label>UUID:</label>
+                                    <strong>UUID:</strong>
                                 </div>
                                 <div class="col-md-7">
                                     <span id="uuid">{{ server.uuid }}</span>
@@ -93,10 +90,10 @@
                             </div>
                             <div class="row">
                                 <div class="col-md-1">
-                                    <span class="glyphicon glyphicon-ok"></span>
+                                    <span class="fa fa-check"></span>
                                 </div>
                                 <div class="col-md-4">
-                                    <label>Enabled:</label>
+                                    <strong>Enabled:</strong>
                                 </div>
                                 <div class="col-md-7">
                                     <input id="enable" class="hidden enable-checkbox" type="checkbox"{{ ' checked' if server.enabled }}>
@@ -108,40 +105,40 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="panel-footer">
-                            <button id="save-main-info" type="button" class="btn btn-default" title="Save">
-                                <span class="glyphicon glyphicon-floppy-disk"></span>
+                        <div class="card-footer">
+                            <button id="save-main-info" type="button" class="btn btn-secondary" title="Save">
+                                <span class="fa fa-floppy-o"></span>
                             </button>
-                            <button id="cancel-main-info" type="button" class="btn btn-default" title="Cancel">
-                                <span class="glyphicon glyphicon-remove"></span>
+                            <button id="cancel-main-info" type="button" class="btn btn-secondary" title="Cancel">
+                                <span class="fa fa-remove"></span>
                             </button>
                         </div>
                     </div>
                 </div>
 
                 <div class="col-md-6">
-                    <div class="server-crawled-information panel panel{{ '-primary' if server.enabled else '-default' }}">
-                        <div class="panel-heading">
-                            <h3>Crawled information</h3>
+                    <div class="server-crawled-information card panel panel{{ '-primary' if server.enabled else '-default' }}">
+                        <div class="card-header d-flex justify-content-between">
+                            <h4>Crawled information</h4>
                         </div>
-                        <div class="panel-body container-fluid">
+                        <div class="card-block">
                             {% if server.crawled_data %}
                                 {% for field in fields if server.crawled_data[field] %}
                                     {% set aggregation_func = config.CRAWLED_FIELDS_SETTINGS.get(field, {}).get('aggregation', None) %}
                                     <div class="row">
                                         <div class="col-md-1">
-                                            <span class="glyphicon glyphicon-file"></span>
+                                            <span class="fa fa-file"></span>
                                         </div>
-                                        <div class="col-md-4">
-                                            <label>
+                                        <div class="col-md-5">
+                                            <strong>
                                                 {{ field | pretty_name }}
                                                 {% if aggregation_func %}
                                                      ({{ aggregation_func }})
                                                 {% endif %}
                                                 :
-                                            </label>
+                                            </strong>
                                         </div>
-                                        <div class="col-md-7">
+                                        <div class="col-md-6">
                                             <span>
                                                 {% set aggregated_value = (server.crawled_data[field] | aggregate(aggregation_func)) %}
                                                 {% if aggregated_value is string or aggregated_value is number %}
@@ -158,8 +155,12 @@
                             {% endif %}
                         </div>
                         {% if server.crawled_data %}
-                            <div class="panel-footer">
-                                <span><strong>Last crawled:</strong> {{ server.crawl_date|datetimeformat('medium') }} ({{ config.BABEL_DEFAULT_TIMEZONE }})</span>
+                            <div class="card-footer">
+                                <span>
+                                    <strong>Last crawled:</strong>
+                                    {{ server.crawl_date|datetimeformat('medium') }}
+                                    ({{ config.BABEL_DEFAULT_TIMEZONE }})
+                                </span>
                             </div>
                         {% endif %}
                     </div>
@@ -215,8 +216,8 @@
                 enabled: $('#enable').prop('checked')
             }
             $('.server-main-information').removeClass('panel-primary').removeClass('panel-default').addClass('panel-info');
-            $('.server-main-information .panel-heading h3').text('Main information (editing)');
-            $('.server-main-information .panel-footer').show();
+            $('.server-main-information h4').text('Main information (editing)');
+            $('.server-main-information .card-footer').addClass('active');
             $(this).hide();
             $('.server-main-information .field-value').each(function(){
                 var fieldValue = $(this);
@@ -244,8 +245,8 @@
                     $('#crawl-now').prop('disabled', ! $('#enable').prop('checked'));
                     $('.server-main-information').removeClass('panel-info').addClass(panelClass);
                     $('.server-crawled-information').removeClass('panel-primary').removeClass('panel-default').addClass(panelClass);
-                    $('.server-main-information .panel-heading h3').text('Main information');
-                    $('.server-main-information .panel-footer').hide();
+                    $('.server-main-information h4').text('Main information');
+                    $('.server-main-information .card-footer').removeClass('active');
                     $('#edit-main-info').show();
                     $('.server-main-information .field-input').each(function(){
                         var fieldInput = $(this);
@@ -275,8 +276,8 @@
             $('.toggle-button').css('cursor', 'default');
             var panelClass = oldFields.enabled ? 'panel-primary' : 'panel-default';
             $('.server-main-information').removeClass('panel-info').addClass(panelClass);
-            $('.server-main-information .panel-heading h3').text('Main information');
-            $('.server-main-information .panel-footer').hide();
+            $('.server-main-information h4').text('Main information');
+            $('.server-main-information .card-footer').removeClass('active');
             $('#edit-main-info').show();
             $('.server-main-information .field-input').each(function(){
                 var fieldInput = $(this);
