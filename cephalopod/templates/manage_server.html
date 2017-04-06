@@ -159,7 +159,7 @@
                         </div>
                         {% if server.crawled_data %}
                             <div class="panel-footer">
-                                <span><strong>Last crawled:</strong> {{ server.crawl_date|datetimeformat('medium') }} ({{ config['BABEL_DEFAULT_TIMEZONE'] }})</span>
+                                <span><strong>Last crawled:</strong> {{ server.crawl_date|datetimeformat('medium') }} ({{ config.BABEL_DEFAULT_TIMEZONE }})</span>
                             </div>
                         {% endif %}
                     </div>

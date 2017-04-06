@@ -41,7 +41,7 @@
                     </button>
                     <ul id="additional-data-dropdown" class="dropdown-menu dropdown-menu-form dropdown-menu-right" role="menu">
                         {% for field in extra_fields %}
-                            {% set aggregation_func = config['CRAWLED_FIELDS_SETTINGS'].get(field, {}).get('aggregation', None) %}
+                            {% set aggregation_func = config.CRAWLED_FIELDS_SETTINGS.get(field, {}).get('aggregation', None) %}
                             <li>
                                 <label class="checkbox">
                                     <input id="{{ field }}"  type="checkbox">
@@ -65,7 +65,7 @@
                 <th>URL</th>
                 <th>Last crawled</th>
                 {% for field in extra_fields %}
-                    {% set aggregation_func = config['CRAWLED_FIELDS_SETTINGS'].get(field, {}).get('aggregation', None) %}
+                    {% set aggregation_func = config.CRAWLED_FIELDS_SETTINGS.get(field, {}).get('aggregation', None) %}
                     <th class="field-{{ field }}">
                         {{ field | pretty_name }}
                         {% if aggregation_func %}
@@ -89,11 +89,11 @@
                             {% if not server.crawl_date %}
                                 Never
                             {% else %}
-                                {{ server.crawl_date | datetimeformat('medium') }} ({{ config['BABEL_DEFAULT_TIMEZONE'] }})
+                                {{ server.crawl_date | datetimeformat('medium') }} ({{ config.BABEL_DEFAULT_TIMEZONE }})
                             {% endif %}
                         </td>
                         {% for field in extra_fields %}
-                            {% set aggregation_func = config['CRAWLED_FIELDS_SETTINGS'].get(field, {}).get('aggregation', None) %}
+                            {% set aggregation_func = config.CRAWLED_FIELDS_SETTINGS.get(field, {}).get('aggregation', None) %}
                             <td class="field-{{ field }}">
                                 {% if not server.crawled_data or not server.crawled_data[field] %}
                                     -
@@ -149,7 +149,7 @@
                                     {% if server.crawled_data%}
                                         {% for field in extra_fields %}
                                             {% if server.crawled_data[field]%}
-                                                {% set aggregation_func = config['CRAWLED_FIELDS_SETTINGS'].get(field, {}).get('aggregation', None) %}
+                                                {% set aggregation_func = config.CRAWLED_FIELDS_SETTINGS.get(field, {}).get('aggregation', None) %}
                                                 <div class="col-md-3">
                                                     <label>
                                                         {{ field | pretty_name }}

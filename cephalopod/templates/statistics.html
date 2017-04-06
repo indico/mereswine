@@ -28,7 +28,7 @@
                 </div>
                 <div class="row">
                     {% for field, content in additional_charts.iteritems() if content %}
-                        {% set aggregation_func = config['CRAWLED_FIELDS_SETTINGS'].get(field, {}).get('aggregation', None) %}
+                        {% set aggregation_func = config.CRAWLED_FIELDS_SETTINGS.get(field, {}).get('aggregation', None) %}
                         <div class="col-md-6">
                             <h4>
                                 {{ field | pretty_name }}

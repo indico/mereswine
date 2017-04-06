@@ -3,7 +3,7 @@ import itertools
 import bcrypt
 from collections import Counter
 from flask import current_app, render_template, jsonify, g, request, flash, redirect, url_for
-from flask.ext.login import login_user, logout_user, login_required
+from flask_login import login_user, logout_user, login_required
 
 from ..core import db
 from ..menu import menu, breadcrumb, make_breadcrumb
@@ -24,7 +24,7 @@ def get_server_fields(server):
     extra_fields = set()
     fields_settings = current_app.config['CRAWLED_FIELDS_SETTINGS']
     if server.crawled_data:
-        data = {k: v for k, v in server.crawled_data.iteritems() if fields_settings.get(k, False) is not None}
+        data = {k: v for k, v in server.crawled_data.iteritems() if fields_settings.get(k, object()) is not None}
         extra_fields.update(data or {})
     return sorted(extra_fields)
 
