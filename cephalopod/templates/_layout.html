@@ -42,37 +42,7 @@
                             {% endfor %}
                         {% endif %}
                     {% endwith %}
-                    {% if not current_user.is_authenticated() %}
-                        <form action="{{ url_for('.login') }}" method="POST">
-                            <input type="hidden" name="next" value={{ request.args.next }}>
-                            <div class="btn-group">
-                                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-                                    Log in
-                                    <span class="caret"></span>
-                                </button>
-                                <ul class="dropdown-menu dropdown-menu-form dropdown-menu-right" role="menu">
-                                    <li>
-                                        <input type="text" name="username" placeholder="Username" required>
-                                    </li>
-                                    <li>
-                                        <input type="password" name="password" placeholder="Password" required>
-                                    </li>
-                                    <li class="divider"></li>
-                                    <li class="login-logout-button">
-                                        <div class="remember-me">
-                                            <input id="remember" type="checkbox" name="remember">
-                                            <label for="remember">Remember me</label>
-                                        </div>
-                                        <div class="login-button">
-                                            <button type="submit" class="btn btn-success">Log in</button>
-                                        </div>
-                                    </li>
-                                </ul>
-                            </div>
-                        </form>
-                    {% else %}
                         <form action="{{ url_for('.logout') }}" method="POST">
-                            <span class="navbar-user navbar-brand glyphicon glyphicon-user"> {{ current_user.username }}</span>
                             <div class="btn-group">
                                 <button type="submit" class="btn btn-default">Log out</button>
                             </div>

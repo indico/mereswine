@@ -48,13 +48,6 @@ def crawl(uuid=None):
 
 
 @manager.command
-def create_user(username, password):
-    user = models.User(username, password)
-    db.session.add(user)
-    db.session.commit()
-
-
-@manager.command
 def runworker(concurrency='4'):
     """Runs the celery worker"""
     args = sys.argv[:1]

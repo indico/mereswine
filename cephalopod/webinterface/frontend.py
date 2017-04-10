@@ -1,13 +1,10 @@
 import itertools
 
-import bcrypt
 from collections import Counter
 from flask import current_app, render_template, jsonify, g, request, flash, redirect, url_for
-from flask_login import login_user, logout_user, login_required
 
 from ..core import db
 from ..menu import menu, breadcrumb, make_breadcrumb
-from ..models import Instance, User
 from ..utils import aggregate_values, aggregate_chart
 from .. import crawler
 from . import bp
@@ -36,18 +33,6 @@ def index():
     return render_template('index.html')
 
 
-@bp.route('/login', methods=('POST',))
-def login():
-    username = request.form['username']
-    password = request.form['password']
-    registered_user = User.query.filter_by(username=username).first()
-    if registered_user is None or bcrypt.hashpw(password.encode('utf-8'),
-                                                registered_user.password.encode('utf-8')) != registered_user.password:
-        flash('Invalid username and/or password', 'error')
-    else:
-        remember = True if 'remember' in request.form else False
-        login_user(registered_user, remember=remember)
-    return redirect(request.form["next"] or url_for(".index"))
 
 
 @bp.route('/logout', methods=('POST',))

@@ -8,21 +8,16 @@
     <h3>Welcome to {{ config.APP_NAME }}!</h3>
     Here you can see all the information of the servers running your application, as well as being able to manage them and explore interesting statistics information.<br>
     <br>
-    {% if not current_user.is_authenticated() %}
-        To access the restricted area you have to login.
-    {% else %}
-        Click on the following buttons to access the restricted area:
-    {% endif %}
     <div class="sections-buttons">
         <form action={{ url_for('.server_list') | tojson }} method="GET">
-            <button type="submit" class="btn btn-default btn-lg"{{ ' disabled' if not current_user.is_authenticated() }}>
+            <button type="submit" class="btn btn-default btn-lg">
                 <span class="glyphicon glyphicon-cog"></span>
                 Server Management
             </button>
         </form>
 
         <form action={{ url_for('.statistics') | tojson }} method="GET">
-            <button type="submit" class="btn btn-default btn-lg"{{ ' disabled' if not current_user.is_authenticated() }}>
+            <button type="submit" class="btn btn-default btn-lg">
                 <span class="glyphicon glyphicon-stats"></span>
                 Statistics
             </button>

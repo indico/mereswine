@@ -1,6 +1,5 @@
 from celery import Celery
 from flask import Flask
-from flask.ext.login import LoginManager
 
 from .core import assets, db, babel
 from .assets import version_url, versioned_static_file
@@ -11,7 +10,6 @@ from .api import bp as api_bp
 # noinspection PyUnresolvedReferences
 from . import models  # registers db models
 
-login_manager = LoginManager()
 
 
 def make_app():
@@ -24,14 +22,7 @@ def make_app():
     babel.init_app(app)
     register_core_funcs(app)
     register_blueprints(app)
-    login_manager.init_app(app)
-    login_manager.login_view = '.index'
     return app
-
-
-@login_manager.user_loader
-def load_user(id):
-    return models.user.User.query.get(int(id))
 
 
 def register_core_funcs(app):

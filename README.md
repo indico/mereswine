@@ -146,5 +146,4 @@ The available arguments and possibile operations are the following:
 - **db create:** creates the DB tables;
 - **db recreate:** drops all DB tables and creates new tables (same as *drop* and then *create*);
 - **crawl [uuid]:** crawl a specific instance (if *uuid* is passed) or all the active instances;
-- **create_usr usr pswd:** creates a new user with *usr*:*pswd* as credentials;
 - **runworker [concurrency]:** runs a celery worker.
