@@ -84,6 +84,14 @@ For each field, the following parameters can be specified:
 
 To specify the time interval between each periodic crawl, you should modify the `CELERYBEAT_SCHEDULE` field.
 
+### Authentication
+
+Cephalopod uses [Flask-Multipass](https://flask-multipass.readthedocs.io) to provide different authentication systems,
+for now it is posisble to log in using your GitHub account. Keep in mind that Flask-Multipass should be configured in
+`settings.cfg` as mentioned in its documentation and as you can see in the settings example file. In addition you should
+specify the email addresses of the GitHub users that should have access to Cephalopod in `USER_WHITELIST` in order to
+prevent the access of every GitHub user.
+
 ## API implementation
 
 To allow your application, and therefore each instance running it, to communicate with Cephalopod you have to use the three APIs available:

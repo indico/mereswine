@@ -45,3 +45,51 @@ CELERYBEAT_SCHEDULE = {
         'schedule': timedelta(days=1)
     }
 }
+
+# Multipass settings
+
+# User email whitelist
+USER_WHITELIST = ['example@domain.com', 'example2@domain.com']
+
+# Register your test application here: https://github.com/settings/applications/
+
+_github_oauth_config = {
+    'consumer_key': '',  # put your key here
+    'consumer_secret': '',  # put your secret here
+    'request_token_params': {'scope': 'user:email'},
+    'base_url': 'https://api.github.com',
+    'request_token_url': None,
+    'access_token_method': 'POST',
+    'access_token_url': 'https://github.com/login/oauth/access_token',
+    'authorize_url': 'https://github.com/login/oauth/authorize'
+}
+
+MULTIPASS_AUTH_PROVIDERS = {
+      'github': {
+        'type': 'oauth',
+        'title': 'GitHub',
+        'oauth': _github_oauth_config
+    },
+}
+
+MULTIPASS_IDENTITY_PROVIDERS = {
+     'github': {
+        'type': 'oauth',
+        'oauth': _github_oauth_config,
+        'endpoint': '/user',
+        'identifier_field': 'id',
+        'mapping': {
+            'affiliation': 'company',
+            'username': 'login'
+        }
+    },
+}
+
+MULTIPASS_PROVIDER_MAP = {
+    'github': 'github'
+}
+
+MULTIPASS_LOGIN_SELECTOR_TEMPLATE = 'login_selector.html'
+MULTIPASS_SUCCESS_ENDPOINT = 'webinterface.index'
+MULTIPASS_IDENTITY_INFO_KEYS = ['email', 'name', 'affiliation', 'username']
+WTF_CSRF_ENABLED = False

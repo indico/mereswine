@@ -1,11 +1,12 @@
 import itertools
 
 from collections import Counter
-from flask import current_app, render_template, jsonify, g, request, flash, redirect, url_for
+from flask import current_app, render_template, jsonify, g, request, redirect, session, url_for
 
 from ..core import db
 from ..menu import menu, breadcrumb, make_breadcrumb
-from ..utils import aggregate_values, aggregate_chart
+from ..models import Instance
+from ..utils import aggregate_values, aggregate_chart, login_required
 from .. import crawler
 from . import bp
 
@@ -28,17 +29,21 @@ def get_server_fields(server):
 
 @bp.route('/')
 @menu('index')
+@login_required
 @breadcrumb('Home', '.index')
 def index():
     return render_template('index.html')
 
 
+@bp.route('/login')
+def login():
+    return render_template('login_selector.html')
 
 
 @bp.route('/logout', methods=('POST',))
 @login_required
 def logout():
-    logout_user()
+    session.clear()
     return redirect(url_for('.index'))
 
 

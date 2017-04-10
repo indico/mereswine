@@ -1,5 +1,6 @@
 from celery import Celery
-from flask import Flask
+from flask import Flask, current_app, flash, session, url_for
+from flask_multipass import Multipass
 
 from .core import assets, db, babel
 from .assets import version_url, versioned_static_file
@@ -10,6 +11,7 @@ from .api import bp as api_bp
 # noinspection PyUnresolvedReferences
 from . import models  # registers db models
 
+multipass = Multipass()
 
 
 def make_app():
@@ -22,6 +24,7 @@ def make_app():
     babel.init_app(app)
     register_core_funcs(app)
     register_blueprints(app)
+    multipass.init_app(app)
     return app
 
 
@@ -59,3 +62,16 @@ def make_celery(app=None):
 
     celery.Task = ContextTask
     return celery
+
+
+@multipass.identity_handler
+def identity_handler(identity_info):
+    """Implements the Flask-Multipass identity handler"""
+    email = identity_info.data['email']
+    if email in current_app.config['USER_WHITELIST']:
+        session['user_email'] = email
+        session['username'] = identity_info.data['username']
+        flash('You were successfully logged in', 'success')
+    else:
+        multipass.logout(url_for('.login'), clear_session=True)
+        flash('You are not allowed to log in', 'error')
