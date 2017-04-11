@@ -30,3 +30,5 @@ wsgiref==0.1.2
 psycopg2==2.7.1
 Flask-Multipass
 flask-oauthlib
+WTForms==2.1
+Flask-WTF==0.13

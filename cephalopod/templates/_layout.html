@@ -27,7 +27,7 @@
                     {% block nav %}
                         <ul class="nav navbar-nav">
                             <li{% if g.menu == 'index' %} class="active"{% endif %}><a href="{{ url_for('.index') }}">Home</a></li>
-                            {% if session.user_email %}
+                            {% if session.user %}
                                 <li{% if g.menu == 'server_list' %} class="active"{% endif %}><a href="{{ url_for('.server_list') }}">Servers</a></li>
                                 <li{% if g.menu == 'statistics' %} class="active"{% endif %}><a href="{{ url_for('.statistics') }}">Statistics</a></li>
                             {% endif %}
@@ -42,9 +42,11 @@
                             {% endfor %}
                         {% endif %}
                     {% endwith %}
-                    {% if session.user_email %}
+                    {% if session.user %}
                         <form action="{{ url_for('.logout') }}" method="POST">
-                            <span class="navbar-user navbar-brand glyphicon glyphicon-user"> {{ session.username }}</span>
+                            <span class="navbar-user navbar-brand glyphicon glyphicon-user">
+                                {{ session.user }} ({{ session._multipass_login_provider }})
+                            </span>
                             <div class="btn-group">
                                 <button type="submit" class="btn btn-default">Log out</button>
                             </div>

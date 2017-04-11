@@ -49,7 +49,10 @@ CELERYBEAT_SCHEDULE = {
 # Multipass settings
 
 # User email whitelist
-USER_WHITELIST = ['example@domain.com', 'example2@domain.com']
+USER_WHITELIST = {
+    'github': ['gh-username', 'gh-username2'],  # customize access granted GitHub usernames
+    'my-ldap': ['my-ldap-username', 'my-ldap-username2']  # customize access granted my-ldap usernames
+}
 
 # Register your test application here: https://github.com/settings/applications/
 
@@ -64,11 +67,38 @@ _github_oauth_config = {
     'authorize_url': 'https://github.com/login/oauth/authorize'
 }
 
+_my_ldap_config = {
+    'uri': 'ldaps://ldap.example.com:636',
+    'bind_dn': 'uid=admin,DC=example,DC=com',
+    'bind_password': 'p455w0rd',
+    'timeout': 30,
+    'verify_cert': True,
+    # optional: if not present, uses certifi's CA bundle (if installed)
+    'cert_file': 'path/to/server/cert',
+    'starttls': False,
+    'page_size': 1000,
+
+    'uid': 'uid',
+    'user_base': 'OU=Users,DC=example,DC=com',
+    'user_filter': '(objectCategory=person)',
+
+    'gid': 'cn',
+    'group_base': 'OU=Organizational Units,DC=example,DC=com',
+    'group_filter': '(objectCategory=groupOfNames)',
+    'member_of_attr': 'memberOf',
+    'ad_group_style': False,
+}
+
 MULTIPASS_AUTH_PROVIDERS = {
       'github': {
         'type': 'oauth',
         'title': 'GitHub',
         'oauth': _github_oauth_config
+    },
+     'my-ldap': {
+        'type': 'ldap',
+        'title': 'My Organization LDAP',
+        'ldap': _my_ldap_config,
     },
 }
 
@@ -77,19 +107,19 @@ MULTIPASS_IDENTITY_PROVIDERS = {
         'type': 'oauth',
         'oauth': _github_oauth_config,
         'endpoint': '/user',
-        'identifier_field': 'id',
-        'mapping': {
-            'affiliation': 'company',
-            'username': 'login'
-        }
+        'identifier_field': 'login',
+    },
+     'my-ldap': {
+        'type': 'ldap',
+        'ldap': _my_ldap_config,
     },
 }
 
 MULTIPASS_PROVIDER_MAP = {
-    'github': 'github'
+    'github': 'github',
+    'my-ldap': 'my-ldap'
 }
 
 MULTIPASS_LOGIN_SELECTOR_TEMPLATE = 'login_selector.html'
-MULTIPASS_SUCCESS_ENDPOINT = 'webinterface.index'
-MULTIPASS_IDENTITY_INFO_KEYS = ['email', 'name', 'affiliation', 'username']
-WTF_CSRF_ENABLED = False
+MULTIPASS_SUCCESS_ENDPOINT = 'frontend.index'
+MULTIPASS_IDENTITY_INFO_KEYS = ['email', 'name', ]

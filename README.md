@@ -86,11 +86,11 @@ To specify the time interval between each periodic crawl, you should modify the 
 
 ### Authentication
 
-Cephalopod uses [Flask-Multipass](https://flask-multipass.readthedocs.io) to provide different authentication systems,
-for now it is posisble to log in using your GitHub account. Keep in mind that Flask-Multipass should be configured in
-`settings.cfg` as mentioned in its documentation and as you can see in the settings example file. In addition you should
-specify the email addresses of the GitHub users that should have access to Cephalopod in `USER_WHITELIST` in order to
-prevent the access of every GitHub user.
+Cephalopod uses [Flask-Multipass](https://flask-multipass.readthedocs.io) to provide different authentication systems.
+Keep in mind that Flask-Multipass should be configured in `settings.cfg` as mentioned in its documentation and as can
+be seen in the settings example file. In addition you should specify in `USER_WHITELIST` the identifiers the users
+have in the authentication systems being used so that they can access Cephalopod, thus preventing that every user
+registered in these systems can access Cephalopod unrestrictedly.
 
 ## API implementation
 

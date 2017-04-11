@@ -35,9 +35,11 @@ def index():
     return render_template('index.html')
 
 
-@bp.route('/login')
-def login():
-    return render_template('login_selector.html')
+@bp.route('/login/', methods=('GET', 'POST'))
+@bp.route('/login/<provider>', methods=('GET', 'POST'))
+def login(provider=None):
+    from cephalopod.factory import multipass
+    return multipass.process_login(provider)
 
 
 @bp.route('/logout', methods=('POST',))

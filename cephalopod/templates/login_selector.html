@@ -3,5 +3,10 @@
 {% block title %}Log in{% endblock %}
 
 {% block content -%}
-    <a href="{{ url_for('login') }}">Log in with GitHub</a>
+    Available login providers:
+    <ul>
+        {% for provider in providers|sort(attribute='title') %}
+            <li><a href="{{ url_for(login_endpoint, provider=provider.name, next=next) }}">{{ provider.title }}</a></li>
+        {% endfor %}
+    </ul>
 {%- endblock %}
