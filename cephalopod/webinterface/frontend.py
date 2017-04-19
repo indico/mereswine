@@ -1,14 +1,16 @@
 import itertools
 
 from collections import Counter
-from flask import current_app, render_template, jsonify, g, request, redirect, session, url_for
+from flask import Blueprint, current_app, render_template, jsonify, g, request, redirect, session, url_for
 
-from ..core import db
+from ..core import db, multipass
 from ..menu import menu, breadcrumb, make_breadcrumb
 from ..models import Instance
-from ..utils import aggregate_values, aggregate_chart, login_required
+from ..utils import aggregate_values, aggregate_chart
 from .. import crawler
-from . import bp
+
+
+bp = Blueprint('frontend', __name__)
 
 
 def get_all_server_fields(server_list):
@@ -27,31 +29,27 @@ def get_server_fields(server):
     return sorted(extra_fields)
 
 
+@bp.before_request
+def login_required():
+    whitelist = current_app.config['USER_WHITELIST']
+    if 'user' not in session or session['user'] not in whitelist.get(session.get('provider'), set()):
+        return multipass.logout(url_for('auth.login'), clear_session=True)
+
+
 @bp.route('/')
 @menu('index')
-@login_required
 @breadcrumb('Home', '.index')
 def index():
     return render_template('index.html')
 
 
-@bp.route('/login/', methods=('GET', 'POST'))
-@bp.route('/login/<provider>', methods=('GET', 'POST'))
-def login(provider=None):
-    from cephalopod.factory import multipass
-    return multipass.process_login(provider)
-
-
 @bp.route('/logout', methods=('POST',))
-@login_required
 def logout():
-    session.clear()
-    return redirect(url_for('.index'))
+    return multipass.logout(url_for('.index'), clear_session=True)
 
 
 @bp.route('/servers')
 @menu('server_list')
-@login_required
 @breadcrumb('Servers', '.server_list')
 def server_list():
     g.breadcrumbs.append(make_breadcrumb('Server list'))
@@ -66,7 +64,6 @@ def server_list():
 
 
 @bp.route('/servers/<id>', methods=('DELETE',))
-@login_required
 def remove_server(id):
     instance = Instance.query.filter_by(id=id).first()
     db.session.delete(instance)
@@ -75,7 +72,6 @@ def remove_server(id):
 
 
 @bp.route('/servers/<id>', methods=('POST',))
-@login_required
 def update_server(id):
     instance = Instance.query.filter_by(id=id).first()
     crawl = request.form.get('crawl', False)
@@ -92,7 +88,6 @@ def update_server(id):
 
 
 @bp.route('/servers/<id>')
-@login_required
 @breadcrumb('Servers', '.server_list')
 def get_server(id):
     instance = Instance.query.filter_by(id=id).first()
@@ -107,7 +102,6 @@ def get_server(id):
 
 
 @bp.route('/servers', methods=('POST',))
-@login_required
 def crawl_all():
     crawler.crawl_all()
     return jsonify()
@@ -115,7 +109,6 @@ def crawl_all():
 
 @bp.route('/statistics')
 @menu('statistics')
-@login_required
 @breadcrumb('Statistics', '.statistics')
 def statistics():
     server_list = Instance.query.all()

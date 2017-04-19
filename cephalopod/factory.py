@@ -5,7 +5,8 @@ from .core import assets, db, babel, multipass
 from .assets import version_url, versioned_static_file
 from .menu import setup_breadcrumbs
 from .utils import pretty_name, aggregate
-from .webinterface import bp as webinterface_bp
+from webinterface.frontend import bp as frontend_bp
+from webinterface.auth import bp as auth_bp
 from .api import bp as api_bp
 # noinspection PyUnresolvedReferences
 from . import models  # registers db models
@@ -39,7 +40,8 @@ def register_core_funcs(app):
 
 def register_blueprints(app):
     """Registers our blueprints."""
-    app.register_blueprint(webinterface_bp)
+    app.register_blueprint(frontend_bp)
+    app.register_blueprint(auth_bp)
     app.register_blueprint(api_bp, url_prefix='/api')
 
 
