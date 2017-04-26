@@ -22,37 +22,40 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav mr-auto">
                         <li class="nav-item">
-                            <a href="{{ url_for('.server_list') }}"
-                               class="nav-link {% if g.menu == 'server_list' %}active{% endif %}">
+                            <a class="nav-link {% if g.menu == 'server_list' %}active{% endif %}"
+                               href="{{ url_for('frontend.server_list') }}">
                                 Servers
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="{{ url_for('.statistics') }}"
-                               class="nav-link {% if g.menu == 'statistics' %}active{% endif %}">
+                            <a class="nav-link {% if g.menu == 'statistics' %}active{% endif %}"
+                               href="{{ url_for('frontend.statistics') }}">
                                 Statistics
                             </a>
                         </li>
                     </ul>
-                </div>
-                <div class="it-navbar-login">
-                    {% with messages = get_flashed_messages() %}
-                        {% if messages %}
-                            {% for message in messages %}
-                                <span class="flashed-message">{{ message }}</span>
-                            {% endfor %}
+                    <ul class="nav navbar-nav ml-auto">
+                        {% if session.user %}
+                            {% with messages = get_flashed_messages() %}
+                                {% if messages %}
+                                    <li class="navbar-text">
+                                        {% for message in messages %}
+                                            <span class="flashed-message">{{ message }}</span>
+                                        {% endfor %}
+                                    </li>
+                                {% endif %}
+                            {% endwith %}
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown">
+                                    <span class="fa fa-user"></span>
+                                    {{ session.user }} ({{ session._multipass_login_provider }})
+                                </a>
+                                <div class="dropdown-menu">
+                                    <a class="dropdown-item" href="{{ url_for('frontend.logout') }}">Log out</a>
+                                </div>
+                            </li>
                         {% endif %}
-                    {% endwith %}
-                    {% if session.user %}
-                        <form action="{{ url_for('.logout') }}" method="POST">
-                            <span class="navbar-user navbar-brand glyphicon glyphicon-user">
-                                {{ session.user }} ({{ session._multipass_login_provider }})
-                            </span>
-                            <div class="btn-group">
-                                <button type="submit" class="btn btn-default">Log out</button>
-                            </div>
-                        </form>
-                    {% endif %}
+                    </ul>
                 </div>
             </div>
         </nav>
