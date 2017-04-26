@@ -43,7 +43,7 @@ def index():
     return render_template('index.html')
 
 
-@bp.route('/logout', methods=('POST',))
+@bp.route('/logout')
 def logout():
     return multipass.logout(url_for('.index'), clear_session=True)
 
