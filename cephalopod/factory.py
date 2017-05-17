@@ -1,5 +1,6 @@
 from celery import Celery
 from flask import Flask, current_app, flash, session, url_for
+from werkzeug.contrib.fixers import ProxyFix
 
 from .core import assets, db, babel, multipass
 from .assets import version_url, versioned_static_file
@@ -15,7 +16,7 @@ from . import models  # registers db models
 def make_app():
     """Returns a :class:`CustomFlask` application instance that is properly configured."""
     app = Flask('cephalopod')
-    app.config.from_pyfile('settings.cfg.example')  # In case a custom option is missing in settings.cfg
+    app.config.from_pyfile('settings.cfg.example', silent=True)  # In case a custom option is missing in settings.cfg
     app.config.from_pyfile('settings.cfg')
     assets.init_app(app)
     db.init_app(app)
@@ -23,6 +24,8 @@ def make_app():
     register_core_funcs(app)
     register_blueprints(app)
     multipass.init_app(app)
+    if app.config['USE_PROXY']:
+        app.wsgi_app = ProxyFix(app.wsgi_app)
     return app
 
 
