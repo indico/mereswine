@@ -132,9 +132,9 @@
                                         <div class="col-md-5">
                                             <strong>
                                                 {{ field | pretty_name }}
-                                                {% if aggregation_func %}
+                                                {%- if aggregation_func %}
                                                      ({{ aggregation_func }})
-                                                {% endif %}
+                                                {% endif -%}
                                                 :
                                             </strong>
                                         </div>
