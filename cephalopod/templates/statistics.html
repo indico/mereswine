@@ -27,7 +27,7 @@
                     </div>
                 </div>
                 <div class="row">
-                    {% for field, content in additional_charts.iteritems() if content %}
+                    {% for field, content in additional_charts.items() if content %}
                         {% set aggregation_func = config.CRAWLED_FIELDS_SETTINGS.get(field, {}).get('aggregation', None) %}
                         <div class="col-md-6 statistics-item">
                             <h4>
@@ -118,7 +118,7 @@
         for (var name in countryNames) {
             data.push([name, countryNames[name]]);
         }
-        var options = { 
+        var options = {
             seriesDefaults: {
                 renderer: $.jqplot.PieRenderer,
                 rendererOptions: {
@@ -147,7 +147,7 @@
         for (var i = 0; i < registration_counts.length; i++) {
             data.push([registration_counts[i][0], registration_counts[i][1]]);
         }
-        options = { 
+        options = {
             seriesDefaults: {
                 renderer: $.jqplot.LineRendered,
                 rendererOptions: {
@@ -215,7 +215,7 @@
                 chartRenderer = $.jqplot.BarRenderer;
             }
 
-            var options = { 
+            var options = {
                 seriesDefaults: {
                     renderer: chartRenderer,
                     rendererOptions: {
