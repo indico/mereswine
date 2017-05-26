@@ -7,6 +7,6 @@
 /cephalopod/static/locale/*.js
 .*.swp
 *.pyc
-*.cfg
+settings.cfg
 celerybeat-schedule
 /build/
