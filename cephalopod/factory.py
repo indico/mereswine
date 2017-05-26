@@ -1,3 +1,5 @@
+import os
+
 from celery import Celery
 from flask import Flask, current_app, flash, session, url_for
 from werkzeug.contrib.fixers import ProxyFix
@@ -18,7 +20,11 @@ def make_app():
     """Returns a :class:`CustomFlask` application instance that is properly configured."""
     app = Flask('cephalopod')
     app.config.from_pyfile('settings.cfg.example', silent=True)  # In case a custom option is missing in settings.cfg
-    app.config.from_pyfile('settings.cfg')
+    app.config.from_pyfile(os.environ['CEPHALOPOD_CONFIG'])
+    app.config.update({
+        'MULTIPASS_LOGIN_SELECTOR_TEMPLATE': 'login_selector.html',
+        'MULTIPASS_SUCCESS_ENDPOINT': 'frontend.index'
+    })
 
     from .cli import register_shell_ctx
 

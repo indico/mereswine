@@ -118,6 +118,4 @@ MULTIPASS_PROVIDER_MAP = {
     'my-ldap': 'my-ldap'
 }
 
-MULTIPASS_LOGIN_SELECTOR_TEMPLATE = 'login_selector.html'
-MULTIPASS_SUCCESS_ENDPOINT = 'frontend.index'
-MULTIPASS_IDENTITY_INFO_KEYS = ['email', 'name', ]
+MULTIPASS_IDENTITY_INFO_KEYS = ['email', 'name']
