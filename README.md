@@ -2,27 +2,43 @@
 
 With the Cephalopod package you'll be able to easily track and manage the various instances of your application, as well as analizing interesting statistical information.
 
-## Installation
+## Installation (production)
 
-To install this package, first of all head to your code directory and clone this repository:
+First of all, we recommend that you install Cephalopod in a virtual environment:
 
 ```sh
-git clone https://github.com/indico/cephalopod.git
-cd cephalopod
+$ virtualenv env
+$ source env/bin/activate
 ```
 
-Then you can either install the package in a dedicated virtual environment (suggested):
+### From PyPI
+
+This is the easiest way to install Cephalopod:
 
 ```sh
-virtualenv env
-. env/bin/activate
-pip install -r requirements.txt
+$ pip install cephalopod
 ```
 
-or you can directly install it for the current user by running this command:
+## Installation from Git
+
+If instead you want/need to install a development version of the package, head to your code directory and clone this
+repository:
 
 ```sh
-python setup.py install
+$ git clone https://github.com/indico/cephalopod.git
+$ cd cephalopod
+```
+
+Then, making sure you are still in your virtual environment, install it with Pip:
+
+```sh
+$ pip install .
+```
+
+If you are instead doing development on Cephalopod, you can link your current repo to your `site-packages`:
+
+```sh
+$ pip install -e .
 ```
 
 ## Configuration
@@ -30,12 +46,27 @@ python setup.py install
 After you installed the package, you should create your own settings file
 
 ```sh
-cp cephalopod/settings.cfg.example cephalopod/settings.cfg
+$ cp cephalopod/settings.cfg.example /somewhere/safe/settings.cfg
 ```
 
-and personalize it.
+and personalize it. Keep in mind that `settings.cfg` has to follow the Python syntax.
 
-Keep in mind that `settings.cfg` has to be written following a correct Python syntax.
+You will then have to define a couple of environment variables:
+
+```sh
+$ export FLASK_APP=cephalopod.autoapp
+$ export CEPHALOPOD_CONFIG=/path/to/settings.cfg
+```
+
+## Running development server
+
+You can easily run a Cephalopod development server:
+
+```sh
+$ flask run
+```
+
+There is also a `cephalopod.wsgi` file included in the distribution, which can be used by WSGI containers.
 
 ### Secret key
 
@@ -132,26 +163,20 @@ On top of that, it will also be displayed all the additional charts you might ha
 
 ### Command line script
 
-For more advanced operations you'll have to use the management script.
+For more advanced operations you'll have to use the Flask CLI and the custom commands cephalopod offers.
 
 To use the script run
 
 ```sh
-cephalopod <arguments>
+flask <arguments>
 ```
-
-if you installed cephalopod with `setup.py`, or
-
-```sh
-python manage.py <arguments>
-```
-
-otherwise.
 
 The available arguments and possibile operations are the following:
 
+- **run:** run a development web server;
+- **shell:** run a Python shell with access to the DB;
 - **db drop:** drops all the DB tables;
 - **db create:** creates the DB tables;
 - **db recreate:** drops all DB tables and creates new tables (same as *drop* and then *create*);
 - **crawl [uuid]:** crawl a specific instance (if *uuid* is passed) or all the active instances;
-- **runworker [concurrency]:** runs a celery worker.
+- **celery:** invoke celery (e.g. to set up a worker)
