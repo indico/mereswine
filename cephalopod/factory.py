@@ -2,15 +2,16 @@ from celery import Celery
 from flask import Flask, current_app, flash, session, url_for
 from werkzeug.contrib.fixers import ProxyFix
 
+# This is needed in order to register all SQLAlchemy models
+from . import models
+
 from .core import assets, db, babel, multipass
 from .assets import version_url, versioned_static_file
 from .menu import setup_breadcrumbs
 from .utils import pretty_name, aggregate
-from webinterface.frontend import bp as frontend_bp
-from webinterface.auth import bp as auth_bp
+from .webinterface.frontend import bp as frontend_bp
+from .webinterface.auth import bp as auth_bp
 from .api import bp as api_bp
-# noinspection PyUnresolvedReferences
-from . import models  # registers db models
 
 
 def make_app():
@@ -18,11 +19,15 @@ def make_app():
     app = Flask('cephalopod')
     app.config.from_pyfile('settings.cfg.example', silent=True)  # In case a custom option is missing in settings.cfg
     app.config.from_pyfile('settings.cfg')
+
+    from .cli import register_shell_ctx
+
     assets.init_app(app)
     db.init_app(app)
     babel.init_app(app)
     register_core_funcs(app)
     register_blueprints(app)
+    register_shell_ctx(app)
     multipass.init_app(app)
     if app.config['USE_PROXY']:
         app.wsgi_app = ProxyFix(app.wsgi_app)
