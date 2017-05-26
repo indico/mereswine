@@ -12,7 +12,6 @@ from . import bp
 @bp.route('/instance/', methods=('POST',))
 def create_instance():
     payload = request.get_json()
-    print payload
     instance = Instance()
     instance.uuid = str(uuid.uuid4())
     instance.url = payload['url'].rstrip('/')
