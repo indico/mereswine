@@ -32,3 +32,4 @@ Flask-Multipass
 flask-oauthlib
 WTForms==2.1
 Flask-WTF==0.13
+libsass==0.12.3

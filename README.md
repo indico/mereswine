@@ -25,12 +25,6 @@ or you can directly install it for the current user by running this command:
 python setup.py install
 ```
 
-SASS is required in order to precompile the custom stylesheets:
-
-```sh
-$ sudo gem install sass
-```
-
 ## Configuration
 
 After you installed the package, you should create your own settings file
