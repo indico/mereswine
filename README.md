@@ -7,8 +7,8 @@ With the Cephalopod package you'll be able to easily track and manage the variou
 First of all, we recommend that you install Cephalopod in a virtual environment:
 
 ```sh
-$ virtualenv env
-$ source env/bin/activate
+$ virtualenv .venv
+$ source .venv/bin/activate
 ```
 
 ### From PyPI
@@ -43,7 +43,7 @@ $ pip install -e .
 
 ## Configuration
 
-After you installed the package, you should create your own settings file
+After you installed the package, you should create your own config file
 
 ```sh
 $ cp cephalopod/cephalopod.cfg.example /somewhere/safe/cephalopod.cfg
@@ -118,7 +118,7 @@ To specify the time interval between each periodic crawl, you should modify the 
 
 Cephalopod uses [Flask-Multipass](https://flask-multipass.readthedocs.io) to provide different authentication systems.
 Keep in mind that Flask-Multipass should be configured in `cephalopod.cfg` as mentioned in its documentation and as can
-be seen in the settings example file. In addition you should specify in `USER_WHITELIST` the identifiers the users
+be seen in the example settings file. In addition you should specify in `USER_WHITELIST` the identifiers the users
 have in the authentication systems being used so that they can access Cephalopod, thus preventing that every user
 registered in these systems can access Cephalopod unrestrictedly.
 
