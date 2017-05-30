@@ -1,6 +1,7 @@
 from flask import Blueprint
 
-from cephalopod.core import multipass
+from ..core import multipass
+
 
 bp = Blueprint('auth', __name__)
 
