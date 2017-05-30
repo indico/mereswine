@@ -1,0 +1,22 @@
+{% extends '_layout.html' %}
+
+{% block title %}Log in{% endblock %}
+
+{% block content -%}
+    <p>Log in using <strong>{{ provider.title }}</strong></p>
+
+    <form method="post">
+        {% for field in form %}
+            {% if field.widget.__class__.__name__ == 'HiddenInput' %}
+                {{ field() }}
+            {% else %}
+                <div>
+                    {{ field.label() }}
+                    {{ field() }}
+                    {{ field.errors|join(' / ') }}
+                </div>
+            {% endif %}
+        {% endfor %}
+        <input type="submit" value="Login">
+    </form>
+{%- endblock %}

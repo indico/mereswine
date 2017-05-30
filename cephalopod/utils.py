@@ -1,8 +1,42 @@
 from __future__ import division
 
+import os
+import sys
 from collections import Counter
 
+import pkg_resources
 from flask import current_app
+from flask.helpers import get_root_path
+
+
+def package_is_editable(package):
+    """Check whether the Python package is installed in 'editable' mode"""
+    # based on pip.dist_is_editable
+    dist = pkg_resources.get_distribution(package)
+    for path_item in sys.path:
+        egg_link = os.path.join(path_item, dist.project_name + '.egg-link')
+        if os.path.isfile(egg_link):
+            return True
+    return False
+
+
+def get_config_path():
+    # env var has priority
+    try:
+        return os.path.expanduser(os.environ['CEPHALOPOD_CONFIG'])
+    except KeyError:
+        pass
+    # try finding the config in various common paths
+    paths = [os.path.expanduser('~/.cephalopod.cfg'), '/etc/cephalopod.cfg']
+    # If it's an editable setup (ie usually a dev instance) allow having
+    # the config in the package's root path
+    if package_is_editable('cephalopod'):
+        paths.insert(0, os.path.normpath(os.path.join(get_root_path('cephalopod'), 'cephalopod.cfg')))
+    for path in paths:
+        if os.path.exists(path):
+            return path
+    raise Exception('No cephalopod config found. Point the CEPHALOPOD_CONFIG env var to your config file or '
+                    'move/symlink the config in one of the following locations: {}'.format(', '.join(paths)))
 
 
 def pretty_name(value):

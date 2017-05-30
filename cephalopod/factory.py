@@ -10,7 +10,7 @@ from . import models
 from .core import assets, db, babel, multipass
 from .assets import version_url, versioned_static_file
 from .menu import setup_breadcrumbs
-from .utils import pretty_name, aggregate
+from .utils import pretty_name, aggregate, get_config_path
 from .webinterface.frontend import bp as frontend_bp
 from .webinterface.auth import bp as auth_bp
 from .api import bp as api_bp
@@ -19,10 +19,13 @@ from .api import bp as api_bp
 def make_app():
     """Returns a :class:`CustomFlask` application instance that is properly configured."""
     app = Flask('cephalopod')
-    app.config.from_pyfile('settings.cfg.example', silent=True)  # In case a custom option is missing in settings.cfg
-    app.config.from_pyfile(os.environ['CEPHALOPOD_CONFIG'])
+    app.config.from_pyfile('defaults.cfg')
+    app.config.from_pyfile(get_config_path())
+    # Config settings that should never be used-configurable
     app.config.update({
+        'SQLALCHEMY_TRACK_MODIFICATIONS': False,
         'MULTIPASS_LOGIN_SELECTOR_TEMPLATE': 'login_selector.html',
+        'MULTIPASS_LOGIN_FORM_TEMPLATE': 'login_form.html',
         'MULTIPASS_SUCCESS_ENDPOINT': 'frontend.index'
     })
 

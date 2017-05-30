@@ -10,5 +10,5 @@ setup(name='cephalopod',
       url='https://github.com/indico/cephalopod',
       packages=find_packages(),
       include_package_data=True,
-      install_requires=requirements
-      )
+      install_requires=requirements,
+      entry_points={'console_scripts': ['cephalopod = cephalopod.cli:cli']})

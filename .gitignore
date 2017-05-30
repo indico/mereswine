@@ -1,3 +1,4 @@
+/.venv/
 /env/
 /dist
 *.egg-info
@@ -7,6 +8,8 @@
 /cephalopod/static/locale/*.js
 .*.swp
 *.pyc
-settings.cfg
+*.cfg
+!defaults.cfg
+!setup.cfg
 celerybeat-schedule
 /build/

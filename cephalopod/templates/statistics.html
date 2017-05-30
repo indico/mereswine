@@ -50,7 +50,7 @@
 
 {% block body_end %}
 
-    {%- assets filters='cssmin,cssrewrite', output='assets/statistics.css',
+    {%- assets filters='csscompressor,cssrewrite', output='assets/statistics.css',
                'css/jquery.jqplot.css', 'css/jquery-jvectormap-1.2.2.css' %}
         <link href="{{ ASSET_URL|version_url }}" rel="stylesheet">
     {%- endassets %}

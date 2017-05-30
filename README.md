@@ -46,16 +46,15 @@ $ pip install -e .
 After you installed the package, you should create your own settings file
 
 ```sh
-$ cp cephalopod/settings.cfg.example /somewhere/safe/settings.cfg
+$ cp cephalopod/cephalopod.cfg.example /somewhere/safe/cephalopod.cfg
 ```
 
-and personalize it. Keep in mind that `settings.cfg` has to follow the Python syntax.
+and personalize it. Keep in mind that `cephalopod.cfg` is executed as Python code and thus needs to be valid Python.
 
-You will then have to define a couple of environment variables:
+You will then have to define an environment variable:
 
 ```sh
-$ export FLASK_APP=cephalopod.autoapp
-$ export CEPHALOPOD_CONFIG=/path/to/settings.cfg
+$ export CEPHALOPOD_CONFIG=/path/to/cephalopod.cfg
 ```
 
 ## Running development server
@@ -63,7 +62,7 @@ $ export CEPHALOPOD_CONFIG=/path/to/settings.cfg
 You can easily run a Cephalopod development server:
 
 ```sh
-$ flask run
+$ cephalopod run
 ```
 
 There is also a `cephalopod.wsgi` file included in the distribution, which can be used by WSGI containers.
@@ -118,7 +117,7 @@ To specify the time interval between each periodic crawl, you should modify the 
 ### Authentication
 
 Cephalopod uses [Flask-Multipass](https://flask-multipass.readthedocs.io) to provide different authentication systems.
-Keep in mind that Flask-Multipass should be configured in `settings.cfg` as mentioned in its documentation and as can
+Keep in mind that Flask-Multipass should be configured in `cephalopod.cfg` as mentioned in its documentation and as can
 be seen in the settings example file. In addition you should specify in `USER_WHITELIST` the identifiers the users
 have in the authentication systems being used so that they can access Cephalopod, thus preventing that every user
 registered in these systems can access Cephalopod unrestrictedly.
@@ -163,12 +162,12 @@ On top of that, it will also be displayed all the additional charts you might ha
 
 ### Command line script
 
-For more advanced operations you'll have to use the Flask CLI and the custom commands cephalopod offers.
+For more advanced operations you'll have to use the Cephalopod CLI and the custom commands cephalopod offers.
 
 To use the script run
 
 ```sh
-flask <arguments>
+cephalopod <arguments>
 ```
 
 The available arguments and possibile operations are the following:
