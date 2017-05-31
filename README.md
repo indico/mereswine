@@ -11,7 +11,7 @@ $ virtualenv .venv
 $ source .venv/bin/activate
 ```
 
-### From PyPI
+### ~From PyPI~
 
 This is the easiest way to install Cephalopod:
 
@@ -82,10 +82,6 @@ The default values are `UTC` for the timezone and `en_GB` (i.e. English format) 
 ### Application name
 
 To personalize your Cephalopod application you should change the field `APP_NAME` to your application name.
-
-### SSL support
-
-In order to run the web server with SSL you should uncomment and change the fields `SSL_CERT` and `SSL_KEY` with the path of your SSL certificate and key.
 
 ### Crawling endpoints
 
