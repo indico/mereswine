@@ -1,4 +1,4 @@
-import os
+from datetime import timedelta
 
 from celery import Celery
 from flask import Flask, current_app, flash, session, url_for
@@ -19,7 +19,23 @@ from .api import bp as api_bp
 def make_app():
     """Returns a :class:`CustomFlask` application instance that is properly configured."""
     app = Flask('cephalopod')
-    app.config.from_pyfile('defaults.cfg')
+    # Defaults
+    app.config.update({
+        'BABEL_DEFAULT_TIMEZONE': 'UTC',
+        'BABEL_DEFAULT_LOCALE': 'en_GB',
+        'APP_NAME': 'Cephalopod',
+        'ASSETS_DEBUG': False,
+        'USE_PROXY': False,
+        'CRAWLING_ENDPOINTS': [],
+        'CRAWLED_FIELDS_SETTINGS': {},
+        'USER_WHITELIST': {},
+        'CELERYBEAT_SCHEDULE': {
+            'crawl-everything': {
+                'task': 'cephalopod.crawler.crawl_all',
+                'schedule': timedelta(days=1)
+            }
+        }
+    })
     app.config.from_pyfile(get_config_path())
     # Config settings that should never be used-configurable
     app.config.update({
