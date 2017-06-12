@@ -1,2 +1,3 @@
 recursive-include cephalopod/static *
 recursive-include cephalopod/templates *
+include cephalopod/cephalopod.wsgi
