@@ -36,16 +36,9 @@ def login_required():
         return multipass.logout(url_for('auth.login'), clear_session=True)
 
 
-@bp.route('/')
-@menu('index')
-@breadcrumb('Home', '.index')
-def index():
-    return render_template('index.html')
-
-
 @bp.route('/logout')
 def logout():
-    return multipass.logout(url_for('.index'), clear_session=True)
+    return multipass.logout(url_for('auth.index'), clear_session=True)
 
 
 @bp.route('/servers')

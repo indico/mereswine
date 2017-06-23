@@ -42,7 +42,7 @@ def make_app():
         'SQLALCHEMY_TRACK_MODIFICATIONS': False,
         'MULTIPASS_LOGIN_SELECTOR_TEMPLATE': 'login_selector.html',
         'MULTIPASS_LOGIN_FORM_TEMPLATE': 'login_form.html',
-        'MULTIPASS_SUCCESS_ENDPOINT': 'frontend.index'
+        'MULTIPASS_SUCCESS_ENDPOINT': 'auth.index'
     })
 
     from .cli import register_shell_ctx

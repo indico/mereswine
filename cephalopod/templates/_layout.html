@@ -18,22 +18,24 @@
                 <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <a class="navbar-brand" href="{{ url_for('frontend.index') }}">{{ config.APP_NAME }}</a>
+                <a class="navbar-brand" href="{{ url_for('auth.index') }}">{{ config.APP_NAME }}</a>
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul class="navbar-nav mr-auto">
-                        <li class="nav-item">
-                            <a class="nav-link {% if g.menu == 'server_list' %}active{% endif %}"
-                               href="{{ url_for('frontend.server_list') }}">
-                                Servers
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link {% if g.menu == 'statistics' %}active{% endif %}"
-                               href="{{ url_for('frontend.statistics') }}">
-                                Statistics
-                            </a>
-                        </li>
-                    </ul>
+                    {% if session.user %}
+                        <ul class="navbar-nav mr-auto">
+                            <li class="nav-item">
+                                <a class="nav-link {% if g.menu == 'server_list' %}active{% endif %}"
+                                   href="{{ url_for('frontend.server_list') }}">
+                                    Servers
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link {% if g.menu == 'statistics' %}active{% endif %}"
+                                   href="{{ url_for('frontend.statistics') }}">
+                                    Statistics
+                                </a>
+                            </li>
+                        </ul>
+                    {% endif %}
                     <ul class="nav navbar-nav ml-auto">
                         {% with messages = get_flashed_messages() %}
                             {% if messages %}
@@ -60,7 +62,7 @@
             </div>
         </nav>
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="{{ url_for('frontend.index') }}">{{ config.APP_NAME }}</a></li>
+            <li class="breadcrumb-item"><a href="{{ url_for('auth.index') }}">{{ config.APP_NAME }}</a></li>
             {% for bc in g.breadcrumbs %}
                 {% if loop.last %}
                     <li class="breadcrumb-item active">{{ bc.title }}</li>

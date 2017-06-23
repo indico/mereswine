@@ -5,19 +5,30 @@
 {% block content -%}
     <div class="jumbotron">
         <h1 class="display-3">Welcome to {{ config.APP_NAME }}!</h1>
-        <p class="lead">
-            Here you can see all the information of the servers running your application, as well as being able to
-            manage them and explore interesting statistics information.
-        </p>
-        <p class="lead">
-            <a class="btn btn-primary btn-lg" href="{{ url_for('.server_list') }}" role="button">
-                <i class="fa fa-cog" aria-hidden="true"></i>
-                Server Management
+        {% if session.user %}
+            <p class="lead">
+                Here you can see all the information of the servers running your application, as well as being able to
+                manage them and explore interesting statistics information.
+            </p>
+            <p class="lead">
+                <a class="btn btn-primary btn-lg" href="{{ url_for('frontend.server_list') }}" role="button">
+                    <i class="fa fa-cog" aria-hidden="true"></i>
+                    Server Management
+                </a>
+                <a class="btn btn-primary btn-lg" href="{{ url_for('frontend.statistics') }}" role="button">
+                    <i class="fa fa-bar-chart" aria-hidden="true"></i>
+                    Statistics
+                </a>
+            </p>
+        {% else %}
+            <p class="lead">
+                <strong>You need to be logged in to have access to the statistics.</strong>
+            </p>
+            <a class="btn btn-primary btn-lg" href="{{ url_for('auth.login') }}" role="button">
+                <i class="fa fa-sign-in" aria-hidden="true"></i>
+                Log in
             </a>
-            <a class="btn btn-primary btn-lg" href="{{ url_for('.statistics') }}" role="button">
-                <i class="fa fa-bar-chart" aria-hidden="true"></i>
-                Statistics
-            </a>
-        </p>
+        {% endif %}
+
     </div>
 {%- endblock %}
