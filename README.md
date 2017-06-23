@@ -125,7 +125,7 @@ To allow your application, and therefore each instance running it, to communicat
 - **Create instance:** this API is used to create a new instance record in the Cephalopod DB.
     - *Endpoint:* `/instance/`;
     - *Request type:* `POST`;
-    - *Data:* the url of the instance server, the contact person name and e-mail address and the organisation name;
+    - *Data:* the url of the instance server, the contact person name and e-mail address and the organization name;
     - *Response:* the instance UUID.
 - **Update instance:** used to update the instance record in the Cephalopod DB whenever some field is changed in the instance server. Also used when the Instance Tracking has to be be enabled/disabled for that instance.
     - *Endpoint*: `/instance/<uuid>`;

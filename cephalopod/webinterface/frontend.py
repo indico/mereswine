@@ -74,7 +74,7 @@ def update_server(id):
         instance.url = request.form['url'].rstrip('/')
         instance.contact = request.form['contact']
         instance.email = request.form['email']
-        instance.organisation = request.form['organisation']
+        instance.organization = request.form['organization']
         instance.enabled = request.form['enabled'] == 'true'
         db.session.commit()
     return jsonify()

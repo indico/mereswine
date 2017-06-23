@@ -17,7 +17,7 @@ def create_instance():
     instance.url = payload['url'].rstrip('/')
     instance.contact = payload['contact']
     instance.email = payload['email']
-    instance.organisation = payload['organisation']
+    instance.organization = payload['organization']
     instance.registration_date = datetime.utcnow()
     db.session.add(instance)
     db.session.commit()
@@ -27,7 +27,7 @@ def create_instance():
 @bp.route('/instance/<uuid>', methods=('PATCH',))
 def update_instance(uuid):
     instance = Instance.query.filter_by(uuid=uuid).first_or_404()
-    fields = ['enabled', 'url', 'contact', 'email', 'organisation']
+    fields = ['enabled', 'url', 'contact', 'email', 'organization']
     payload = request.get_json()
     for field in fields:
         value = payload.pop(field, None)

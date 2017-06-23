@@ -54,7 +54,7 @@
     <table id="server-table" class="table">
         <thead>
             <tr>
-                <th>Organisation name</th>
+                <th>Organization name</th>
                 <th>URL</th>
                 <th>Last crawled</th>
                 {% for field in extra_fields %}
@@ -75,7 +75,7 @@
                     <tr class="server-row{{ ' danger' if not server.enabled }}">
                         <td>
                             <i class="fa fa-chevron-right toggle-expand"></i>
-                            {{ server.organisation }}
+                            {{ server.organization }}
                         </td>
                         <td><a href="{{ server.url }}">{{ server.url }}</a></td>
                         <td>

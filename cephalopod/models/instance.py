@@ -31,7 +31,7 @@ class Instance(db.Model):
     url = db.Column(db.String, nullable=False)
     contact = db.Column(db.String, nullable=False)
     email = db.Column(db.String, nullable=False)
-    organisation = db.Column(db.String, nullable=False)
+    organization = db.Column(db.String, nullable=False)
     crawl_date = db.Column(db.DateTime)
     crawled_data = db.Column(JSONEncodedDict)
     geolocation = db.Column(JSONEncodedDict)
@@ -46,5 +46,5 @@ class Instance(db.Model):
                 'url': self.url,
                 'contact': self.contact,
                 'email': self.email,
-                'organisation': self.organisation,
+                'organization': self.organization,
                 'registered': self.registration_date}

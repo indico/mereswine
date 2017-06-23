@@ -38,10 +38,10 @@
                                     <span class="fa fa-briefcase"></span>
                                 </div>
                                 <div class="col-md-4">
-                                    <strong>Organisation:</strong>
+                                    <strong>Organization:</strong>
                                 </div>
                                 <div class="col-md-7">
-                                    <span id="organisation" class="field-value">{{ server.organisation }}</span>
+                                    <span id="organization" class="field-value">{{ server.organization }}</span>
                                 </div>
                             </div>
                             <div class="row">
@@ -200,7 +200,7 @@
         });
 
         var oldFields = {
-            organisation: $('#organisation').text(),
+            organization: $('#organization').text(),
             url: $('#url').text(),
             contact: $('#contact').text(),
             email: $('#email').text(),
@@ -209,7 +209,7 @@
 
         $('#edit-main-info').on('click', function(e){
             oldFields = {
-                organisation: $('#organisation').text(),
+                organization: $('#organization').text(),
                 url: $('#url').text(),
                 contact: $('#contact').text(),
                 email: $('#email').text(),
@@ -234,7 +234,7 @@
                 type: 'POST',
                 url: {{ url_for('.update_server', id=server.id) | tojson }},
                 data: {
-                    organisation: $('#organisation').val(),
+                    organization: $('#organization').val(),
                     url: $('#url').val(),
                     contact: $('#contact').val(),
                     email: $('#email').val(),
