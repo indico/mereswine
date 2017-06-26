@@ -33,7 +33,8 @@ def get_server_fields(server):
 def login_required():
     whitelist = current_app.config['USER_WHITELIST']
     if 'user' not in session or session['user'] not in whitelist.get(session.get('provider'), set()):
-        return multipass.logout(url_for('auth.login'), clear_session=True)
+        next_url = request.full_path.rstrip('?')
+        return multipass.logout(url_for('auth.login', next=next_url), clear_session=True)
 
 
 @bp.route('/logout')
