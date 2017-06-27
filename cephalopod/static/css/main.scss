@@ -15,6 +15,16 @@ h1 {
 /* Server list page */
 
 #server-list {
+    .server-row {
+        td {
+            vertical-align: middle;
+        }
+
+        .toggle-expand {
+            cursor: pointer;
+        }
+    }
+
     .server-info-row {
         .row > * {
             padding: 0;
