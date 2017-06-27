@@ -105,8 +105,7 @@ def identity_handler(identity_info):
     if provider in whitelist and identifier in whitelist.get(provider, set()):
         session['user'] = identifier
         session['provider'] = provider
-        flash('You were successfully logged in', 'success')
     else:
         session.clear()
         flash('You are not allowed to log in', 'error')
-        return multipass.logout(url_for('.login'))
+        return multipass.logout(url_for('auth.index'))
