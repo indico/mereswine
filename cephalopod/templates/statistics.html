@@ -28,13 +28,9 @@
                 </div>
                 <div class="row">
                     {% for field, content in additional_charts.items() if content %}
-                        {% set aggregation_func = config.CRAWLED_FIELDS_SETTINGS.get(field, {}).get('aggregation', None) %}
                         <div class="col-md-6 statistics-item">
                             <h4>
                                 {{ field | pretty_name }}
-                                {% if aggregation_func %}
-                                     ({{ aggregation_func }})
-                                {% endif %}
                             </h4>
                             <div id="{{ field }}" class="chartdiv" data-data="{{ content['data'] | tojson | forceescape }}" data-aggregation-label="{{ content['aggregation_label'] }}" data-aggregate-by-label="{{ content['aggregate_by_label'] }}" data-chart-type="{{ content['chart_type'] }}"></div>
                         </div>

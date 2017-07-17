@@ -36,14 +36,10 @@
                     <div id="additional-data-dropdown" class="dropdown-menu"
                          role="menu">
                         {% for field in extra_fields %}
-                            {% set aggregation_func = config.CRAWLED_FIELDS_SETTINGS.get(field, {}).get('aggregation', None) %}
-                                <label class="dropdown-item checkbox">
-                                    <input id="{{ field }}"  type="checkbox">
-                                    {{ field | pretty_name }}
-                                    {% if aggregation_func %}
-                                         ({{ aggregation_func }})
-                                    {% endif %}
-                                </label>
+                            <label class="dropdown-item checkbox">
+                                <input id="{{ field }}"  type="checkbox">
+                                {{ field | pretty_name }}
+                            </label>
                         {% endfor %}
                     </div>
                 </div>
@@ -58,12 +54,8 @@
                 <th>URL</th>
                 <th>Last crawled</th>
                 {% for field in extra_fields %}
-                    {% set aggregation_func = config.CRAWLED_FIELDS_SETTINGS.get(field, {}).get('aggregation', None) %}
                     <th class="field-{{ field }}">
                         {{ field | pretty_name }}
-                        {% if aggregation_func %}
-                             ({{ aggregation_func }})
-                        {% endif %}
                     </th>
                 {% endfor %}
                 <th class="no-sort"></th>
@@ -145,11 +137,7 @@
                                                 {% set aggregation_func = config.CRAWLED_FIELDS_SETTINGS.get(field, {}).get('aggregation', None) %}
                                                 <div class="col-md-3">
                                                     <strong>
-                                                        {{ field | pretty_name }}
-                                                        {%- if aggregation_func %}
-                                                             ({{ aggregation_func }})
-                                                        {%- endif -%}
-                                                        :
+                                                        {{ field | pretty_name }}:
                                                     </strong>
                                                     <span>
                                                         {% set aggregated_value = (server.crawled_data[field] | aggregate(aggregation_func)) %}
