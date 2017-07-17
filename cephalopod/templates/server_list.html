@@ -103,7 +103,7 @@
                         <td>
                             <div class="btn-group btn-group-xs server-actions">
                                 <button type="button" class="btn btn-secondary manage-server" data-url="{{ url_for('.get_server', id=server.id) }}" title="Server details">
-                                    <i class="fa fa-search" aria-hidden="true"></i>
+                                    <i class="fa fa-info-circle" aria-hidden="true"></i>
                                 </button>
                                 <button type="button" class="btn btn-secondary crawl-now"{{ ' disabled' if not server.enabled }} data-url="{{ url_for('.update_server', id=server.id) }}" title="Crawl now">
                                     <i class="fa fa-refresh"></i>
