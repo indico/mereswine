@@ -180,7 +180,8 @@
 
 {% block body_end %}
 
-    <script type="text/javascript" src="https://maps.google.com/maps/api/js?sensor=true"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key={{ config.GOOGLE_MAPS_API_KEY }}&amp;callback=initMap"
+            async defer></script>
 
     <script>
 
@@ -327,12 +328,13 @@
             });
         });
 
-        $('.server-geolocation').each(function(){
-            $this = $(this);
+        function initMap() {
+            var $serverGeolocation = $('.server-geolocation');
             var mapCanvas = $('<div>', {class: 'map-canvas'});
-            $this.append(mapCanvas);
+            $serverGeolocation.append(mapCanvas);
 
-            var coords = new google.maps.LatLng($this.data('latitude'), $this.data('longitude'));
+            var coords = new google.maps.LatLng($serverGeolocation.data('latitude'),
+                                                $serverGeolocation.data('longitude'));
 
             var options = {
                 zoom: 9,
@@ -350,7 +352,7 @@
                 map: map,
                 title: {{ title | tojson }}
             });
-        });
+        }
 
     </script>
 {%- endblock %}
