@@ -341,6 +341,11 @@
         $('#show-enabled').trigger('change');
         $('#show-disabled').trigger('change');
 
+        // Prevents 'Additional data' dropdown from closing when clicking the label
+        $('label.dropdown-item').on('click', function() {
+            $(this).closest('.btn-group').addClass('show');
+        });
+
     </script>
 
 {%- endblock %}
