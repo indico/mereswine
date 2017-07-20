@@ -174,12 +174,33 @@
 
         addAjaxDeleter($('#server-list'), '.js-server-delete');
 
+        var additionalData = localStorage.getItem('additionalData');
+        if (!additionalData) {
+            localStorage.setItem("additionalData", JSON.stringify([]));
+        } else {
+            JSON.parse(additionalData).forEach(function(field) {
+                $('.field-' + field).css('display', 'table-cell');
+                $('#' + field).prop('checked', true);
+            });
+        }
+
         $('#additional-data-dropdown input').on('change', function(){
+            var additionalData = JSON.parse(localStorage.getItem('additionalData'));
+            var idx = additionalData.indexOf(this.id);
             if (this.checked) {
                 $('.field-'+this.id).css('display', 'table-cell');
+                // Save checked option in localStorage if doesn't exist
+                if (idx === -1) {
+                    additionalData.push(this.id);
+                }
             } else {
                 $('.field-'+this.id).css('display', 'none');
+                // Remove unchecked option form localStorage if exists
+                if (idx > -1) {
+                    additionalData.splice(idx, 1);
+                }
             }
+            localStorage.setItem("additionalData", JSON.stringify(additionalData));
         }).trigger('change');
 
         $('.toggle-expand').on('click', function(){
@@ -254,6 +275,7 @@
                 noMatch.hide();
             }
         }).prop('checked', true);
+
         $('#show-disabled').on('change', function(){
             var noMatch = $('#no-matching-instances');
             var toggled = this.checked;
@@ -288,6 +310,7 @@
             $rowmore.detach();
             $rowmore.removeClass('hidden');
         });
+
         var aoColumns = [];
         $('#server-table thead th').each(function(){
             if ($(this).hasClass('no-sort')) {
@@ -296,6 +319,7 @@
                 aoColumns.push(null);
             }
         });
+
         if ($('.server-row').length > 0) {
             $('#server-table').DataTable({
                 'columns': aoColumns,
