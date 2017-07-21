@@ -1,0 +1,8 @@
+A new instance has been registered:
+
+Organization: {{ instance.organization }}
+URL: {{ instance.url }}
+Contact: {{ instance.contact }}
+Email: {{ instance.email }}
+
+{{ url_for('frontend.get_server', id=instance.id, _external=true) }}

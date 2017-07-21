@@ -7,7 +7,7 @@ from werkzeug.contrib.fixers import ProxyFix
 # This is needed in order to register all SQLAlchemy models
 from . import models
 
-from .core import assets, db, babel, multipass
+from .core import assets, db, babel, multipass, mail
 from .assets import version_url, versioned_static_file
 from .menu import setup_breadcrumbs
 from .utils import pretty_name, aggregate, get_config_path
@@ -54,6 +54,7 @@ def make_app():
     register_blueprints(app)
     register_shell_ctx(app)
     multipass.init_app(app)
+    mail.init_app(app)
     if app.config['USE_PROXY']:
         app.wsgi_app = ProxyFix(app.wsgi_app)
     return app

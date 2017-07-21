@@ -2,6 +2,7 @@ Babel==2.4.0
 Flask==0.12.2
 Flask-Assets==0.12
 Flask-Babel==0.11.2
+Flask-Mail==0.9.1
 Flask-Multipass>=0.0.dev4
 Flask-OAuthlib==0.9.3
 Flask-SQLAlchemy==2.2

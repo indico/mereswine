@@ -45,6 +45,14 @@ CELERYBEAT_SCHEDULE = {
     }
 }
 
+# Mail settings
+MAIL_SERVER = 'localhost'
+MAIL_PORT = 25
+MAIL_USERNAME = ''
+MAIL_PASSWORD = ''
+MAIL_SENDER = 'sender@example.org'
+MAIL_RECIPIENT = 'recipient@example.org'
+
 # Multipass settings
 
 # User email whitelist

@@ -1,9 +1,10 @@
 import uuid
 from datetime import datetime
 
-from flask import jsonify, request
+from flask import jsonify, request, render_template
 from sqlalchemy.exc import SQLAlchemyError
 
+from ..utils import send_email
 from ..core import db
 from ..models import Instance
 from . import bp
@@ -21,6 +22,9 @@ def create_instance():
     instance.registration_date = datetime.utcnow()
     db.session.add(instance)
     db.session.commit()
+    subject = "New instance '{}' registered".format(instance.organization)
+    body = render_template('emails/new_instance_notification.txt', instance=instance)
+    send_email(subject, body)
     return jsonify(uuid=instance.uuid)
 
 

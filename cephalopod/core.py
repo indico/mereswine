@@ -1,6 +1,7 @@
 import csscompressor
 from flask_assets import Environment
 from flask_babel import Babel
+from flask_mail import Mail
 from flask_multipass import Multipass
 from flask_sqlalchemy import SQLAlchemy
 from webassets.filter import register_filter, Filter
@@ -11,6 +12,7 @@ assets = Environment()
 db = SQLAlchemy()
 babel = Babel()
 multipass = Multipass()
+mail = Mail()
 
 
 @register_filter

@@ -7,6 +7,7 @@ from collections import Counter
 import pkg_resources
 from flask import current_app
 from flask.helpers import get_root_path
+from flask_mail import Message
 
 
 def package_is_editable(package):
@@ -158,3 +159,14 @@ def aggregate_chart(extended_instances, extra_fields):
             }
 
     return aggregated_fields
+
+
+def send_email(subject, body):
+    from cephalopod.core import mail
+    subject = "[{}] {}".format(current_app.config['APP_NAME'], subject)
+    msg = Message(subject,
+                  sender=current_app.config['MAIL_SENDER'],
+                  recipients=[current_app.config['MAIL_RECIPIENT']])
+
+    msg.body = body
+    mail.send(msg)
