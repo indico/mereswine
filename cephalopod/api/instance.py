@@ -1,7 +1,8 @@
 import uuid
 from datetime import datetime
+from smtplib import SMTPException
 
-from flask import jsonify, request, render_template
+from flask import jsonify, request, render_template, current_app
 from sqlalchemy.exc import SQLAlchemyError
 
 from ..utils import send_email
@@ -24,7 +25,10 @@ def create_instance():
     db.session.commit()
     subject = "New instance '{}' registered".format(instance.organization)
     body = render_template('emails/new_instance_notification.txt', instance=instance)
-    send_email(subject, body)
+    try:
+        send_email(subject, body)
+    except SMTPException:
+        current_app.logger.exception('Could not send email')
     return jsonify(uuid=instance.uuid)
 
 
