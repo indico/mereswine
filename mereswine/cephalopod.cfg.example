@@ -3,7 +3,7 @@ BABEL_DEFAULT_TIMEZONE = "UTC"
 BABEL_DEFAULT_LOCALE = "en_GB"
 ASSETS_DEBUG = False
 SECRET_KEY = ''
-APP_NAME = 'Cephalopod'
+APP_NAME = 'Mereswine'
 GOOGLE_MAPS_API_KEY = ''
 DEBUG = True
 CRAWLING_ENDPOINTS = [
@@ -33,14 +33,14 @@ CRAWLED_FIELDS_SETTINGS = {
 }
 
 # Database settings
-SQLALCHEMY_DATABASE_URI = 'postgresql:///cephalopod'
+SQLALCHEMY_DATABASE_URI = 'postgresql:///mereswine'
 
 # Celery settings
 CELERY_BROKER_URL = 'redis://127.0.0.1:6379/0'
 from datetime import timedelta
 CELERYBEAT_SCHEDULE = {
     'crawl-everything': {
-        'task': 'cephalopod.crawler.crawl_all',
+        'task': 'mereswine.crawler.crawl_all',
         'schedule': timedelta(days=1)
     }
 }

@@ -3,9 +3,9 @@
 /dist
 *.egg-info
 /.idea/
-/cephalopod/static/.webassets-cache
-/cephalopod/static/assets/
-/cephalopod/static/locale/*.js
+/mereswine/static/.webassets-cache
+/mereswine/static/assets/
+/mereswine/static/locale/*.js
 .*.swp
 *.pyc
 *.cfg

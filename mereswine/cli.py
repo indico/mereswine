@@ -3,7 +3,7 @@ from celery.bin.celery import CeleryCommand, command_classes
 from flask.cli import FlaskGroup
 
 
-# XXX: Do not import any cephalopod modules here!
+# XXX: Do not import any mereswine modules here!
 # If any import from this module triggers an exception the dev server
 # will die while an exception only happening during app creation will
 # be handled gracefully.
@@ -28,7 +28,7 @@ def register_shell_ctx(app):
 @click.group(cls=FlaskGroup, create_app=_create_app)
 def cli():
     """
-    This script lets you control various aspects of Cephalopod from the
+    This script lets you control various aspects of Mereswine from the
     command line.
     """
 
@@ -82,4 +82,4 @@ def celery(ctx):
     # remove the celery shell command
     next(funcs for group, funcs, _ in command_classes if group == 'Main').remove('shell')
     del CeleryCommand.commands['shell']
-    CeleryCommand(celery).execute_from_commandline(['cephalopod celery'] + ctx.args)
+    CeleryCommand(celery).execute_from_commandline(['mereswine celery'] + ctx.args)

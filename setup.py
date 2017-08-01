@@ -5,10 +5,10 @@ with open('requirements.txt') as f:
     requirements = f.readlines()
 
 
-setup(name='cephalopod',
+setup(name='mereswine',
       version='1.0',
-      url='https://github.com/indico/cephalopod',
+      url='https://github.com/indico/mereswine',
       packages=find_packages(),
       include_package_data=True,
       install_requires=requirements,
-      entry_points={'console_scripts': ['cephalopod = cephalopod.cli:cli']})
+      entry_points={'console_scripts': ['mereswine = mereswine.cli:cli']})
