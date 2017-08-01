@@ -1,10 +1,10 @@
-# Cephalopod
+# Mereswine
 
-With the Cephalopod package you'll be able to easily track and manage the various instances of your application, as well as analizing interesting statistical information.
+With the Mereswine package you'll be able to easily track and manage the various instances of your application, as well as analizing interesting statistical information.
 
 ## Installation (production)
 
-First of all, we recommend that you install Cephalopod in a virtual environment:
+First of all, we recommend that you install Mereswine in a virtual environment:
 
 ```sh
 $ virtualenv .venv
@@ -13,10 +13,10 @@ $ source .venv/bin/activate
 
 ### ~From PyPI~
 
-This is the easiest way to install Cephalopod:
+This is the easiest way to install Mereswine:
 
 ```sh
-$ pip install cephalopod
+$ pip install mereswine
 ```
 
 ## Installation from Git
@@ -25,8 +25,8 @@ If instead you want/need to install a development version of the package, head t
 repository:
 
 ```sh
-$ git clone https://github.com/indico/cephalopod.git
-$ cd cephalopod
+$ git clone https://github.com/indico/mereswine.git
+$ cd mereswine
 ```
 
 Then, making sure you are still in your virtual environment, install it with Pip:
@@ -35,7 +35,7 @@ Then, making sure you are still in your virtual environment, install it with Pip
 $ pip install .
 ```
 
-If you are instead doing development on Cephalopod, you can link your current repo to your `site-packages`:
+If you are instead doing development on Mereswine, you can link your current repo to your `site-packages`:
 
 ```sh
 $ pip install -e .
@@ -46,26 +46,26 @@ $ pip install -e .
 After you installed the package, you should create your own config file
 
 ```sh
-$ cp cephalopod/cephalopod.cfg.example /somewhere/safe/cephalopod.cfg
+$ cp mereswine/mereswine.cfg.example /somewhere/safe/mereswine.cfg
 ```
 
-and personalize it. Keep in mind that `cephalopod.cfg` is executed as Python code and thus needs to be valid Python.
+and personalize it. Keep in mind that `mereswine.cfg` is executed as Python code and thus needs to be valid Python.
 
 You will then have to define an environment variable:
 
 ```sh
-$ export CEPHALOPOD_CONFIG=/path/to/cephalopod.cfg
+$ export MERESWINE_CONFIG=/path/to/mereswine.cfg
 ```
 
 ## Running development server
 
-You can easily run a Cephalopod development server:
+You can easily run a Mereswine development server:
 
 ```sh
-$ cephalopod run
+$ mereswine run
 ```
 
-There is also a `cephalopod.wsgi` file included in the distribution, which can be used by WSGI containers.
+There is also a `mereswine.wsgi` file included in the distribution, which can be used by WSGI containers.
 
 ### Secret key
 
@@ -81,11 +81,11 @@ The default values are `UTC` for the timezone and `en_GB` (i.e. English format) 
 
 ### Application name
 
-To personalize your Cephalopod application you should change the field `APP_NAME` to your application name.
+To personalize your Mereswine application you should change the field `APP_NAME` to your application name.
 
 ### Crawling endpoints
 
-To allow Cephalopod to crawl additional information from the servers running your application, you should specify all the necessary endpoints in the `CRAWLING_ENDPOINTS` field.
+To allow Mereswine to crawl additional information from the servers running your application, you should specify all the necessary endpoints in the `CRAWLING_ENDPOINTS` field.
 
 This field is going to be a Python list where each element is a Python dictionary containing an `url` and (optionally) a `headers` dictionary. Each endpoint url will be appended to the server base url at the moment of sending the http request to crawl the information.
 
@@ -95,11 +95,11 @@ All the configurations relative to the crawled fields are managed through the `C
 
 Each field must have a key name equals to the corresponding crawled field name. Any mismatching field will be ignored.
 
-In case you want to ignore some of the fields that the crawling endpoints offer, it is possible to set the fields to `None` and your Cephalopod application will not show them in the interface.
+In case you want to ignore some of the fields that the crawling endpoints offer, it is possible to set the fields to `None` and your Mereswine application will not show them in the interface.
 
 For each field, the following parameters can be specified:
 
-- **label:** a string that specifies how the field name will be rendered across Cephalopod. The default value is the field name with spaces instead of underscores and with the first word starting with a capital letter;
+- **label:** a string that specifies how the field name will be rendered across Mereswine. The default value is the field name with spaces instead of underscores and with the first word starting with a capital letter;
 - **chart:** a boolean value that indicates whether to include or not that field amongst the statistics. Default: `False`;
 - **chart_type:** if `chart` is set to `True` it specifies with which kind of chart the field statistics will be displayed. Accepted values are: `'bar'`, for a barchart, `'line'`, for a linechart, and `'pie'`, for a piechart. Default: `'bar'`;
 - **aggregation:** if the field cannot be directly shown (for example it's a list or a dictionary) you have to define an aggregation function to aggregate the values inside the field and use the aggregated value instead. At the moment, only numeric values are supported and the accepted aggregation functions are: `None`, when no aggregation is necessary, `'sum'`, to aggregate by sum, `'avg'`, to aggregate by average, and `'min'` and `'max'` to show the lowest and the highest value, respectively. Default: `None`;
@@ -112,22 +112,22 @@ To specify the time interval between each periodic crawl, you should modify the 
 
 ### Authentication
 
-Cephalopod uses [Flask-Multipass](https://flask-multipass.readthedocs.io) to provide different authentication systems.
-Keep in mind that Flask-Multipass should be configured in `cephalopod.cfg` as mentioned in its documentation and as can
+Mereswine uses [Flask-Multipass](https://flask-multipass.readthedocs.io) to provide different authentication systems.
+Keep in mind that Flask-Multipass should be configured in `mereswine.cfg` as mentioned in its documentation and as can
 be seen in the example settings file. In addition you should specify in `USER_WHITELIST` the identifiers the users
-have in the authentication systems being used so that they can access Cephalopod, thus preventing that every user
-registered in these systems can access Cephalopod unrestrictedly.
+have in the authentication systems being used so that they can access Mereswine, thus preventing that every user
+registered in these systems can access Mereswine unrestrictedly.
 
 ## API implementation
 
-To allow your application, and therefore each instance running it, to communicate with Cephalopod you have to use the three APIs available:
+To allow your application, and therefore each instance running it, to communicate with Mereswine you have to use the three APIs available:
 
-- **Create instance:** this API is used to create a new instance record in the Cephalopod DB.
+- **Create instance:** this API is used to create a new instance record in the Mereswine DB.
     - *Endpoint:* `/instance/`;
     - *Request type:* `POST`;
     - *Data:* the url of the instance server, the contact person name and e-mail address and the organization name;
     - *Response:* the instance UUID.
-- **Update instance:** used to update the instance record in the Cephalopod DB whenever some field is changed in the instance server. Also used when the Instance Tracking has to be be enabled/disabled for that instance.
+- **Update instance:** used to update the instance record in the Mereswine DB whenever some field is changed in the instance server. Also used when the Instance Tracking has to be be enabled/disabled for that instance.
     - *Endpoint*: `/instance/<uuid>`;
     - *Request type:* `PATCH`;
     - *Data:* every combination of the following fields: server url, contact person name, contact e-mail address and enabled status (`True` or `False`);
@@ -140,13 +140,13 @@ To allow your application, and therefore each instance running it, to communicat
 
 ## Usage
 
-Cephalopod is basically composed by two main functionalities: instance details & management and statistics.
+Mereswine is basically composed by two main functionalities: instance details & management and statistics.
 
 For others more advanced functionalities a python script has been written and included in the package.
 
 ### Instance details & management
 
-Cephalopod allows you to view a comprehensive list of all the instances in the DB, with the possibility to filter them by a few criteria. Also in the server list you can sort the instances selected by one of the available fields (be it one of the main fields or one of the crawled fields) and you can choose to run at any moment the crawler to crawl all the instances.
+Mereswine allows you to view a comprehensive list of all the instances in the DB, with the possibility to filter them by a few criteria. Also in the server list you can sort the instances selected by one of the available fields (be it one of the main fields or one of the crawled fields) and you can choose to run at any moment the crawler to crawl all the instances.
 
 By clicking on the detail button for a specific instance, you'll be able to explore it's main and crawled information and see a map with the approximated physical location of the server.
 
@@ -158,12 +158,12 @@ On top of that, it will also be displayed all the additional charts you might ha
 
 ### Command line script
 
-For more advanced operations you'll have to use the Cephalopod CLI and the custom commands cephalopod offers.
+For more advanced operations you'll have to use the Mereswine CLI and the custom commands mereswine offers.
 
 To use the script run
 
 ```sh
-cephalopod <arguments>
+mereswine <arguments>
 ```
 
 The available arguments and possibile operations are the following:

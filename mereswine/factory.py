@@ -18,12 +18,12 @@ from .api import bp as api_bp
 
 def make_app():
     """Returns a :class:`CustomFlask` application instance that is properly configured."""
-    app = Flask('cephalopod')
+    app = Flask('mereswine')
     # Defaults
     app.config.update({
         'BABEL_DEFAULT_TIMEZONE': 'UTC',
         'BABEL_DEFAULT_LOCALE': 'en_GB',
-        'APP_NAME': 'Cephalopod',
+        'APP_NAME': 'Mereswine',
         'ASSETS_DEBUG': False,
         'USE_PROXY': False,
         'CRAWLING_ENDPOINTS': [],
@@ -31,7 +31,7 @@ def make_app():
         'USER_WHITELIST': {},
         'CELERYBEAT_SCHEDULE': {
             'crawl-everything': {
-                'task': 'cephalopod.crawler.crawl_all',
+                'task': 'mereswine.crawler.crawl_all',
                 'schedule': timedelta(days=1)
             }
         }

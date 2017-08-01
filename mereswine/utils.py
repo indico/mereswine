@@ -24,19 +24,19 @@ def package_is_editable(package):
 def get_config_path():
     # env var has priority
     try:
-        return os.path.expanduser(os.environ['CEPHALOPOD_CONFIG'])
+        return os.path.expanduser(os.environ['MERESWINE_CONFIG'])
     except KeyError:
         pass
     # try finding the config in various common paths
-    paths = [os.path.expanduser('~/.cephalopod.cfg'), '/etc/cephalopod.cfg']
+    paths = [os.path.expanduser('~/.mereswine.cfg'), '/etc/mereswine.cfg']
     # If it's an editable setup (ie usually a dev instance) allow having
     # the config in the package's root path
-    if package_is_editable('cephalopod'):
-        paths.insert(0, os.path.normpath(os.path.join(get_root_path('cephalopod'), 'cephalopod.cfg')))
+    if package_is_editable('mereswine'):
+        paths.insert(0, os.path.normpath(os.path.join(get_root_path('mereswine'), 'mereswine.cfg')))
     for path in paths:
         if os.path.exists(path):
             return path
-    raise Exception('No cephalopod config found. Point the CEPHALOPOD_CONFIG env var to your config file or '
+    raise Exception('No mereswine config found. Point the MERESWINE_CONFIG env var to your config file or '
                     'move/symlink the config in one of the following locations: {}'.format(', '.join(paths)))
 
 
@@ -162,7 +162,7 @@ def aggregate_chart(extended_instances, extra_fields):
 
 
 def send_email(subject, body):
-    from cephalopod.core import mail
+    from mereswine.core import mail
     subject = "[{}] {}".format(current_app.config['APP_NAME'], subject)
     msg = Message(subject,
                   sender=current_app.config['MAIL_SENDER'],
