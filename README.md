@@ -1,5 +1,7 @@
 # Mereswine
 
+![Mereswine logo](https://raw.githubusercontent.com/indico/mereswine/master/mereswine/static/logo.png)
+
 With the Mereswine package you'll be able to easily track and manage the various instances of your application, as well as analizing interesting statistical information.
 
 ## Installation (production)

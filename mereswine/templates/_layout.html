@@ -86,5 +86,9 @@
                 crossorigin="anonymous">
         </script>
         {% block body_end %}{% endblock %}
+        <div class="footer">
+            <img src="{{ url_for('static', filename='logo.png') }}" class="footer-logo">
+            <span>Powered by <a href="https://github.com/indico/mereswine">Mereswine</a></span>
+        </div>
     </body>
 </html>
