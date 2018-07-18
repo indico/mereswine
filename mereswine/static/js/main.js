@@ -17,6 +17,7 @@
                 success: function() {
                     row.fadeOut(function() {
                         if (row.siblings('.server-row').length) {
+                            row.next('.server-info-row').remove();
                             row.remove();
                             $('#show-enabled').trigger('change');
                         }
