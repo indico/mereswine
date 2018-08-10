@@ -13,7 +13,7 @@ $ virtualenv .venv
 $ source .venv/bin/activate
 ```
 
-### ~From PyPI~
+### From PyPI
 
 This is the easiest way to install Mereswine:
 
