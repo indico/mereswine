@@ -119,7 +119,7 @@ def statistics():
         dates.append(server.registration_date.date())
         if server.geolocation:
             country_names.append(server.geolocation['country_name'])
-            country_codes.append(server.geolocation['country_code'])
+            country_codes.append(server.geolocation['country_code2'])
             markers.append({
                 'latLng': [server.geolocation['latitude'], server.geolocation['longitude']],
                 'name': crawler.trim_url(server.url)

@@ -1,28 +1,16 @@
 import logging
 from datetime import datetime
+from urllib.parse import urlparse
 
 import requests
+import socket
 from flask import current_app
 
 from .core import db
 from .models import Instance
 
 
-def trim_url(url):
-    short_url = url
-    try:
-        short_url = short_url[short_url.index('//')+2:]
-    except ValueError:
-        pass
-    try:
-        short_url = short_url[:short_url.index(':')]
-    except ValueError:
-        pass
-    try:
-        short_url = short_url[short_url.index('www.')+4:]
-    except ValueError:
-        pass
-    return short_url
+GEOLOCATION_URL = 'https://api.ipgeolocation.io/ipgeo'
 
 
 def crawl(instance):
@@ -44,9 +32,31 @@ def crawl(instance):
 
 
 def geolocate(instance):
-    url = 'http://freegeoip.net/json/{0}'.format(trim_url(instance.url))
-    r = requests.get(url)
+    api_key = current_app.config['IP_GEOLOCATION_API_KEY']
+
+    if not api_key:
+        logging.warn('Geolocation API key not set. Geolocation is off.')
+        return
+
+    url = urlparse(instance.url).hostname
+
+    try:
+        ip_address = socket.gethostbyname(url)
+    except socket.gaierror:
+        logging.warn("Geolocation: couldn't resolve %s", url)
+        return
+
+    r = requests.get(GEOLOCATION_URL, params={
+        'ip': ip_address,
+        'apiKey': api_key
+    })
     geolocation = r.json()
+
+    if 'message' in geolocation:
+        # The API returned an error
+        logging.error('Geolocation failed for %s: %s', url, geolocation['message'])
+        return
+
     instance.geolocation = geolocation
     db.session.commit()
 
