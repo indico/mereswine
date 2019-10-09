@@ -6,7 +6,7 @@ with open('requirements.txt') as f:
 
 
 setup(name='mereswine',
-      version='1.0-dev',
+      version='1.0-rc1',
       url='https://github.com/indico/mereswine',
       packages=find_packages(),
       include_package_data=True,
