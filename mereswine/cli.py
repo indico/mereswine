@@ -1,6 +1,9 @@
 import click
+import logging
+import mondrian
 from celery.bin.celery import CeleryCommand, command_classes
-from flask.cli import FlaskGroup
+from flask import current_app
+from flask.cli import FlaskGroup, with_appcontext
 
 
 # XXX: Do not import any mereswine modules here!
@@ -26,11 +29,15 @@ def register_shell_ctx(app):
 
 
 @click.group(cls=FlaskGroup, create_app=_create_app)
+@with_appcontext
 def cli():
     """
     This script lets you control various aspects of Mereswine from the
     command line.
     """
+    logger = logging.getLogger()
+    mondrian.setup(excepthook=True)
+    logger.setLevel(logging.DEBUG if current_app.debug else logging.INFO)
 
 
 @cli.group(name='db')
