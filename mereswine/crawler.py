@@ -20,6 +20,7 @@ def crawl(instance):
     for endpoint in crawling_endpoints:
         try:
             endpoint_url = endpoint['url']
+            logging.debug("Crawling endpoint '%s'", endpoint_url)
         except KeyError:
             continue
         url = '{0}{1}'.format(base_url, endpoint_url)
@@ -65,19 +66,24 @@ def crawl_instance(instance):
     if not isinstance(instance, Instance):
         instance = Instance.query.filter_by(uuid=instance).one()
 
-    try:
-        crawl(instance)
-    except Exception:
-        logging.exception("cannot crawl instance {0}".format(instance.uuid))
-    else:
-        logging.info("successfully crawled instance {0}".format(instance.uuid))
+    logging.info("Crawling %s [%s]", instance.url, instance.uuid)
 
     try:
-        geolocate(instance)
+        crawl(instance)
+
+        try:
+            geolocate(instance)
+        except Exception:
+            logging.error("Cannot geolocate instance %s", instance.uuid)
+        else:
+            logging.info("successfully geolocated instance %s", instance.uuid)
+    except requests.ConnectionError:
+        logging.error('Cannot crawl instance %s: Connection error', instance.uuid)
     except Exception:
-        logging.exception("cannot geolocate instance {0}".format(instance.uuid))
+        logging.exception("Cannot crawl instance %s", instance.uuid)
     else:
-        logging.info("successfully geolocated instance {0}".format(instance.uuid))
+        logging.info("Successfully crawled instance %s", instance.uuid)
+
 
 
 def crawl_all():
