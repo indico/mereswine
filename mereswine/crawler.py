@@ -25,7 +25,7 @@ def crawl(instance):
             continue
         url = '{0}{1}'.format(base_url, endpoint_url)
         headers = endpoint.get('headers', None)
-        r = requests.get(url, headers=headers, verify=not current_app.config['DEBUG'])
+        r = requests.get(url, headers=headers, verify=not current_app.config['DEBUG'], timeout=30)
         crawled_data.update(r.json())
     instance.crawled_data = crawled_data
     instance.crawl_date = datetime.utcnow()
