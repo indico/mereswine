@@ -2,6 +2,7 @@ import itertools
 
 from collections import Counter
 from flask import Blueprint, current_app, render_template, jsonify, g, request, session, url_for
+from urllib.parse import urlparse
 
 from ..core import db, multipass
 from ..menu import menu, breadcrumb, make_breadcrumb
@@ -85,7 +86,7 @@ def update_server(id):
 @breadcrumb('Servers', '.server_list')
 def get_server(id):
     instance = Instance.query.filter_by(id=id).first()
-    title = crawler.trim_url(instance.url)
+    title = urlparse(instance.url).hostname
     g.breadcrumbs.append(make_breadcrumb(title))
     wvars = {
         'server': instance,
@@ -122,7 +123,7 @@ def statistics():
             country_codes.append(server.geolocation['country_code2'])
             markers.append({
                 'latLng': [server.geolocation['latitude'], server.geolocation['longitude']],
-                'name': crawler.trim_url(server.url)
+                'name': urlparse(server.url).hostname
             })
             id_mapping[i] = server.id
             i += 1
